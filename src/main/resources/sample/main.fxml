@@ -23,7 +23,7 @@
     </top>
     <center>
         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-            <Tab text="       students       ">
+            <Tab text="       Žáci       ">
                 <BorderPane>
                     <top>
                         <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">

@@ -1,157 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <BorderPane>
     <top>
         <HBox>
             <MenuBar>
-                <menus>
-                    <Menu text="something">
+                <Menu text="something">
                     <MenuItem text="nový školní rok"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="nevim"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="další možnosti"/>
-                    </Menu>
-                    <Menu text="něco">
-                        <MenuItem text="nevim"/>
-                        <SeparatorMenuItem/>
-                        <MenuItem text="další možnosti"/>
-                    </Menu>
-                </menus>
+                </Menu>
+                <Menu text="něco">
+                    <MenuItem text="nevim"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="další možnosti"/>
+                </Menu>
             </MenuBar>
         </HBox>
     </top>
     <center>
         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="       students       ">
-                    <content>
-                        <BorderPane>
-                            <top>
-                                <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
-                                    <padding>
-                                        <Insets left="20"/>
-                                    </padding>
-                                    <Label text="třídy:"/>
-                                    <ChoiceBox prefWidth="100" >
-                                    </ChoiceBox>
-                                    <Button text="new"/>
-                                    <Button text="import CSV"/>
-                                    <Button text="export CSV"/>
-                                </HBox>
-                            </top>
-                            <center>
-                                <TableView>
-                                    <columns>
-                                        <TableColumn prefWidth="100" text="třída"/>
-                                        <TableColumn prefWidth="150" text="příjmení"/>
-                                        <TableColumn prefWidth="150" text="jméno"/>
-                                        <TableColumn prefWidth="120" text="školné"/>
-                                        <TableColumn prefWidth="150" text="variabilní symbol"/>
-                                        <TableColumn prefWidth="150" text="telefon"/>
-                                        <TableColumn prefWidth="150" text="email"/>
-                                        <TableColumn prefWidth="200" text="poznámky"/>
-                                    </columns>
-                                </TableView>
-                            </center>
-                        </BorderPane>
-                    </content>
-                </Tab>
-                <Tab text="       Bankovní výpisy       ">
-                    <content>
-                        <BorderPane>
-                            <top>
-                                <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
-                                    <padding>
-                                        <Insets left="20"/>
-                                    </padding>
-                                    <Button text="Import CSV"/>
-                                    <Button text="Zadat nový ručně"/>
-                                </HBox>
-                            </top>
-                            <center>
-                                <TableView>
-                                    <columns>
-                                        <TableColumn prefWidth="150" text="datum"/>
-                                        <TableColumn prefWidth="150" text="číslo výpisu"/>
-                                        <TableColumn prefWidth="150" text="název"/>
-                                    </columns>
-                                </TableView>
-                            </center>
-                        </BorderPane>
-                    </content>
-                </Tab>
-                <Tab text="       Transakce       ">
-                    <content>
-                        <BorderPane>
-                            <top>
-                                <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
-                                    <padding>
-                                        <Insets left="20"/>
-                                    </padding>
-                                    <Button text="nová transakce hotově"/>
-                                    <Button text="upravit"/>
-                                    <Button text="smazat"/>
-                                </HBox>
-                            </top>
-                            <center>
-                                <TableView>
-                                    <columns>
-                                        <TableColumn prefWidth="150" text="Datum"/>
-                                        <TableColumn prefWidth="150" text="Variabilní symbol"/>
-                                        <TableColumn prefWidth="150" text="Příjmení"/>
-                                        <TableColumn prefWidth="150" text="Jméno"/>
-                                        <TableColumn prefWidth="150" text="Částka"/>
-                                        <TableColumn prefWidth="150" text="Způsob platby"/>
-                                        <TableColumn prefWidth="300" text="poznámka"/>
-                                    </columns>
-                                </TableView>
-                            </center>
-                        </BorderPane>
-                    </content>
-                </Tab>
-                <Tab text="       Souhrn       ">
-                    <BorderPane>
-                        <top>
-                            <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
-                                <padding>
-                                    <Insets left="20"/>
-                                </padding>
-                                <Label text="třídy"/>
-                                <ChoiceBox/>
-                                <Button text="Export CSV"/>
-                            </HBox>
-                        </top>
-                        <center>
-                            <TableView>
-                                <columns>
-                                    <TableColumn prefWidth="100" text="Třída"/>
-                                    <TableColumn prefWidth="150" text="Příjmení"/>
-                                    <TableColumn prefWidth="150" text="Jméno"/>
-                                    <TableColumn prefWidth="150" text="Variabilní symbol"/>
-                                    <TableColumn prefWidth="150" text="Má dát"/>
-                                    <TableColumn prefWidth="150" text="Dal"/>
-                                    <TableColumn prefWidth="150" text="Přeplatek"/>
-                                    <TableColumn prefWidth="150" text="Nedoplatek"/>
-                                </columns>
-                            </TableView>
-                        </center>
-                    </BorderPane>
-                </Tab>
-            </tabs>
+            <Tab text="       Žáci       ">
+                <BorderPane>
+                    <top>
+                        <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
+                            <padding>
+                                <Insets left="20"/>
+                            </padding>
+                            <Label text="třídy:"/>
+                            <ChoiceBox prefWidth="100">
+                            </ChoiceBox>
+                            <Button text="new"/>
+                            <Button text="import CSV"/>
+                            <Button text="export CSV"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView>
+                            <columns>
+                                <TableColumn prefWidth="100" text="třída"/>
+                                <TableColumn prefWidth="150" text="příjmení"/>
+                                <TableColumn prefWidth="150" text="jméno"/>
+                                <TableColumn prefWidth="120" text="školné"/>
+                                <TableColumn prefWidth="150" text="variabilní symbol"/>
+                                <TableColumn prefWidth="150" text="telefon"/>
+                                <TableColumn prefWidth="150" text="email"/>
+                                <TableColumn prefWidth="200" text="poznámky"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+            <Tab text="       Bankovní výpisy       ">
+                <BorderPane>
+                    <top>
+                        <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
+                            <padding>
+                                <Insets left="20"/>
+                            </padding>
+                            <Button text="Import CSV"/>
+                            <Button text="Zadat nový ručně"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView>
+                            <columns>
+                                <TableColumn prefWidth="150" text="datum"/>
+                                <TableColumn prefWidth="150" text="číslo výpisu"/>
+                                <TableColumn prefWidth="150" text="název"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+            <Tab text="       Transakce       ">
+                <BorderPane>
+                    <top>
+                        <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
+                            <padding>
+                                <Insets left="20"/>
+                            </padding>
+                            <Button text="nová transakce hotově"/>
+                            <Button text="upravit"/>
+                            <Button text="smazat"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView>
+                            <columns>
+                                <TableColumn prefWidth="150" text="Datum"/>
+                                <TableColumn prefWidth="150" text="Variabilní symbol"/>
+                                <TableColumn prefWidth="150" text="Příjmení"/>
+                                <TableColumn prefWidth="150" text="Jméno"/>
+                                <TableColumn prefWidth="150" text="Částka"/>
+                                <TableColumn prefWidth="150" text="Způsob platby"/>
+                                <TableColumn prefWidth="300" text="poznámka"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
+            <Tab text="       Souhrn       ">
+                <BorderPane>
+                    <top>
+                        <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
+                            <padding>
+                                <Insets left="20"/>
+                            </padding>
+                            <Label text="třídy"/>
+                            <ChoiceBox/>
+                            <Button text="Export CSV"/>
+                        </HBox>
+                    </top>
+                    <center>
+                        <TableView>
+                            <columns>
+                                <TableColumn prefWidth="100" text="Třída"/>
+                                <TableColumn prefWidth="150" text="Příjmení"/>
+                                <TableColumn prefWidth="150" text="Jméno"/>
+                                <TableColumn prefWidth="150" text="Variabilní symbol"/>
+                                <TableColumn prefWidth="150" text="Má dát"/>
+                                <TableColumn prefWidth="150" text="Dal"/>
+                                <TableColumn prefWidth="150" text="Přeplatek"/>
+                                <TableColumn prefWidth="150" text="Nedoplatek"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                </BorderPane>
+            </Tab>
         </TabPane>
     </center>
 </BorderPane>
