@@ -6,36 +6,67 @@ import java.util.List;
 
 public class DataSource {
 
-    public static final String DB_NAME = "musicForUI.db";
-    public static final String CONNECTION_STRING = "jdbc:sqlite:D:\\Java\\databases\\" + DB_NAME;
+    public static final String DB_NAME = "schoolFees.db";
+    public static final String CONNECTION_STRING = "jdbc:sqlite:D:\\Java\\MyProjects2\\" + DB_NAME;
 
-    public static final String TABLE_ALBUMS = "albums";
-    public static final String COLUMN_ALBUM_ID = "_id";
-    public static final String COLUMN_ALBUM_NAME = "name";
-    public static final String COLUMN_ALBUM_ARTIST = "artist";
-    public static final int INDEX_ALBUM_ID = 1;
-    public static final int INDEX_ALBUM_NAME = 2;
-    public static final int INDEX_ALBUM_ARTIST = 3;
 
-    public static final String TABLE_ARTISTS = "artists";
-    public static final String COLUMN_ARTIST_ID = "_id";
-    public static final String COLUMN_ARTIST_NAME = "name";
-    public static final int INDEX_ARTIST_ID = 1;
-    public static final int INDEX_ARTIST_NAME = 2;
+    public static final String TABLE_CLASSES = "classes";
+    public static final String COLUMN_CLASSES_ID = "_id";
+    public static final String COLUMN_CLASSES_NAME = "name";
+    public static final String COLUMN_CLASSES_STAGE = "stage";
+    public static final String COLUMN_CLASSES_STARTING_YEAR = "starting_year";
+    public static final int INDEX_CLASSES_ID = 1;
+    public static final int INDEX_CLASSES_NAME = 4;
+    public static final int INDEX_CLASSES_STAGE = 3;
+    public static final int INDEX_CLASSES_STARTING_YEAR = 2;
 
-    public static final String TABLE_SONGS = "songs";
-    public static final String COLUMN_SONG_ID = "_id";
-    public static final String COLUMN_SONG_TRACK = "track";
-    public static final String COLUMN_SONG_TITLE = "title";
-    public static final String COLUMN_SONG_ALBUM = "album";
-    public static final int INDEX_SONG_ID = 1;
-    public static final int INDEX_SONG_TRACK = 2;
-    public static final int INDEX_SONG_TITLE = 3;
-    public static final int INDEX_SONG_ALBUM = 4;
+    public static final String TABLE_STUDENTS = "students";
+    public static final String COLUMN_STUDENTS_VS = "VS";
+    public static final String COLUMN_STUDENTS_LAST_NAME = "last_name";
+    public static final String COLUMN_STUDENTS_FIRST_NAME = "first_name";
+    public static final String COLUMN_STUDENTS_CLASS = "class";
+    public static final String COLUMN_STUDENTS_FEES = "fees";
+    public static final String COLUMN_STUDENTS_MOTHER_PHONE = "mother_phone";
+    public static final String COLUMN_STUDENTS_FATHER_PHONE = "father_phone";
+    public static final String COLUMN_STUDENTS_MOTHER_EMAIL = "mother_email";
+    public static final String COLUMN_STUDENTS_FATHER_EMAIL = "father_email";
+    public static final String COLUMN_STUDENTS_NOTES = "notes";
+    public static final int INDEX_STUDENT_VS = 1;
+    public static final int INDEX_STUDENT_LAST_NAME = 2;
+    public static final int INDEX_STUDENT_FIRST_NAME = 3;
+    public static final int INDEX_STUDENT_CLASS = 4;
+    public static final int INDEX_STUDENT_FEES = 5;
+    public static final int INDEX_STUDENT_MOTHER_PHONE = 6;
+    public static final int INDEX_STUDENT_FATHER_PHONE = 7;
+    public static final int INDEX_STUDENT_MOTHER_EMAIL = 8;
+    public static final int INDEX_STUDENT_FATHER_EMAIL = 9;
+    public static final int INDEX_STUDENT_NOTES = 10;
 
-    public static final int ORDER_BY_NONE = 1;
-    public static final int ORDER_BY_ASC = 2;
-    public static final int ORDER_BY_DESC = 3;
+    public static final String TABLE_BANK_STATEMENT = "bank_statement";
+    public static final String COLUMN_BANK_ID = "_id";
+    public static final String COLUMN_BANK_DATE = "date";
+    public static final String COLUMN_BANK_NAME = "name";
+    public static final int INDEX_BANK_ID = 1;
+    public static final int INDEX_BANK_DATE = 2;
+    public static final int INDEX_BANK_NAME = 3;
+
+    public static final String TABLE_TRANSACTIONS = "transactions";
+    public static final String COLUMN_TRANSACTIONS_ID = "_id";
+    public static final String COLUMN_TRANSACTIONS_BANK_STATEMENT = "bank_statement";
+    public static final String COLUMN_TRANSACTIONS_VS = "VS";
+    public static final String COLUMN_TRANSACTIONS_AMOUNT = "amount";
+    public static final String COLUMN_TRANSACTIONS_PAYMENT_METHOD = "payment_method";
+    public static final String COLUMN_TRANSACTIONS_NOTES = "notes";
+    public static final int INDEX_TRANSACTION_ID = 1;
+    public static final int INDEX_TRANSACTION_BANK_STATEMENT = 2;
+    public static final int INDEX_TRANSACTION_VS = 3;
+    public static final int INDEX_TRANSACTION_AMOUNT = 4;
+    public static final int INDEX_TRANSACTION_PAYMENT_METHOD = 5;
+    public static final int INDEX_TRANSACTION_NOTES = 6;
+
+    public static final String VIEW_STUDENT_LIST = "students_list";
+
+
 
 
     public static final String INSERT_ARTIST =
