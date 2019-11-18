@@ -1,0 +1,16 @@
+sample\Controller.class
+sample\Controller$5.class
+sample\Controller$2.class
+sample\Controller$1.class
+sample\GetAllArtistsTask.class
+sample\model\Artist.class
+sample\model\Song.class
+sample\Controller$3.class
+sample\Controller$4.class
+module-info.class
+sample\model\Album.class
+sample\EditArtistController.class
+sample\model\DataSource.class
+sample\NewSongController.class
+sample\Main.class
+sample\model\NewSong.class
