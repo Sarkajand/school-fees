@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <top>
         <HBox>
             <MenuBar>
@@ -39,16 +41,48 @@
                         </HBox>
                     </top>
                     <center>
-                        <TableView>
+                        <TableView fx:id="studentsTable">
                             <columns>
-                                <TableColumn prefWidth="100" text="třída"/>
-                                <TableColumn prefWidth="150" text="příjmení"/>
-                                <TableColumn prefWidth="150" text="jméno"/>
-                                <TableColumn prefWidth="120" text="školné"/>
-                                <TableColumn prefWidth="150" text="variabilní symbol"/>
-                                <TableColumn prefWidth="150" text="telefon"/>
-                                <TableColumn prefWidth="150" text="email"/>
-                                <TableColumn prefWidth="200" text="poznámky"/>
+                                <TableColumn prefWidth="100" text="třída">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="className"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="příjmení">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="lastName"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="jméno">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="firstName"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="120" text="školné">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="fees"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="variabilní symbol">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="VS"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="telefon">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="motherPhone"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="email">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="motherEmail"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="200" text="poznámky">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="notes"/>
+                                    </cellValueFactory>
+                                </TableColumn>
                             </columns>
                         </TableView>
                     </center>

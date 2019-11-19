@@ -11,8 +11,6 @@ public class Artist {
     public Artist() {
         this.id = new SimpleIntegerProperty();
         this.name = new SimpleStringProperty();
-        String blbost = "aaaa";
-        //TODO musim dodelat blabal
     }
 
     public int getId() {
