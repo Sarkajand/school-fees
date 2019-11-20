@@ -35,11 +35,12 @@
                             <fx:define>
                                 <ToggleGroup fx:id="schoolStageToggleGroup"/>
                             </fx:define>
-                            <RadioButton text="všichni" toggleGroup="$schoolStageToggleGroup" selected="true" onAction="#listStudents"/>
+                            <RadioButton text="všichni" toggleGroup="$schoolStageToggleGroup" selected="true"
+                                         onAction="#listStudents"/>
                             <RadioButton text="ZŠ" toggleGroup="$schoolStageToggleGroup" onAction="#listStudents"/>
                             <RadioButton text="MŠ" toggleGroup="$schoolStageToggleGroup" onAction="#listStudents"/>
                             <Label text="třídy:"/>
-                            <ChoiceBox prefWidth="100">
+                            <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnStudentsTab" onAction="#listStudentsByClass">
                             </ChoiceBox>
                             <Button text="nový žák"/>
                             <Button text="import CSV"/>

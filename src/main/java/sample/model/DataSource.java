@@ -66,6 +66,7 @@ public class DataSource {
 
     public static final String VIEW_STUDENT_LIST = "students_list";
     public static final String VIEW_STUDENT_LIST_STAGE = "stage";
+    public static final String VIEW_STUDENTS_LIST_CLASS = "class_name";
     public static final int INDEX_STUDENT_LIST_CLASS_NAME = 1;
     public static final int INDEX_STUDENT_LIST_LAST_NAME = 2;
     public static final int INDEX_STUDENT_LIST_FIRST_NAME = 3;
@@ -82,6 +83,10 @@ public class DataSource {
             "SELECT * FROM " + VIEW_STUDENT_LIST;
     public static final String QUERY_STUDENTS_BY_SCHOOL_STAGE =
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + VIEW_STUDENT_LIST_STAGE + " = ?";
+    public static final String QUERY_STUDENTS_BY_CLASS =
+            "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + VIEW_STUDENTS_LIST_CLASS + " = ?";
+    public static final String QUERY_CLASSES =
+            "SELECT " + COLUMN_CLASSES_CLASS_NAME + " FROM " + TABLE_CLASSES;
 
 
     //
@@ -125,6 +130,8 @@ public class DataSource {
     private Connection conn;
     private PreparedStatement queryStudents;
     private PreparedStatement queryStudentsBySchoolStage;
+    private PreparedStatement queryStudentsByClass;
+    private PreparedStatement queryClasses;
 
 
 //    private PreparedStatement insertIntoArtists;
@@ -154,6 +161,8 @@ public class DataSource {
             conn = DriverManager.getConnection(CONNECTION_STRING);
             queryStudents = conn.prepareStatement(QUERY_STUDENTS);
             queryStudentsBySchoolStage = conn.prepareStatement(QUERY_STUDENTS_BY_SCHOOL_STAGE);
+            queryStudentsByClass = conn.prepareStatement(QUERY_STUDENTS_BY_CLASS);
+            queryClasses = conn.prepareStatement(QUERY_CLASSES);
 
 //            insertIntoArtists = conn.prepareStatement(INSERT_ARTIST, Statement.RETURN_GENERATED_KEYS);
 //            insertIntoAlbums = conn.prepareStatement(INSERT_ALBUM, Statement.RETURN_GENERATED_KEYS);
@@ -214,11 +223,14 @@ public class DataSource {
 //                deleteArtist.close();
 //            }
 
+            if (queryStudents != null) {
+                queryStudents.close();
+            }
             if (queryStudentsBySchoolStage != null) {
                 queryStudentsBySchoolStage.close();
             }
-            if (queryStudents != null) {
-                queryStudents.close();
+            if (queryStudentsByClass != null) {
+                queryStudentsByClass.close();
             }
             if (conn != null) {
                 conn.close();
@@ -278,11 +290,39 @@ public class DataSource {
             return setStudents(results);
 
         } catch (SQLException e) {
-            System.out.println("Query students ¨by school stage failed: " + e.getMessage());
+            System.out.println("Query students by school stage failed: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
+
+    public List<Student> queryStudentsByClass(String className) {
+        try {
+            queryStudentsByClass.setString(1, className);
+            ResultSet results = queryStudentsByClass.executeQuery();
+            return setStudents(results);
+        } catch (SQLException e) {
+            System.out.println("Query students by class failed: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<String> listClasses() {
+        try {
+            ResultSet results = queryClasses.executeQuery();
+            List<String> classes = new ArrayList<>();
+            while (results.next()) {
+                classes.add(results.getString(1));
+            }
+            return classes;
+        } catch (SQLException e) {
+            System.out.println("Query classes failed: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 
 

@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
@@ -17,11 +18,14 @@ public class Controller {
     private TableView studentsTable;
     @FXML
     private ToggleGroup schoolStageToggleGroup;
+    @FXML
+    private ChoiceBox classesChoiceBoxOnStudentsTab;
 
 
 
     @FXML
     public void listStudents() {
+        classesChoiceBoxOnStudentsTab.valueProperty().set(null);
         RadioButton selectedRadioButton = (RadioButton) schoolStageToggleGroup.getSelectedToggle();
         String schoolStageSelected = selectedRadioButton.getText();
         Task<ObservableList<Student>> task = new Task<ObservableList<Student>>() {
@@ -38,6 +42,27 @@ public class Controller {
 
         new Thread(task).start();
     }
+
+    @FXML
+    public void setClassesChoiceBoxOnStudentsTab() {
+        classesChoiceBoxOnStudentsTab.setItems(FXCollections.observableArrayList(DataSource.getInstance().listClasses()));
+    }
+
+    @FXML
+    public void listStudentsByClass() {
+        String className = (String) classesChoiceBoxOnStudentsTab.getSelectionModel().getSelectedItem();
+        Task<ObservableList<Student>> task = new Task<ObservableList<Student>>() {
+            @Override
+            protected ObservableList<Student> call() throws Exception {
+                return FXCollections.observableArrayList(DataSource.getInstance().queryStudentsByClass(className));
+            }
+        };
+        studentsTable.itemsProperty().bind(task.valueProperty());
+
+        new Thread(task).start();
+    }
+
+
 
 
 

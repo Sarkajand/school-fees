@@ -21,6 +21,7 @@ public class Main extends Application {
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.listStudents();
+        controller.setClassesChoiceBoxOnStudentsTab();
 
         primaryStage.setTitle("Školné");
         primaryStage.setScene(new Scene(root, 1400, 800));
