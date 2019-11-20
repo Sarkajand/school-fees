@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Student {
 
+    private SimpleStringProperty schoolStage;
     private SimpleStringProperty className;
     private SimpleStringProperty lastName;
     private SimpleStringProperty firstName;
@@ -18,6 +19,7 @@ public class Student {
     private SimpleStringProperty notes;
 
     public Student() {
+        this.schoolStage = new SimpleStringProperty();
         this.className = new SimpleStringProperty();
         this.lastName = new SimpleStringProperty();
         this.firstName = new SimpleStringProperty();
@@ -28,6 +30,14 @@ public class Student {
         this.motherEmail = new SimpleStringProperty();
         this.fatherEmail = new SimpleStringProperty();
         this.notes = new SimpleStringProperty();
+    }
+
+    public String getSchoolStage() {
+        return schoolStage.get();
+    }
+
+    public void setSchoolStage(String schoolStage) {
+        this.schoolStage.set(schoolStage);
     }
 
     public String getClassName() {

@@ -65,6 +65,7 @@ public class DataSource {
     public static final int INDEX_TRANSACTION_NOTES = 6;
 
     public static final String VIEW_STUDENT_LIST = "students_list";
+    public static final String VIEW_STUDENT_LIST_STAGE = "stage";
     public static final int INDEX_STUDENT_LIST_CLASS_NAME = 1;
     public static final int INDEX_STUDENT_LIST_LAST_NAME = 2;
     public static final int INDEX_STUDENT_LIST_FIRST_NAME = 3;
@@ -75,9 +76,12 @@ public class DataSource {
     public static final int INDEX_STUDENT_LIST_MOTHER_EMAIL = 8;
     public static final int INDEX_STUDENT_LIST_FATHER_EMAIL = 9;
     public static final int INDEX_STUDENT_LIST_NOTES = 10;
+    public static final int INDEX_STUDENT_LIST_STAGE = 11;
 
     public static final String QUERY_STUDENTS =
             "SELECT * FROM " + VIEW_STUDENT_LIST;
+    public static final String QUERY_STUDENTS_BY_SCHOOL_STAGE =
+            "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + VIEW_STUDENT_LIST_STAGE + " = ?";
 
 
     //
@@ -120,6 +124,7 @@ public class DataSource {
     private static DataSource instance = new DataSource();
     private Connection conn;
     private PreparedStatement queryStudents;
+    private PreparedStatement queryStudentsBySchoolStage;
 
 
 //    private PreparedStatement insertIntoArtists;
@@ -148,6 +153,7 @@ public class DataSource {
         try {
             conn = DriverManager.getConnection(CONNECTION_STRING);
             queryStudents = conn.prepareStatement(QUERY_STUDENTS);
+            queryStudentsBySchoolStage = conn.prepareStatement(QUERY_STUDENTS_BY_SCHOOL_STAGE);
 
 //            insertIntoArtists = conn.prepareStatement(INSERT_ARTIST, Statement.RETURN_GENERATED_KEYS);
 //            insertIntoAlbums = conn.prepareStatement(INSERT_ALBUM, Statement.RETURN_GENERATED_KEYS);
@@ -208,6 +214,9 @@ public class DataSource {
 //                deleteArtist.close();
 //            }
 
+            if (queryStudentsBySchoolStage != null) {
+                queryStudentsBySchoolStage.close();
+            }
             if (queryStudents != null) {
                 queryStudents.close();
             }
@@ -219,32 +228,66 @@ public class DataSource {
         }
     }
 
+    private List<Student> setStudents(ResultSet results) {
+        if (results == null) {
+            System.out.println("no data for students");
+            return null;
+        } else {
+            try {
+                List<Student> students = new ArrayList<>();
+                while (results.next()) {
+                    Student student = new Student();
+                    student.setClassName(results.getString(INDEX_STUDENT_LIST_CLASS_NAME));
+                    student.setLastName(results.getString(INDEX_STUDENT_LIST_LAST_NAME));
+                    student.setFirstName(results.getString(INDEX_STUDENT_LIST_FIRST_NAME));
+                    student.setFees(results.getDouble(INDEX_STUDENT_LIST_FEES));
+                    student.setVS(results.getInt(INDEX_STUDENT_LIST_VS));
+                    student.setMotherPhone(results.getString(INDEX_STUDENT_LIST_MOTHER_PHONE));
+                    student.setFatherPhone(results.getString(INDEX_STUDENT_LIST_FATHER_PHONE));
+                    student.setMotherEmail(results.getString(INDEX_STUDENT_LIST_MOTHER_EMAIL));
+                    student.setFatherEmail(results.getString(INDEX_STUDENT_LIST_FATHER_EMAIL));
+                    student.setNotes(results.getString(INDEX_STUDENT_LIST_NOTES));
+                    student.setSchoolStage(results.getString(INDEX_STUDENT_LIST_STAGE));
+
+                    students.add(student);
+                }
+                return students;
+            } catch (SQLException e) {
+                System.out.println("Setting data for students failed: " + e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     public List<Student> queryStudent() {
         try {
             ResultSet results = queryStudents.executeQuery();
-            List<Student> students = new ArrayList<>();
-            while (results.next()) {
-                Student student = new Student();
-                student.setClassName(results.getString(INDEX_STUDENT_LIST_CLASS_NAME));
-                student.setLastName(results.getString(INDEX_STUDENT_LIST_LAST_NAME));
-                student.setFirstName(results.getString(INDEX_STUDENT_LIST_FIRST_NAME));
-                student.setFees(results.getDouble(INDEX_STUDENT_LIST_FEES));
-                student.setVS(results.getInt(INDEX_STUDENT_LIST_VS));
-                student.setMotherPhone(results.getString(INDEX_STUDENT_LIST_MOTHER_PHONE));
-                student.setFatherPhone(results.getString(INDEX_STUDENT_LIST_FATHER_PHONE));
-                student.setMotherEmail(results.getString(INDEX_STUDENT_LIST_MOTHER_EMAIL));
-                student.setFatherEmail(results.getString(INDEX_STUDENT_LIST_FATHER_EMAIL));
-                student.setNotes(results.getString(INDEX_STUDENT_LIST_NOTES));
-
-                students.add(student);
-            }
-            return students;
+            return setStudents(results);
         } catch (SQLException e) {
             System.out.println("Query students failed: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
+
+    public List<Student> queryStudentsBySchoolStage(String schoolStage) {
+        try {
+            queryStudentsBySchoolStage.setString(1, schoolStage);
+            ResultSet results = queryStudentsBySchoolStage.executeQuery();
+            return setStudents(results);
+
+        } catch (SQLException e) {
+            System.out.println("Query students ¨by school stage failed: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
 
 //    public List<Artist> queryArtists(int sortOrder) {
 //

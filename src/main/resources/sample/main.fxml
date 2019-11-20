@@ -32,10 +32,17 @@
                             <padding>
                                 <Insets left="20"/>
                             </padding>
+                            <fx:define>
+                                <ToggleGroup fx:id="schoolStageToggleGroup"/>
+                            </fx:define>
+                            <RadioButton text="všichni" toggleGroup="$schoolStageToggleGroup" selected="true"
+                                         onAction="#listStudents"/>
+                            <RadioButton text="ZŠ" toggleGroup="$schoolStageToggleGroup" onAction="#listStudents"/>
+                            <RadioButton text="MŠ" toggleGroup="$schoolStageToggleGroup" onAction="#listStudents"/>
                             <Label text="třídy:"/>
                             <ChoiceBox prefWidth="100">
                             </ChoiceBox>
-                            <Button text="new"/>
+                            <Button text="nový žák"/>
                             <Button text="import CSV"/>
                             <Button text="export CSV"/>
                         </HBox>
@@ -43,39 +50,49 @@
                     <center>
                         <TableView fx:id="studentsTable">
                             <columns>
-                                <TableColumn prefWidth="100" text="třída">
+                                <TableColumn prefWidth="120" text="třída">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="className"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="150" text="příjmení">
+                                <TableColumn prefWidth="110" text="příjmení">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="lastName"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="150" text="jméno">
+                                <TableColumn prefWidth="110" text="jméno">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="firstName"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="120" text="školné">
+                                <TableColumn prefWidth="110" text="školné">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="fees"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="150" text="variabilní symbol">
+                                <TableColumn prefWidth="130" text="variabilní symbol">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="VS"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="150" text="telefon">
+                                <TableColumn prefWidth="130" text="telefon matky">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="motherPhone"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="150" text="email">
+                                <TableColumn prefWidth="130" text="telefon otce">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="fatherPhone"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="140" text="email matky">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="motherEmail"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="140" text="email otce">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="fatherEmail"/>
                                     </cellValueFactory>
                                 </TableColumn>
                                 <TableColumn prefWidth="200" text="poznámky">

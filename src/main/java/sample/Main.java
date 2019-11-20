@@ -23,7 +23,7 @@ public class Main extends Application {
         controller.listStudents();
 
         primaryStage.setTitle("Školné");
-        primaryStage.setScene(new Scene(root, 1200, 800));
+        primaryStage.setScene(new Scene(root, 1400, 800));
         primaryStage.show();
     }
 

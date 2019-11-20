@@ -4,7 +4,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import sample.model.DataSource;
 import sample.model.Student;
 
@@ -13,13 +15,23 @@ public class Controller {
 
     @FXML
     private TableView studentsTable;
+    @FXML
+    private ToggleGroup schoolStageToggleGroup;
+
+
 
     @FXML
     public void listStudents() {
+        RadioButton selectedRadioButton = (RadioButton) schoolStageToggleGroup.getSelectedToggle();
+        String schoolStageSelected = selectedRadioButton.getText();
         Task<ObservableList<Student>> task = new Task<ObservableList<Student>>() {
             @Override
             protected ObservableList<Student> call() throws Exception {
-                return FXCollections.observableArrayList(DataSource.getInstance().queryStudent());
+                if (schoolStageSelected.equals("všichni")) {
+                    return FXCollections.observableArrayList(DataSource.getInstance().queryStudent());
+                } else {
+                    return FXCollections.observableArrayList(DataSource.getInstance().queryStudentsBySchoolStage(schoolStageSelected));
+                }
             }
         };
         studentsTable.itemsProperty().bind(task.valueProperty());
