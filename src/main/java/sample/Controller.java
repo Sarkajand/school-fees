@@ -4,16 +4,26 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import sample.model.DataSource;
 import sample.model.Student;
+
+import java.io.IOException;
 
 
 public class Controller {
 
+    @FXML
+    private BorderPane mainWindow;
     @FXML
     private TableView studentsTable;
     @FXML
@@ -60,6 +70,37 @@ public class Controller {
         studentsTable.itemsProperty().bind(task.valueProperty());
 
         new Thread(task).start();
+    }
+
+    @FXML
+    public void newStudent() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Controller.class.getResource("editStudent.fxml"));
+            GridPane page = loader.load();
+
+            Stage studentStage = new Stage();
+            studentStage.setTitle("Edit Artist");
+            studentStage.initModality(Modality.WINDOW_MODAL);
+            studentStage.initOwner(mainWindow.getScene().getWindow());
+            Scene scene = new Scene(page);
+            studentStage.setScene(scene);
+
+            EditStudentController controller = loader.getController();
+            controller.setStage(studentStage);
+
+            if (controller.isSaveClicked()) {
+                Student student = controller.handleSave();
+                String className = student.getClassName();
+//                v datasource metodu pro najití id třídy
+//                pak v datasource metodu pro vložení studenta a tady odsut poslání všech parametrů
+//                        udělat to pomocí task<boolen>
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -218,7 +259,7 @@ public class Controller {
 //        dialog.initModality(Modality.WINDOW_MODAL);
 //        dialog.initOwner(mainWindow.getScene().getWindow());
 //        dialog.setTitle("Add new song");
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("newSong.fxml"));
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("editStudent.fxml"));
 //
 //
 //        try {
