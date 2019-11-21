@@ -11,7 +11,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.model.DataSource;
@@ -74,13 +73,16 @@ public class Controller {
 
     @FXML
     public void newStudent() {
+//        todo
+        System.out.println("newStudent was called");
+
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Controller.class.getResource("editStudent.fxml"));
-            GridPane page = loader.load();
+            BorderPane page = loader.load();
 
             Stage studentStage = new Stage();
-            studentStage.setTitle("Edit Artist");
+            studentStage.setTitle("Nový žák");
             studentStage.initModality(Modality.WINDOW_MODAL);
             studentStage.initOwner(mainWindow.getScene().getWindow());
             Scene scene = new Scene(page);
@@ -89,13 +91,39 @@ public class Controller {
             EditStudentController controller = loader.getController();
             controller.setStage(studentStage);
 
+            studentStage.showAndWait();
+
             if (controller.isSaveClicked()) {
+//                todo
+                System.out.println("Save is clicked");
+
                 Student student = controller.handleSave();
                 String className = student.getClassName();
-//                v datasource metodu pro najití id třídy
-//                pak v datasource metodu pro vložení studenta a tady odsut poslání všech parametrů
-//                        udělat to pomocí task<boolen>
+//                todo
+                System.out.println("classname from created student is " + className);
 
+                int classId = DataSource.getInstance().findClassIdByClassName(className);
+//                todo
+                System.out.println("class id = " + classId);
+
+                Task<Boolean> task = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+//                        todo
+                        System.out.println("new theread is running and trying call insert student");
+
+                        return DataSource.getInstance().insertStudent(student, classId);
+                    }
+                };
+                task.setOnSucceeded(e -> {
+                    if (task.valueProperty().get()) {
+//                        todo
+                        System.out.println("calling liststudents");
+                        listStudents();
+                    }
+                });
+
+                new Thread(task).start();
             }
 
         } catch (IOException e) {

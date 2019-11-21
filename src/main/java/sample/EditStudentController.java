@@ -40,6 +40,9 @@ public class EditStudentController {
     }
 
     public void setStage(Stage stage) {
+//        todo
+        System.out.println("setStage was called");
+
         this.studentStage = stage;
     }
 
@@ -61,22 +64,22 @@ public class EditStudentController {
 
     private boolean isInputValid() {
         String errorMessage = "";
-        if (!lastNameField.getText().matches("\\.+")) {
+        if (!lastNameField.getText().matches(".+")) {
             errorMessage += "Neplatné příjmení\n";
         }
-        if (!firstNameField.getText().matches("\\.+")) {
+        if (!firstNameField.getText().matches(".+")) {
             errorMessage += "Neplatné jméno\n";
         }
         if (!VSField.getText().matches("\\d+")) {
             errorMessage += "Neplatný variabilní symbol, musí být číslo\n";
         }
-        if (!feesField.getText().matches("\\d+")) {
-            errorMessage += "Neplatné školné, musí být číslo\n";
+        if (!feesField.getText().matches("\\d+\\.?\\d+")) {
+            errorMessage += "Neplatné školné, musí být číslo, k oddělení desetiných míst použij tečku\n";
         }
-        if (!motherPhoneField.getText().matches("\\.+") && !fatherPhoneField.getText().matches("\\.+")) {
+        if (!motherPhoneField.getText().matches(".+") && !fatherPhoneField.getText().matches(".+")) {
             errorMessage += "Neplatný telefon, zadej alespoň jeden telefon\n";
         }
-        if (!motherEmailField.getText().matches("\\.+[@]\\.+[.]\\.+") && !fatherEmailField.getText().matches("\\.+[@]\\.+[.]\\.+")) {
+        if (!motherEmailField.getText().matches(".+[\\@].+[\\.].+") && !fatherEmailField.getText().matches(".+[\\@].+[\\.].+")) {
             errorMessage += "Neplatný email, zadej alespoň jeden email\n";
         }
         if (editStudentClassesChoiceBox.getSelectionModel().getSelectedItem() == null) {
@@ -98,7 +101,13 @@ public class EditStudentController {
     }
 
     public Student handleSave() {
+//        todo
+        System.out.println("handleSave called");
+
         if (isInputValid()) {
+//            todo
+            System.out.println("input is valid, creating student");
+
             saveClicked = true;
             Student student = new Student();
             student.setLastName(lastNameField.getText());
@@ -111,9 +120,10 @@ public class EditStudentController {
             student.setFatherEmail(fatherEmailField.getText());
             student.setNotes(notesField.getText());
             student.setClassName((String) editStudentClassesChoiceBox.getSelectionModel().getSelectedItem());
+
+            studentStage.close();
             return student;
         }
-        saveClicked = false;
         return null;
     }
 

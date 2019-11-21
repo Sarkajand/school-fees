@@ -87,6 +87,10 @@ public class DataSource {
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + VIEW_STUDENTS_LIST_CLASS + " = ?";
     public static final String QUERY_CLASSES =
             "SELECT " + COLUMN_CLASSES_CLASS_NAME + " FROM " + TABLE_CLASSES;
+    public static final String FIND_CLASS_ID_BY_CLASS_NAME =
+            "SELECT " + COLUMN_CLASSES_ID + " FROM " + TABLE_CLASSES + " WHERE " + COLUMN_CLASSES_CLASS_NAME + " = ?";
+    public static final String INSERT_STUDENT =
+            "INSERT INTO " + TABLE_STUDENTS + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
     //
@@ -132,6 +136,8 @@ public class DataSource {
     private PreparedStatement queryStudentsBySchoolStage;
     private PreparedStatement queryStudentsByClass;
     private PreparedStatement queryClasses;
+    private PreparedStatement findClassIdByClassName;
+    private PreparedStatement insertStudent;
 
 
 //    private PreparedStatement insertIntoArtists;
@@ -163,6 +169,8 @@ public class DataSource {
             queryStudentsBySchoolStage = conn.prepareStatement(QUERY_STUDENTS_BY_SCHOOL_STAGE);
             queryStudentsByClass = conn.prepareStatement(QUERY_STUDENTS_BY_CLASS);
             queryClasses = conn.prepareStatement(QUERY_CLASSES);
+            findClassIdByClassName = conn.prepareStatement(FIND_CLASS_ID_BY_CLASS_NAME);
+            insertStudent = conn.prepareStatement(INSERT_STUDENT);
 
 //            insertIntoArtists = conn.prepareStatement(INSERT_ARTIST, Statement.RETURN_GENERATED_KEYS);
 //            insertIntoAlbums = conn.prepareStatement(INSERT_ALBUM, Statement.RETURN_GENERATED_KEYS);
@@ -231,6 +239,12 @@ public class DataSource {
             }
             if (queryStudentsByClass != null) {
                 queryStudentsByClass.close();
+            }
+            if (findClassIdByClassName != null) {
+                findClassIdByClassName.close();
+            }
+            if (insertStudent != null) {
+                insertStudent.close();
             }
             if (conn != null) {
                 conn.close();
@@ -320,6 +334,51 @@ public class DataSource {
             System.out.println("Query classes failed: " + e.getMessage());
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public int findClassIdByClassName(String className) {
+        try {
+            findClassIdByClassName.setString(1, className);
+            ResultSet results = findClassIdByClassName.executeQuery();
+            return results.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Finding class failed: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public boolean insertStudent(Student student, int classId) {
+        try {
+//            todo
+            System.out.println("insertStudent was called");
+            insertStudent.setInt(INDEX_STUDENT_VS, student.getVS());
+            insertStudent.setString(INDEX_STUDENT_LAST_NAME, student.getLastName());
+            insertStudent.setString(INDEX_STUDENT_FIRST_NAME, student.getFirstName());
+            insertStudent.setInt(INDEX_STUDENT_CLASS, classId);
+            insertStudent.setDouble(INDEX_STUDENT_FEES, student.getFees());
+            insertStudent.setString(INDEX_STUDENT_MOTHER_PHONE, student.getMotherPhone());
+            insertStudent.setString(INDEX_STUDENT_FATHER_PHONE, student.getFatherPhone());
+            insertStudent.setString(INDEX_STUDENT_MOTHER_EMAIL, student.getMotherEmail());
+            insertStudent.setString(INDEX_STUDENT_FATHER_EMAIL, student.getFatherEmail());
+            insertStudent.setString(INDEX_STUDENT_NOTES, student.getNotes());
+
+            int affectedRecords = insertStudent.executeUpdate();
+            if (affectedRecords == 1) {
+                return true;
+            } else return false;
+//            todo smazat tydle tři řádky
+//            boolean inserting = insertStudent.execute();
+//            System.out.println("execute was " + inserting);
+//            return inserting;
+
+//            return insertStudent.execute();
+
+        } catch (SQLException e) {
+            System.out.println("Inserting student failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 

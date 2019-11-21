@@ -43,7 +43,7 @@
                             <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnStudentsTab"
                                        onAction="#listStudentsByClass">
                             </ChoiceBox>
-                            <Button text="nový žák"/>
+                            <Button text="nový žák" onAction="#newStudent"/>
                             <Button text="upravit žáka"/>
                             <Button text="smazat žáka"/>
                             <Button text="import CSV"/>
