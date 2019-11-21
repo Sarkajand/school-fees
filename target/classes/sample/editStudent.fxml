@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="sample.EditStudentController"
@@ -14,7 +14,8 @@
             <Label text="Jméno" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
             <TextField fx:id="firstNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <Label text="Třídy" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-            <ChoiceBox fx:id="editStudentClassesChoiceBox" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="150"/>
+            <ChoiceBox fx:id="editStudentClassesChoiceBox" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       prefWidth="150"/>
             <Label text="Variabilní symbol" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
             <TextField fx:id="VSField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
             <Label text="Školné" GridPane.rowIndex="4" GridPane.columnIndex="0"/>

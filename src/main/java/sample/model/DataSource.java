@@ -91,6 +91,8 @@ public class DataSource {
             "SELECT " + COLUMN_CLASSES_ID + " FROM " + TABLE_CLASSES + " WHERE " + COLUMN_CLASSES_CLASS_NAME + " = ?";
     public static final String INSERT_STUDENT =
             "INSERT INTO " + TABLE_STUDENTS + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String DELETE_STUDENT =
+            "DELETE FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
 
 
     //
@@ -138,6 +140,7 @@ public class DataSource {
     private PreparedStatement queryClasses;
     private PreparedStatement findClassIdByClassName;
     private PreparedStatement insertStudent;
+    private PreparedStatement deleteStudent;
 
 
 //    private PreparedStatement insertIntoArtists;
@@ -171,6 +174,7 @@ public class DataSource {
             queryClasses = conn.prepareStatement(QUERY_CLASSES);
             findClassIdByClassName = conn.prepareStatement(FIND_CLASS_ID_BY_CLASS_NAME);
             insertStudent = conn.prepareStatement(INSERT_STUDENT);
+            deleteStudent = conn.prepareStatement(DELETE_STUDENT);
 
 //            insertIntoArtists = conn.prepareStatement(INSERT_ARTIST, Statement.RETURN_GENERATED_KEYS);
 //            insertIntoAlbums = conn.prepareStatement(INSERT_ALBUM, Statement.RETURN_GENERATED_KEYS);
@@ -245,6 +249,9 @@ public class DataSource {
             }
             if (insertStudent != null) {
                 insertStudent.close();
+            }
+            if (deleteStudent != null) {
+                deleteStudent.close();
             }
             if (conn != null) {
                 conn.close();
@@ -351,8 +358,6 @@ public class DataSource {
 
     public boolean insertStudent(Student student, int classId) {
         try {
-//            todo
-            System.out.println("insertStudent was called");
             insertStudent.setInt(INDEX_STUDENT_VS, student.getVS());
             insertStudent.setString(INDEX_STUDENT_LAST_NAME, student.getLastName());
             insertStudent.setString(INDEX_STUDENT_FIRST_NAME, student.getFirstName());
@@ -367,19 +372,31 @@ public class DataSource {
             int affectedRecords = insertStudent.executeUpdate();
             if (affectedRecords == 1) {
                 return true;
-            } else return false;
-//            todo smazat tydle tři řádky
-//            boolean inserting = insertStudent.execute();
-//            System.out.println("execute was " + inserting);
-//            return inserting;
-
-//            return insertStudent.execute();
-
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             System.out.println("Inserting student failed: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean deleteStudent(int VS) {
+        try {
+            deleteStudent.setInt(1, VS);
+            int affectedRecords = deleteStudent.executeUpdate();
+            if (affectedRecords == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println("Deleting student failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
 

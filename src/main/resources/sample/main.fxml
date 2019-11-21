@@ -44,8 +44,8 @@
                                        onAction="#listStudentsByClass">
                             </ChoiceBox>
                             <Button text="nový žák" onAction="#newStudent"/>
-                            <Button text="upravit žáka"/>
-                            <Button text="smazat žáka"/>
+                            <Button text="upravit žáka" onAction="#editStudent"/>
+                            <Button text="smazat žáka" onAction="#deleteStudent"/>
                             <Button text="import CSV"/>
                             <Button text="export CSV"/>
                         </HBox>

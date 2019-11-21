@@ -6,10 +6,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,7 +26,6 @@ public class Controller {
     private ToggleGroup schoolStageToggleGroup;
     @FXML
     private ChoiceBox classesChoiceBoxOnStudentsTab;
-
 
 
     @FXML
@@ -73,9 +69,6 @@ public class Controller {
 
     @FXML
     public void newStudent() {
-//        todo
-        System.out.println("newStudent was called");
-
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Controller.class.getResource("editStudent.fxml"));
@@ -94,42 +87,99 @@ public class Controller {
             studentStage.showAndWait();
 
             if (controller.isSaveClicked()) {
-//                todo
-                System.out.println("Save is clicked");
-
                 Student student = controller.handleSave();
                 String className = student.getClassName();
-//                todo
-                System.out.println("classname from created student is " + className);
-
                 int classId = DataSource.getInstance().findClassIdByClassName(className);
-//                todo
-                System.out.println("class id = " + classId);
 
                 Task<Boolean> task = new Task<Boolean>() {
                     @Override
                     protected Boolean call() throws Exception {
-//                        todo
-                        System.out.println("new theread is running and trying call insert student");
-
                         return DataSource.getInstance().insertStudent(student, classId);
                     }
                 };
                 task.setOnSucceeded(e -> {
-                    if (task.valueProperty().get()) {
-//                        todo
-                        System.out.println("calling liststudents");
                         listStudents();
-                    }
                 });
 
                 new Thread(task).start();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void editStudent() {
+        final Student student = (Student) studentsTable.getSelectionModel().getSelectedItem();
+        if (student == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Chyba, není vybraný žák");
+            alert.setContentText("Musíte vybrat žáka");
+            alert.showAndWait();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(Controller.class.getResource("editStudent.fxml"));
+                BorderPane page = loader.load();
+
+                Stage studentStage = new Stage();
+                studentStage.setTitle("Nový žák");
+                studentStage.initModality(Modality.WINDOW_MODAL);
+                studentStage.initOwner(mainWindow.getScene().getWindow());
+                Scene scene = new Scene(page);
+                studentStage.setScene(scene);
+
+                EditStudentController controller = loader.getController();
+                controller.setStage(studentStage);
+                controller.setFields(student);
+
+                studentStage.showAndWait();
+
+                if (controller.isSaveClicked()) {
+                    DataSource.getInstance().deleteStudent(student.getVS());
+                    Student editedStudent = controller.handleSave();
+                    String className = editedStudent.getClassName();
+                    int classId = DataSource.getInstance().findClassIdByClassName(className);
+
+                    Task<Boolean> task = new Task<Boolean>() {
+                        @Override
+                        protected Boolean call() throws Exception {
+                            return DataSource.getInstance().insertStudent(editedStudent, classId);
+                        }
+                    };
+                    task.setOnSucceeded(e -> {
+                        listStudents();
+                    });
+                    new Thread(task).start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteStudent() {
+        final Student student = (Student) studentsTable.getSelectionModel().getSelectedItem();
+        if (student == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Chyba, není vybraný žák");
+            alert.setContentText("Musíte vybrat žáka");
+            alert.showAndWait();
+        } else {
+            Task<Boolean> task = new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    return DataSource.getInstance().deleteStudent(student.getVS());
+                }
+            };
+            task.setOnSucceeded(e -> listStudents());
+
+            new Thread(task).start();
+        }
+    }
+
+
+
+
 
 
 

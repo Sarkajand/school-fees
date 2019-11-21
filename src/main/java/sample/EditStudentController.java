@@ -40,9 +40,6 @@ public class EditStudentController {
     }
 
     public void setStage(Stage stage) {
-//        todo
-        System.out.println("setStage was called");
-
         this.studentStage = stage;
     }
 
@@ -60,6 +57,7 @@ public class EditStudentController {
         motherEmailField.setText(student.getMotherEmail());
         fatherEmailField.setText(student.getFatherEmail());
         notesField.setText(student.getNotes());
+        editStudentClassesChoiceBox.setValue(student.getClassName());
     }
 
     private boolean isInputValid() {
@@ -101,13 +99,7 @@ public class EditStudentController {
     }
 
     public Student handleSave() {
-//        todo
-        System.out.println("handleSave called");
-
         if (isInputValid()) {
-//            todo
-            System.out.println("input is valid, creating student");
-
             saveClicked = true;
             Student student = new Student();
             student.setLastName(lastNameField.getText());
