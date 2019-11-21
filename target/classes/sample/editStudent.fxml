@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="sample.EditStudentController"
+            prefHeight="450.0" prefWidth="500.0">
+    <center>
+        <GridPane vgap="10" hgap="10" alignment="CENTER">
+            <Label text="Příjmení" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="lastNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Jméno" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="firstNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Třídy" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ChoiceBox fx:id="editStudentClassesChoiceBox" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="150"/>
+            <Label text="Variabilní symbol" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="VSField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Školné" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="feesField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="telefon matky" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="motherPhoneField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="telefon otce" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="fatherPhoneField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label text="email matky" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <TextField fx:id="motherEmailField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            <Label text="email otce" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <TextField fx:id="fatherEmailField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+            <Label text="poznámky" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+            <TextField fx:id="notesField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+        </GridPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="20" prefHeight="50">
+            <padding>
+                <Insets bottom="20"/>
+                <Insets right="20"/>
+            </padding>
+            <Button text="Odejít beze změny" onAction="#handleCancel"/>
+            <Button text="Uložit" onAction="#handleSave"/>
+        </HBox>
+    </bottom>
+</BorderPane>

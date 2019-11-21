@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller" fx:id="mainWindow">
     <top>
         <HBox>
             <MenuBar>
@@ -43,7 +43,9 @@
                             <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnStudentsTab"
                                        onAction="#listStudentsByClass">
                             </ChoiceBox>
-                            <Button text="nový žák"/>
+                            <Button text="nový žák" onAction="#newStudent"/>
+                            <Button text="upravit žáka"/>
+                            <Button text="smazat žáka"/>
                             <Button text="import CSV"/>
                             <Button text="export CSV"/>
                         </HBox>
