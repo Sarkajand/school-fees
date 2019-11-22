@@ -8,12 +8,12 @@
     <top>
         <HBox>
             <MenuBar>
-                <Menu text="something">
-                    <MenuItem text="nový školní rok"/>
+                <Menu text="menu">
+                    <MenuItem text="třídy" onAction="#showClasses"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="nevim"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="další možnosti"/>
+                    <MenuItem text="další možnosti?"/>
                 </Menu>
                 <Menu text="něco">
                     <MenuItem text="nevim"/>
@@ -52,6 +52,15 @@
                     </top>
                     <center>
                         <TableView fx:id="studentsTable">
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem text="upravit" onAction="#editStudent"/>
+                                        <SeparatorMenuItem/>
+                                        <MenuItem text="smazat" onAction="#deleteStudent"/>
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
                             <columns>
                                 <TableColumn prefWidth="120" text="třída">
                                     <cellValueFactory>

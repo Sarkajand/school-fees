@@ -12,13 +12,12 @@ public class DataSource {
 
     public static final String TABLE_CLASSES = "classes";
     public static final String COLUMN_CLASSES_ID = "_id";
-    public static final String COLUMN_CLASSES_CLASS_NAME = "class_name";
     public static final String COLUMN_CLASSES_STAGE = "stage";
-    public static final String COLUMN_CLASSES_STARTING_YEAR = "starting_year";
+    public static final String COLUMN_CLASSES_CLASS_NAME = "class_name";
     public static final int INDEX_CLASSES_ID = 1;
-    public static final int INDEX_CLASSES_NAME = 4;
-    public static final int INDEX_CLASSES_STAGE = 3;
-    public static final int INDEX_CLASSES_STARTING_YEAR = 2;
+    public static final int INDEX_CLASSES_STAGE = 2;
+    public static final int INDEX_CLASSES_NAME = 3;
+
 
     public static final String TABLE_STUDENTS = "students";
     public static final String COLUMN_STUDENTS_VS = "VS";
@@ -93,6 +92,10 @@ public class DataSource {
             "INSERT INTO " + TABLE_STUDENTS + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String DELETE_STUDENT =
             "DELETE FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
+    public static final String LIST_CLASSES_WITH_STAGE =
+            "SELECT " + COLUMN_CLASSES_CLASS_NAME + ", " + COLUMN_CLASSES_STAGE + " FROM " + TABLE_CLASSES;
+    public static final String INSERT_CLASS =
+            "INSERT INTO " + TABLE_CLASSES + " (" + COLUMN_CLASSES_STAGE + ", " + COLUMN_CLASSES_CLASS_NAME + ") VALUES (?, ?)";
 
 
     private static DataSource instance = new DataSource();
@@ -104,6 +107,8 @@ public class DataSource {
     private PreparedStatement findClassIdByClassName;
     private PreparedStatement insertStudent;
     private PreparedStatement deleteStudent;
+    private PreparedStatement listClassesWithStage;
+    private PreparedStatement insertClass;
 
     private DataSource() {
 
@@ -124,6 +129,8 @@ public class DataSource {
             findClassIdByClassName = conn.prepareStatement(FIND_CLASS_ID_BY_CLASS_NAME);
             insertStudent = conn.prepareStatement(INSERT_STUDENT);
             deleteStudent = conn.prepareStatement(DELETE_STUDENT);
+            listClassesWithStage = conn.prepareStatement(LIST_CLASSES_WITH_STAGE);
+            insertClass = conn.prepareStatement(INSERT_CLASS);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -150,6 +157,12 @@ public class DataSource {
             }
             if (deleteStudent != null) {
                 deleteStudent.close();
+            }
+            if (listClassesWithStage != null) {
+                listClassesWithStage.close();
+            }
+            if (insertClass != null) {
+                insertClass.close();
             }
             if (conn != null) {
                 conn.close();
@@ -242,6 +255,24 @@ public class DataSource {
         }
     }
 
+    public List<Classes> listClassesWithStage() {
+        try {
+            ResultSet results = listClassesWithStage.executeQuery();
+            List<Classes> classes = new ArrayList<>();
+            while (results.next()) {
+                Classes newClass = new Classes();
+                newClass.setClassName(results.getString(1));
+                newClass.setStage(results.getString(2));
+                classes.add(newClass);
+            }
+            return classes;
+        } catch (SQLException e) {
+            System.out.println("Query classes with stage failed: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public int findClassIdByClassName(String className) {
         try {
             findClassIdByClassName.setString(1, className);
@@ -294,7 +325,25 @@ public class DataSource {
             e.printStackTrace();
             return false;
         }
+    }
 
+    public boolean insertClass(Classes classes) {
+        try {
+            insertClass.setString(1, classes.getStage());
+            insertClass.setString(2, classes.getClassName());
+
+            int affectedRecords = insertClass.executeUpdate();
+
+            if (affectedRecords == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println("Inserting class failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

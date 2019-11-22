@@ -14,6 +14,7 @@ import sample.model.DataSource;
 import sample.model.Student;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 public class Controller {
@@ -98,7 +99,7 @@ public class Controller {
                     }
                 };
                 task.setOnSucceeded(e -> {
-                        listStudents();
+                    listStudents();
                 });
 
                 new Thread(task).start();
@@ -165,15 +166,45 @@ public class Controller {
             alert.setContentText("Musíte vybrat žáka");
             alert.showAndWait();
         } else {
-            Task<Boolean> task = new Task<Boolean>() {
-                @Override
-                protected Boolean call() throws Exception {
-                    return DataSource.getInstance().deleteStudent(student.getVS());
-                }
-            };
-            task.setOnSucceeded(e -> listStudents());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Smazat žáka");
+            alert.setContentText("Chcete smazat žáka: " + student.getLastName() + " " + student.getFirstName() +
+                    "? \n pro potvrzení stiskni ok, pro zrušení stiskni Cancel");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Task<Boolean> task = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return DataSource.getInstance().deleteStudent(student.getVS());
+                    }
+                };
+                task.setOnSucceeded(e -> listStudents());
 
-            new Thread(task).start();
+                new Thread(task).start();
+            }
         }
+    }
+
+    public void showClasses() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Controller.class.getResource("classes.fxml"));
+            BorderPane page = loader.load();
+
+            Stage classesStage = new Stage();
+            classesStage.setTitle("Nový žák");
+            classesStage.initModality(Modality.WINDOW_MODAL);
+            classesStage.initOwner(mainWindow.getScene().getWindow());
+            Scene scene = new Scene(page);
+            classesStage.setScene(scene);
+
+            ClassesController controller = loader.getController();
+
+            classesStage.show();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
