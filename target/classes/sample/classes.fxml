@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sample.ClassesController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <HBox prefHeight="50" alignment="CENTER_LEFT" spacing="15">
+            <padding>
+                <Insets left="20"/>
+            </padding>
+            <Button text="nová třída" onAction="#newClass"/>
+            <Button text="upravit třídu"/>
+            <Button text="smazat třídu"/>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="classesTableView">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem text="upravit"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem text="smazat"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+            <columns>
+                <TableColumn prefWidth="120" text="jméno třídy">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="className"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="120" text="ZŠ/MŠ">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="stage"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
