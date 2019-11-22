@@ -42,19 +42,4 @@ public class Main extends Application {
         super.stop();
         DataSource.getInstance().close();
     }
-
-//    @Override
-//    public void init() throws Exception {
-//        super.init();
-//        if (!DataSource.getInstance().open()) {
-//            System.out.println("Fatal Error: Couldn't connect database");
-//            Platform.exit();
-//        }
-//    }
-//
-//    @Override
-//    public void stop() throws Exception {
-//        super.stop();
-//        DataSource.getInstance().close();
-//    }
 }
