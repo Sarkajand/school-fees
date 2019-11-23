@@ -99,6 +99,8 @@ public class DataSource {
     public static final String EDIT_CLASS =
             "UPDATE " + TABLE_CLASSES + " SET " + COLUMN_CLASSES_STAGE + " = ?,  " + COLUMN_CLASSES_CLASS_NAME + " = ? WHERE " +
                     COLUMN_CLASSES_ID + " = ?";
+    public static final String QUERY_STUDENTS_BY_CLASS_ID =
+            "SELECT * FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_CLASS + " = ?";
 
 
     private static DataSource instance = new DataSource();
@@ -365,6 +367,11 @@ public class DataSource {
             return false;
         }
     }
+
+//    public boolean deleteClass (int classId) {
+//
+//
+//    }
 
 }
 
