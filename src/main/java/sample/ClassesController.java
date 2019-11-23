@@ -145,7 +145,7 @@ public class ClassesController {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Smazat třídu");
             alert.setContentText("Chcete smazat třídu: " + classes.getClassName() +
-                    "? \n smaže i všechny žáky třídy \n pro potvrzení stiskni ok, pro zrušení stiskni Cancel");
+                    "? \nSmaže i všechny žáky třídy \nPřed smazáním je vhodné udělat zálohu \nPro potvrzení stiskni OK, pro zrušení stiskni Cancel");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 int classId = DataSource.getInstance().findClassIdByClassName(classes.getClassName());

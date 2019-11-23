@@ -11,7 +11,7 @@
                 <Menu text="menu">
                     <MenuItem text="třídy" onAction="#showClasses"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="nevim"/>
+                    <MenuItem text="záloha databáze" onAction="#backupDatabase"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="další možnosti?"/>
                 </Menu>

@@ -210,4 +210,21 @@ public class Controller {
             System.out.println(e.getMessage());
         }
     }
+
+    public void backupDatabase() {
+        Task<Boolean> task = new Task<Boolean>() {
+            @Override
+            protected Boolean call() throws Exception {
+                return DataSource.getInstance().backupDatabase();
+            }
+        };
+        task.setOnSucceeded(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Záloha databáze");
+            alert.setContentText("Záloha databáze byla vytvořena");
+            alert.showAndWait();
+        });
+        new Thread(task).start();
+
+    }
 }

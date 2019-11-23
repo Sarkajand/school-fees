@@ -1,14 +1,15 @@
 package sample.model;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DataSource {
 
     public static final String DB_NAME = "schoolFees.db";
-    public static final String CONNECTION_STRING = "jdbc:sqlite:D:\\Java\\MyProjects2\\" + DB_NAME;
-
+    public static final String CONNECTION_STRING = "jdbc:sqlite:src\\main\\resources\\database\\" + DB_NAME;
 
     public static final String TABLE_CLASSES = "classes";
     public static final String COLUMN_CLASSES_ID = "_id";
@@ -397,7 +398,24 @@ public class DataSource {
             e.printStackTrace();
             return false;
         }
+    }
 
+    public boolean backupDatabase() {
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+            StringBuilder sb = new StringBuilder("backup to src\\main\\resources\\database\\backup\\zaloha-");
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            sb.append(formatter.format(date));
+            sb.append(".db");
+            connection.createStatement().executeUpdate(sb.toString());
+            connection.close();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Database backup failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
