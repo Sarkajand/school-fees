@@ -199,6 +199,7 @@ public class Controller {
             classesStage.setScene(scene);
 
             ClassesController controller = loader.getController();
+            controller.setStage(classesStage);
 
             classesStage.show();
 

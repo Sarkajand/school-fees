@@ -96,6 +96,9 @@ public class DataSource {
             "SELECT " + COLUMN_CLASSES_CLASS_NAME + ", " + COLUMN_CLASSES_STAGE + " FROM " + TABLE_CLASSES;
     public static final String INSERT_CLASS =
             "INSERT INTO " + TABLE_CLASSES + " (" + COLUMN_CLASSES_STAGE + ", " + COLUMN_CLASSES_CLASS_NAME + ") VALUES (?, ?)";
+    public static final String EDIT_CLASS =
+            "UPDATE " + TABLE_CLASSES + " SET " + COLUMN_CLASSES_STAGE + " = ?,  " + COLUMN_CLASSES_CLASS_NAME + " = ? WHERE " +
+                    COLUMN_CLASSES_ID + " = ?";
 
 
     private static DataSource instance = new DataSource();
@@ -109,6 +112,7 @@ public class DataSource {
     private PreparedStatement deleteStudent;
     private PreparedStatement listClassesWithStage;
     private PreparedStatement insertClass;
+    private PreparedStatement editClass;
 
     private DataSource() {
 
@@ -131,6 +135,7 @@ public class DataSource {
             deleteStudent = conn.prepareStatement(DELETE_STUDENT);
             listClassesWithStage = conn.prepareStatement(LIST_CLASSES_WITH_STAGE);
             insertClass = conn.prepareStatement(INSERT_CLASS);
+            editClass = conn.prepareStatement(EDIT_CLASS);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -163,6 +168,9 @@ public class DataSource {
             }
             if (insertClass != null) {
                 insertClass.close();
+            }
+            if (editClass != null) {
+                editClass.close();
             }
             if (conn != null) {
                 conn.close();
@@ -334,13 +342,25 @@ public class DataSource {
 
             int affectedRecords = insertClass.executeUpdate();
 
-            if (affectedRecords == 1) {
-                return true;
-            } else {
-                return false;
-            }
+            return affectedRecords == 1;
         } catch (SQLException e) {
-            System.out.println("Inserting class failed: " + e.getMessage());
+            System.out.println("Class inserting failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean editClass(int classId, Classes editedClass) {
+        try {
+            editClass.setString(1, editedClass.getStage());
+            editClass.setString(2, editedClass.getClassName());
+            editClass.setInt(3, classId);
+
+            int affectedRecords = editClass.executeUpdate();
+
+            return affectedRecords == 1;
+        } catch (SQLException e) {
+            System.out.println("Class edit failed: " + e.getMessage());
             e.printStackTrace();
             return false;
         }

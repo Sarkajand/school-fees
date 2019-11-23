@@ -16,7 +16,7 @@
                 <Insets left="20"/>
             </padding>
             <Button text="nová třída" onAction="#newClass"/>
-            <Button text="upravit třídu"/>
+            <Button text="upravit třídu" onAction="#editClass"/>
             <Button text="smazat třídu"/>
         </HBox>
     </top>
