@@ -17,7 +17,7 @@
             </padding>
             <Button text="nová třída" onAction="#newClass"/>
             <Button text="upravit třídu" onAction="#editClass"/>
-            <Button text="smazat třídu"/>
+            <Button text="smazat třídu" onAction="#deleteClass"/>
         </HBox>
     </top>
     <center>
@@ -25,9 +25,9 @@
             <contextMenu>
                 <ContextMenu>
                     <items>
-                        <MenuItem text="upravit"/>
+                        <MenuItem text="upravit" onAction="#editClass"/>
                         <SeparatorMenuItem/>
-                        <MenuItem text="smazat"/>
+                        <MenuItem text="smazat" onAction="#deleteClass"/>
                     </items>
                 </ContextMenu>
             </contextMenu>

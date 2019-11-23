@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -15,6 +16,7 @@ import sample.model.Classes;
 import sample.model.DataSource;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ClassesController {
 
@@ -140,6 +142,23 @@ public class ClassesController {
             alert.setContentText("Musíte vybrat třídu");
             alert.showAndWait();
         } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Smazat třídu");
+            alert.setContentText("Chcete smazat třídu: " + classes.getClassName() +
+                    "? \n smaže i všechny žáky třídy \n pro potvrzení stiskni ok, pro zrušení stiskni Cancel");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                int classId = DataSource.getInstance().findClassIdByClassName(classes.getClassName());
+                Task<Boolean> task = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return DataSource.getInstance().deleteClass(classId);
+                    }
+                };
+                task.setOnSucceeded(e -> listClasses());
+
+                new Thread(task).start();
+            }
 
         }
     }

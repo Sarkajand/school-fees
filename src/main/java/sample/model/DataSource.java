@@ -101,6 +101,8 @@ public class DataSource {
                     COLUMN_CLASSES_ID + " = ?";
     public static final String QUERY_STUDENTS_BY_CLASS_ID =
             "SELECT * FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_CLASS + " = ?";
+    public static final String DELETE_CLASS =
+            "DELETE FROM " + TABLE_CLASSES + " WHERE " + COLUMN_CLASSES_ID + " = ?";
 
 
     private static DataSource instance = new DataSource();
@@ -115,6 +117,8 @@ public class DataSource {
     private PreparedStatement listClassesWithStage;
     private PreparedStatement insertClass;
     private PreparedStatement editClass;
+    private PreparedStatement queryStudentsByClassId;
+    private PreparedStatement deleteClass;
 
     private DataSource() {
 
@@ -138,6 +142,8 @@ public class DataSource {
             listClassesWithStage = conn.prepareStatement(LIST_CLASSES_WITH_STAGE);
             insertClass = conn.prepareStatement(INSERT_CLASS);
             editClass = conn.prepareStatement(EDIT_CLASS);
+            queryStudentsByClassId = conn.prepareStatement(QUERY_STUDENTS_BY_CLASS_ID);
+            deleteClass = conn.prepareStatement(DELETE_CLASS);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -173,6 +179,12 @@ public class DataSource {
             }
             if (editClass != null) {
                 editClass.close();
+            }
+            if (queryStudentsByClassId != null) {
+                queryStudentsByClassId.close();
+            }
+            if (deleteClass != null) {
+                deleteClass.close();
             }
             if (conn != null) {
                 conn.close();
@@ -368,10 +380,25 @@ public class DataSource {
         }
     }
 
-//    public boolean deleteClass (int classId) {
-//
-//
-//    }
+    public boolean deleteClass(int classId) {
+        try {
+            queryStudentsByClassId.setInt(1, classId);
+            ResultSet results = queryStudentsByClassId.executeQuery();
+            while (results.next()) {
+                deleteStudent.setInt(1, results.getInt(INDEX_STUDENT_VS));
+            }
+            deleteClass.setInt(1, classId);
+
+            int affectedRecords = deleteClass.executeUpdate();
+            return affectedRecords == 1;
+
+        } catch (SQLException e) {
+            System.out.println("Deleting class failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 
 }
 

@@ -201,11 +201,13 @@ public class Controller {
             ClassesController controller = loader.getController();
             controller.setStage(classesStage);
 
-            classesStage.show();
+            classesStage.showAndWait();
+
+            setClassesChoiceBoxOnStudentsTab();
+            listStudents();
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
