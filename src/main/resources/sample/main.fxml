@@ -46,8 +46,6 @@
                             <Button text="nový žák" onAction="#newStudent"/>
                             <Button text="upravit žáka" onAction="#editStudent"/>
                             <Button text="smazat žáka" onAction="#deleteStudent"/>
-                            <Button text="import CSV"/>
-                            <Button text="export CSV"/>
                         </HBox>
                     </top>
                     <center>
@@ -112,6 +110,11 @@
                                         <PropertyValueFactory property="notes"/>
                                     </cellValueFactory>
                                 </TableColumn>
+                                <TableColumn prefWidth="200" text="poznámky k platbám">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="paymentNotes"/>
+                                    </cellValueFactory>
+                                </TableColumn>
                             </columns>
                         </TableView>
                     </center>
@@ -133,7 +136,6 @@
                             <columns>
                                 <TableColumn prefWidth="150" text="datum"/>
                                 <TableColumn prefWidth="150" text="číslo výpisu"/>
-                                <TableColumn prefWidth="150" text="název"/>
                             </columns>
                         </TableView>
                     </center>
@@ -149,18 +151,23 @@
                             <Button text="nová transakce hotově"/>
                             <Button text="upravit"/>
                             <Button text="smazat"/>
+                            <Label text="         Najít podle VS:"/>
+                            <TextField/>
+                            <Label text="        Najít podle příjmení:"/>
+                            <TextField/>
                         </HBox>
                     </top>
                     <center>
                         <TableView>
                             <columns>
                                 <TableColumn prefWidth="150" text="Datum"/>
+                                <TableColumn prefWidth="150" text="Třída"/>
                                 <TableColumn prefWidth="150" text="Variabilní symbol"/>
                                 <TableColumn prefWidth="150" text="Příjmení"/>
                                 <TableColumn prefWidth="150" text="Jméno"/>
                                 <TableColumn prefWidth="150" text="Částka"/>
                                 <TableColumn prefWidth="150" text="Způsob platby"/>
-                                <TableColumn prefWidth="300" text="poznámka"/>
+                                <TableColumn prefWidth="300" text="zpráva pro příjemce"/>
                             </columns>
                         </TableView>
                     </center>
@@ -189,6 +196,7 @@
                                 <TableColumn prefWidth="150" text="Dal"/>
                                 <TableColumn prefWidth="150" text="Přeplatek"/>
                                 <TableColumn prefWidth="150" text="Nedoplatek"/>
+                                <TableColumn prefWidth="150" text="poznámky k platbám"/>
                             </columns>
                         </TableView>
                     </center>

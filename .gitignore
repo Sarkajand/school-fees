@@ -1,4 +1,4 @@
 *.iml
 /pom.txt
 /dependency-reduced-pom.xml
-/database/backup/
+/src/main/resources/database/backup/

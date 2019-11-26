@@ -41,6 +41,9 @@ public class DataSource {
     public static final int INDEX_STUDENT_MOTHER_EMAIL = 8;
     public static final int INDEX_STUDENT_FATHER_EMAIL = 9;
     public static final int INDEX_STUDENT_NOTES = 10;
+    public static final int INDEX_STUDENT_PAYMENT_NOTES = 11;
+    public static final int INDEX_STUDENT_SHOULD_PAY = 12;
+    public static final int INDEX_STUDENT_PAYED = 13;
 
     public static final String TABLE_BANK_STATEMENT = "bank_statement";
     public static final String COLUMN_BANK_ID = "_id";
@@ -78,6 +81,9 @@ public class DataSource {
     public static final int INDEX_STUDENT_LIST_FATHER_EMAIL = 9;
     public static final int INDEX_STUDENT_LIST_NOTES = 10;
     public static final int INDEX_STUDENT_LIST_STAGE = 11;
+    public static final int INDEX_STUDENT_LIST_PAYMENT_NOTES = 12;
+    public static final int INDEX_STUDENT_LIST_SHOULD_PAY = 13;
+    public static final int INDEX_STUDENT_LIST_PAYED = 14;
 
     public static final String QUERY_STUDENTS =
             "SELECT * FROM " + VIEW_STUDENT_LIST;
@@ -90,7 +96,7 @@ public class DataSource {
     public static final String FIND_CLASS_ID_BY_CLASS_NAME =
             "SELECT " + COLUMN_CLASSES_ID + " FROM " + TABLE_CLASSES + " WHERE " + COLUMN_CLASSES_CLASS_NAME + " = ?";
     public static final String INSERT_STUDENT =
-            "INSERT INTO " + TABLE_STUDENTS + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO " + TABLE_STUDENTS + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String DELETE_STUDENT =
             "DELETE FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
     public static final String LIST_CLASSES_WITH_STAGE =
@@ -104,6 +110,10 @@ public class DataSource {
             "SELECT * FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_CLASS + " = ?";
     public static final String DELETE_CLASS =
             "DELETE FROM " + TABLE_CLASSES + " WHERE " + COLUMN_CLASSES_ID + " = ?";
+    public static final String INSERT_BANK_STATEMENT =
+            "INSERT INTO " + TABLE_BANK_STATEMENT + " VALUES (?, ?)";
+    public static final String FIND_STUDENT_BY_VS =
+            "SELECT * FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
 
 
     private static DataSource instance = new DataSource();
@@ -120,6 +130,8 @@ public class DataSource {
     private PreparedStatement editClass;
     private PreparedStatement queryStudentsByClassId;
     private PreparedStatement deleteClass;
+    private PreparedStatement insertBankStatement;
+    private PreparedStatement findStudentByVS;
 
     private DataSource() {
 
@@ -145,6 +157,8 @@ public class DataSource {
             editClass = conn.prepareStatement(EDIT_CLASS);
             queryStudentsByClassId = conn.prepareStatement(QUERY_STUDENTS_BY_CLASS_ID);
             deleteClass = conn.prepareStatement(DELETE_CLASS);
+            insertBankStatement = conn.prepareStatement(INSERT_BANK_STATEMENT);
+            findStudentByVS = conn.prepareStatement(FIND_STUDENT_BY_VS);
             return true;
         } catch (SQLException e) {
             System.out.println("Couldn't connect to database: " + e.getMessage());
@@ -187,6 +201,12 @@ public class DataSource {
             if (deleteClass != null) {
                 deleteClass.close();
             }
+            if (insertBankStatement != null) {
+                insertBankStatement.close();
+            }
+            if (findStudentByVS != null) {
+                findStudentByVS.close();
+            }
             if (conn != null) {
                 conn.close();
             }
@@ -215,6 +235,9 @@ public class DataSource {
                     student.setFatherEmail(results.getString(INDEX_STUDENT_LIST_FATHER_EMAIL));
                     student.setNotes(results.getString(INDEX_STUDENT_LIST_NOTES));
                     student.setSchoolStage(results.getString(INDEX_STUDENT_LIST_STAGE));
+                    student.setPaymentNotes(results.getString(INDEX_STUDENT_LIST_PAYMENT_NOTES));
+                    student.setShouldPay(results.getDouble(INDEX_STUDENT_LIST_SHOULD_PAY));
+                    student.setPayed(results.getDouble(INDEX_STUDENT_LIST_PAYED));
 
                     students.add(student);
                 }
@@ -320,6 +343,9 @@ public class DataSource {
             insertStudent.setString(INDEX_STUDENT_MOTHER_EMAIL, student.getMotherEmail());
             insertStudent.setString(INDEX_STUDENT_FATHER_EMAIL, student.getFatherEmail());
             insertStudent.setString(INDEX_STUDENT_NOTES, student.getNotes());
+            insertStudent.setString(INDEX_STUDENT_PAYMENT_NOTES, student.getPaymentNotes());
+            insertStudent.setDouble(INDEX_STUDENT_SHOULD_PAY, student.getShouldPay());
+            insertStudent.setDouble(INDEX_STUDENT_PAYED, student.getPayed());
 
             int affectedRecords = insertStudent.executeUpdate();
             if (affectedRecords == 1) {
@@ -405,7 +431,7 @@ public class DataSource {
             Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:");
             StringBuilder sb = new StringBuilder("backup to src\\main\\resources\\database\\backup\\zaloha-");
             Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm");
             sb.append(formatter.format(date));
             sb.append(".db");
             connection.createStatement().executeUpdate(sb.toString());
@@ -417,6 +443,35 @@ public class DataSource {
             return false;
         }
     }
+
+    public boolean insertBankStatement(BankStatement bankStatement) {
+        try {
+            insertBankStatement.setInt(1, bankStatement.getId());
+            insertBankStatement.setString(2, bankStatement.getDate());
+            List<Transaction> transactions = bankStatement.getTransactions();
+            for (Transaction transaction : transactions) {
+                int VS = transaction.getVS();
+                findStudentByVS.setInt(1, VS);
+                ResultSet results = findStudentByVS.executeQuery();
+                if (results != null) {
+//                    todo
+//                    zavolat metodu vložení nové transakce
+                }
+            }
+
+
+            int affectedRecords = insertBankStatement.executeUpdate();
+
+            return affectedRecords == 1;
+        } catch (SQLException e) {
+            System.out.println("Inserting bank statemnet failed: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+
 
 }
 

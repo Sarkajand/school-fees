@@ -17,6 +17,10 @@ public class Student {
     private SimpleStringProperty motherEmail;
     private SimpleStringProperty fatherEmail;
     private SimpleStringProperty notes;
+    private SimpleStringProperty paymentNotes;
+    private SimpleDoubleProperty shouldPay;
+    private SimpleDoubleProperty payed;
+
 
     public Student() {
         this.schoolStage = new SimpleStringProperty();
@@ -30,6 +34,9 @@ public class Student {
         this.motherEmail = new SimpleStringProperty();
         this.fatherEmail = new SimpleStringProperty();
         this.notes = new SimpleStringProperty();
+        this.paymentNotes = new SimpleStringProperty();
+        this.shouldPay = new SimpleDoubleProperty();
+        this.payed = new SimpleDoubleProperty();
     }
 
     public String getSchoolStage() {
@@ -118,5 +125,29 @@ public class Student {
 
     public void setNotes(String notes) {
         this.notes.set(notes);
+    }
+
+    public String getPaymentNotes() {
+        return paymentNotes.get();
+    }
+
+    public void setPaymentNotes(String paymentNotes) {
+        this.paymentNotes.set(paymentNotes);
+    }
+
+    public double getShouldPay() {
+        return shouldPay.get();
+    }
+
+    public void setShouldPay(double shouldPay) {
+        this.shouldPay.set(shouldPay);
+    }
+
+    public double getPayed() {
+        return payed.get();
+    }
+
+    public void setPayed(double payed) {
+        this.payed.set(payed);
     }
 }

@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import sample.model.DataSource;
@@ -30,7 +31,9 @@ public class EditStudentController {
     @FXML
     private TextField fatherEmailField;
     @FXML
-    private TextField notesField;
+    private TextArea notesArea;
+    @FXML
+    private TextArea paymentNotesArea;
 
     private boolean saveClicked = false;
     private Stage studentStage;
@@ -56,7 +59,8 @@ public class EditStudentController {
         fatherPhoneField.setText(student.getFatherPhone());
         motherEmailField.setText(student.getMotherEmail());
         fatherEmailField.setText(student.getFatherEmail());
-        notesField.setText(student.getNotes());
+        notesArea.setText(student.getNotes());
+        paymentNotesArea.setText(student.getPaymentNotes());
         editStudentClassesChoiceBox.setValue(student.getClassName());
     }
 
@@ -110,7 +114,8 @@ public class EditStudentController {
             student.setFatherPhone(fatherPhoneField.getText());
             student.setMotherEmail(motherEmailField.getText());
             student.setFatherEmail(fatherEmailField.getText());
-            student.setNotes(notesField.getText());
+            student.setNotes(notesArea.getText());
+            student.setPaymentNotes(paymentNotesArea.getText());
             student.setClassName((String) editStudentClassesChoiceBox.getSelectionModel().getSelectedItem());
 
             studentStage.close();
