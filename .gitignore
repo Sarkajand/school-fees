@@ -2,3 +2,5 @@
 /pom.txt
 /dependency-reduced-pom.xml
 /src/main/resources/database/backup/
+.idea/
+target/
