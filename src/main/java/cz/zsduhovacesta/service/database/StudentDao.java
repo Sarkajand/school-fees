@@ -72,7 +72,7 @@ public class StudentDao {
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + COLUMN_STUDENT_LIST_STAGE + " = ?";
     public static final String QUERY_STUDENTS_BY_CLASS =
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + COLUMN_STUDENTS_LIST_CLASS + " = ?";
-//    todo - zatim nemam metodu pro hledání podle vs, nevim jestli jí budu potřebovat - případně nezapomenout smazat
+    //    todo - zatim nemam metodu pro hledání podle vs, nevim jestli jí budu potřebovat - případně nezapomenout smazat
     public static final String QUERY_STUDENT_BY_VS =
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
     public static final String INSERT_STUDENT =
@@ -98,7 +98,7 @@ public class StudentDao {
             insertStudent = connection.prepareStatement(INSERT_STUDENT);
             deleteStudent = connection.prepareStatement(DELETE_STUDENT);
         } catch (SQLException e) {
-            System.out.println("Couldn't create prepared statement for StudentDao");
+            logger.error("Couldn't create prepared statement for StudentDao", e);
             throw e;
         }
     }
@@ -124,7 +124,7 @@ public class StudentDao {
                 deleteStudent.close();
             }
         } catch (SQLException e) {
-            System.out.println("Couldn't close prepared statement in StudentDao: " + e.getMessage());
+            logger.error("Couldn't close prepared statement in StudentDao: ", e);
             throw e;
         }
     }
@@ -138,7 +138,7 @@ public class StudentDao {
                 return setStudents(results);
             }
         } catch (SQLException e) {
-            System.out.println("Query all students failed: " + e.getMessage());
+            logger.warn("Query all students failed: " + e.getMessage());
             return Collections.emptyList();
         }
     }
@@ -182,7 +182,7 @@ public class StudentDao {
                 return setStudents(results);
             }
         } catch (SQLException e) {
-            System.out.println("Query students by school stage failed: " + e.getMessage());
+            logger.warn("Query students by school stage failed: ", e);
             return Collections.emptyList();
         }
     }
@@ -197,7 +197,7 @@ public class StudentDao {
                 return setStudents(results);
             }
         } catch (SQLException e) {
-            System.out.println("Query students by class failed: " + e.getMessage());
+            logger.warn("Query students by class failed: ", e);
             return Collections.emptyList();
         }
     }

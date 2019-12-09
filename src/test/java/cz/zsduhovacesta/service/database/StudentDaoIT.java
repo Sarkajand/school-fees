@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class StudentDaoTest {
+class StudentDaoIT {
 
     private static final String DB_NAME = "schoolFees.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:src\\test\\resources\\database\\" + DB_NAME;

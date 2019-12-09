@@ -1,6 +1,8 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.BankStatement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.sql.Connection;
@@ -12,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class BankStatementDao {
+
+    final Logger logger = LoggerFactory.getLogger(BankStatementDao.class);
 
     public static final String TABLE_BANK_STATEMENT = "bank_statement";
     public static final String COLUMN_BANK_ID = "_id";
@@ -28,18 +32,18 @@ public class BankStatementDao {
         try {
             queryBankStatements = connection.prepareStatement(QUERY_BANK_STATEMENTS);
         } catch (SQLException e) {
-            System.out.println("Couldn't create prepared statement for StudentDao");
+            logger.error("Couldn't create prepared statement for StudentDao", e);
             throw e;
         }
     }
 
-    public void close() throws SQLException{
+    public void close() throws SQLException {
         try {
             if (queryBankStatements != null) {
                 queryBankStatements.close();
             }
         } catch (SQLException e) {
-            System.out.println("Couldn't close prepared statement in StudentDao: " + e.getMessage());
+            logger.error("Couldn't close prepared statement in StudentDao: ", e);
             throw e;
         }
     }
@@ -49,14 +53,13 @@ public class BankStatementDao {
             ResultSet results = queryBankStatements.executeQuery();
             return setBankStatements(results);
         } catch (SQLException e) {
-            System.out.println("Query bank statements failed: " + e.getMessage());
-            e.printStackTrace();
+            logger.warn("Query bank statements failed: ", e);
             return Collections.emptyList();
         }
     }
 
     private List<BankStatement> setBankStatements(ResultSet results) throws SQLException {
-        List <BankStatement> bankStatements = new ArrayList<>();
+        List<BankStatement> bankStatements = new ArrayList<>();
         while (results.next()) {
             BankStatement bankStatement = new BankStatement();
             bankStatement.setId(results.getInt(INDEX_BANK_ID));

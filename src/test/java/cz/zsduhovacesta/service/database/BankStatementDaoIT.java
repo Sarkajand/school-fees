@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BankStatementDaoTest {
+class BankStatementDaoIT {
 
     private static final String DB_NAME = "schoolFees.db";
     private static final String CONNECTION_STRING = "jdbc:sqlite:src\\test\\resources\\database\\" + DB_NAME;

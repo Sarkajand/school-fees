@@ -1,6 +1,8 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class TransactionDao {
+
+    final Logger logger = LoggerFactory.getLogger(TransactionDao.class);
+
     public static final String TABLE_TRANSACTIONS = "transactions";
     public static final String COLUMN_TRANSACTIONS_ID = "_id";
     public static final String COLUMN_TRANSACTIONS_BANK_STATEMENT = "bank_statement";
@@ -42,22 +47,22 @@ public class TransactionDao {
 
     private PreparedStatement queryAllTransactions;
 
-    TransactionDao (Connection connection) throws SQLException {
+    TransactionDao(Connection connection) throws SQLException {
         try {
             queryAllTransactions = connection.prepareStatement(QUERY_ALL_TRANSACTIONS);
         } catch (SQLException e) {
-            System.out.println("Couldn't create prepared statement for StudentDao");
+            logger.error("Couldn't create prepared statement for StudentDao", e);
             throw e;
         }
     }
 
     public void close() throws SQLException {
-        try{
+        try {
             if (queryAllTransactions != null) {
                 queryAllTransactions.close();
             }
         } catch (SQLException e) {
-            System.out.println("Couldn't close prepared statement in TransactionDao: " + e.getMessage());
+            logger.error("Couldn't close prepared statement in TransactionDao: ", e);
             throw e;
         }
     }
@@ -67,16 +72,16 @@ public class TransactionDao {
             ResultSet results = queryAllTransactions.executeQuery();
             if (results == null) {
                 return Collections.emptyList();
-            }else {
+            } else {
                 return setTransactions(results);
             }
         } catch (SQLException e) {
-            System.out.println("Query all transactions failed: " + e.getMessage());
+            logger.warn("Query all transactions failed: ", e);
             return Collections.emptyList();
         }
     }
 
-    private List<Transaction> setTransactions (ResultSet results) throws SQLException {
+    private List<Transaction> setTransactions(ResultSet results) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
         while (results.next()) {
             Transaction transaction = setTransaction(results);
@@ -85,7 +90,7 @@ public class TransactionDao {
         return transactions;
     }
 
-    private Transaction setTransaction (ResultSet results) throws SQLException {
+    private Transaction setTransaction(ResultSet results) throws SQLException {
         Transaction transaction = new Transaction();
         transaction.setDate(results.getString(INDEX_TRANSACTIONS_LIST_DATE));
         transaction.setClassName(results.getString(INDEX_TRANSACTIONS_LIST_CLASS_NAME));

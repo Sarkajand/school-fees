@@ -1,6 +1,8 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.Classes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ClassesDao {
+
+    final Logger logger = LoggerFactory.getLogger(ClassesDao.class);
 
     public static final String TABLE_CLASSES = "classes";
     public static final String COLUMN_CLASSES_ID = "_id";
@@ -42,7 +46,7 @@ public class ClassesDao {
             editClass = connection.prepareStatement(EDIT_CLASS);
             deleteClass = connection.prepareStatement(DELETE_CLASS);
         } catch (SQLException e) {
-            System.out.println("Couldn't create prepared statement for ClassesDao");
+            logger.error("Couldn't create prepared statement for ClassesDao", e);
             throw e;
         }
     }
@@ -62,7 +66,7 @@ public class ClassesDao {
                 deleteClass.close();
             }
         } catch (SQLException e) {
-            System.out.println("Couldn't close prepared statement in StudentDao: " + e.getMessage());
+            logger.error("Couldn't close prepared statement in StudentDao: ", e);
             throw e;
         }
     }
@@ -76,8 +80,7 @@ public class ClassesDao {
             }
             return classesNames;
         } catch (SQLException e) {
-            System.out.println("Query classes failed: " + e.getMessage());
-            e.printStackTrace();
+            logger.warn("Query classes failed: ", e);
             return Collections.emptyList();
         }
     }
@@ -92,8 +95,7 @@ public class ClassesDao {
             }
             return classes;
         } catch (SQLException e) {
-            System.out.println("Query classes with stage failed: " + e.getMessage());
-            e.printStackTrace();
+            logger.warn("Query classes with stage failed: ", e);
             return Collections.emptyList();
         }
     }
@@ -127,7 +129,7 @@ public class ClassesDao {
         }
     }
 
-    public void deleteClass (Classes classToDelete) throws Exception {
+    public void deleteClass(Classes classToDelete) throws Exception {
         deleteClass.setInt(1, classToDelete.getClassId());
 
         int affectedRecords = deleteClass.executeUpdate();

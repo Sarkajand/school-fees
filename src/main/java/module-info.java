@@ -5,7 +5,8 @@ module schoolFees {
     requires java.sql;
     requires java.base;
     requires commons.csv;
-    requires org.slf4j;
+    requires slf4j.api;
+
 
     opens cz.zsduhovacesta;
     opens cz.zsduhovacesta.controller;
