@@ -21,11 +21,11 @@ public class ClassDialogController {
         this.editClassStage = stage;
     }
 
-    public boolean isSaveClicked() {
+    boolean isSaveClicked() {
         return saveClicked;
     }
 
-    public void setFields(Classes classes) {
+    void setFields(Classes classes) {
         classNameTextField.setText(classes.getClassName());
         stageChoiceBox.setValue(classes.getStage());
     }
@@ -33,7 +33,7 @@ public class ClassDialogController {
     private boolean isInputValid() {
         String errorMessage = "";
         if (!classNameTextField.getText().matches(".+")) {
-            errorMessage += "Neplatné jméno třídy\n";
+            errorMessage += "Musíte napsat jméno třídy\n";
         }
         if (stageChoiceBox.getSelectionModel().getSelectedItem() == null) {
             errorMessage += "Musíte vybrat stupeň\n";

@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class ClassesController {
@@ -31,29 +32,14 @@ public class ClassesController {
         this.classStage = classStage;
     }
 
-    public void listClasses() {
+    private void listClasses() {
         ObservableList<Classes> classes = FXCollections.observableList(DaoManager.getInstance().listAllClasses());
         classesTableView.itemsProperty().set(classes);
     }
 
     public void newClass() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Controller.class.getResource("classDialog.fxml"));
-            BorderPane page = loader.load();
-
-            Stage editClassStage = new Stage();
-            editClassStage.setTitle("Nová třída");
-            editClassStage.initModality(Modality.WINDOW_MODAL);
-            editClassStage.initOwner(classStage);
-            Scene scene = new Scene(page);
-            editClassStage.setScene(scene);
-
-            ClassDialogController controller = loader.getController();
-            controller.setStage(editClassStage);
-
-            editClassStage.showAndWait();
-
+            ClassDialogController controller = setClassDialogAndGetController("nová třída", null);
             if (controller.isSaveClicked()) {
                 Classes newClass = controller.handleSave();
                 DaoManager.getInstance().insertClass(newClass);
@@ -62,6 +48,26 @@ public class ClassesController {
         } catch (Exception e ) {
             showAlert("Chyba", "Nepodařilo se vložit třídu");
         }
+    }
+    private ClassDialogController setClassDialogAndGetController(String title, Classes classes) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Controller.class.getResource("classDialog.fxml"));
+        BorderPane page = loader.load();
+
+        Stage classDialogStage = new Stage();
+        classDialogStage.setTitle(title);
+        classDialogStage.initModality(Modality.WINDOW_MODAL);
+        classDialogStage.initOwner(classStage);
+        Scene scene = new Scene(page);
+        classDialogStage.setScene(scene);
+
+        ClassDialogController controller = loader.getController();
+        controller.setStage(classDialogStage);
+        if (classes != null) {
+            controller.setFields(classes);
+        }
+        classDialogStage.showAndWait();
+        return controller;
     }
 
     private void showAlert(String title, String contentText) {
@@ -72,31 +78,13 @@ public class ClassesController {
     }
 
     public void editClass() {
-        final Classes classes = classesTableView.getSelectionModel().getSelectedItem();
-
-        if (classes == null) {
+        final Classes classToEdit = classesTableView.getSelectionModel().getSelectedItem();
+        if (classToEdit == null) {
             showAlert("Chyba, není vybraná třída", "Musíte vybrat třídu");
         } else {
             try {
-                int classId = DaoManager.getInstance().queryClassIdByClassName(classes.getClassName());
-
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(Controller.class.getResource("classDialog.fxml"));
-                BorderPane page = loader.load();
-
-                Stage editClassStage = new Stage();
-                editClassStage.setTitle("Upravit třídu");
-                editClassStage.initModality(Modality.WINDOW_MODAL);
-                editClassStage.initOwner(classStage);
-                Scene scene = new Scene(page);
-                editClassStage.setScene(scene);
-
-                ClassDialogController controller = loader.getController();
-                controller.setStage(editClassStage);
-                controller.setFields(classes);
-
-                editClassStage.showAndWait();
-
+                int classId = classToEdit.getClassId();
+                ClassDialogController controller = setClassDialogAndGetController("Upravit třídu", classToEdit);
                 if (controller.isSaveClicked()) {
                     Classes editedClass = controller.handleSave();
                     editedClass.setClassId(classId);
@@ -111,14 +99,14 @@ public class ClassesController {
 
     public void deleteClass() {
         final Classes classToDelete = classesTableView.getSelectionModel().getSelectedItem();
-
         if (classToDelete == null) {
             showAlert("Chyba, není vybraná třída", "Musíte vybrat třídu");
         } else {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Smazat třídu");
-            alert.setContentText("Chcete smazat třídu: " + classToDelete.getClassName() +
-                    "? \nSmaže i všechny žáky třídy \nPřed smazáním je vhodné udělat zálohu \nPro potvrzení stiskni OK, pro zrušení stiskni Cancel");
+            alert.setContentText("Chcete smazat třídu: " + classToDelete.getClassName() + "? " +
+                    "\nSmaže i všechny žáky třídy \nPřed smazáním je vhodné udělat zálohu " +
+                    "\nPro potvrzení stiskni OK, pro zrušení stiskni Cancel");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
