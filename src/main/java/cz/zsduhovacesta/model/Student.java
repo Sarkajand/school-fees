@@ -10,6 +10,7 @@ public class Student {
 
     private SimpleStringProperty schoolStage;
     private SimpleStringProperty className;
+    private SimpleIntegerProperty classId;
     private SimpleStringProperty lastName;
     private SimpleStringProperty firstName;
     private SimpleDoubleProperty fees;
@@ -28,6 +29,7 @@ public class Student {
     public Student() {
         this.schoolStage = new SimpleStringProperty();
         this.className = new SimpleStringProperty();
+        this.classId = new SimpleIntegerProperty();
         this.lastName = new SimpleStringProperty();
         this.firstName = new SimpleStringProperty();
         this.fees = new SimpleDoubleProperty();
@@ -57,6 +59,14 @@ public class Student {
 
     public void setClassName(String className) {
         this.className.set(className);
+    }
+
+    public int getClassId () {
+        return this.classId.get();
+    }
+
+    public void setClassId (int classId) {
+        this.classId.set(classId);
     }
 
     public String getLastName() {
@@ -170,6 +180,7 @@ public class Student {
         Student student = (Student) o;
         return Objects.equals(getSchoolStage(), student.getSchoolStage()) &&
                 Objects.equals(getClassName(), student.getClassName()) &&
+                Objects.equals(getClassId(), student.getClassId()) &&
                 Objects.equals(getLastName(), student.getLastName()) &&
                 Objects.equals(getFirstName(), student.getFirstName()) &&
                 Objects.equals(getFees(), student.getFees()) &&
@@ -187,6 +198,6 @@ public class Student {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSchoolStage(), getClassName(), getLastName(), getFirstName(), getFees(), getVS(), getMotherPhone(), getFatherPhone(), getMotherEmail(), getFatherEmail(), getNotes(), getPaymentNotes(), getShouldPay(), getPayed(), getSummaryLastYear());
+        return Objects.hash(getSchoolStage(), getClassName(), getClassId(), getLastName(), getFirstName(), getFees(), getVS(), getMotherPhone(), getFatherPhone(), getMotherEmail(), getFatherEmail(), getNotes(), getPaymentNotes(), getShouldPay(), getPayed(), getSummaryLastYear());
     }
 }

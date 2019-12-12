@@ -73,6 +73,7 @@ class StudentDaoIT {
 
     private Student firstStudentInDatabase() {
         Student student = new Student();
+        student.setClassId(2);
         student.setVS(254325);
         student.setClassName("PODMOŘSKÝ SVĚT");
         student.setLastName("Novák");
@@ -120,7 +121,7 @@ class StudentDaoIT {
         Student studentToInsert = firstStudentInDatabase();
         studentToInsert.setVS(111);
         try {
-            studentDao.insertStudent(studentToInsert, 2);
+            studentDao.insertStudent(studentToInsert);
             Student insertedStudent = getStudentFromDatabase();
             assert studentToInsert.equals(insertedStudent);
         } catch (Exception e) {
@@ -132,7 +133,7 @@ class StudentDaoIT {
     void insertExistingStudent() {
         Student existingStudent = firstStudentInDatabase();
         try {
-            studentDao.insertStudent(existingStudent, 2);
+            studentDao.insertStudent(existingStudent);
             fail("Should throw exception");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -147,8 +148,9 @@ class StudentDaoIT {
         studentToInsert.setFirstName("firstName");
         studentToInsert.setSchoolStage("MŠ");
         studentToInsert.setClassName("POHÁDKA");
+        studentToInsert.setClassId(1);
         try {
-            studentDao.insertStudent(studentToInsert, 1);
+            studentDao.insertStudent(studentToInsert);
             Student insertedStudent = getStudentFromDatabase();
             assert studentToInsert.equals(insertedStudent);
         } catch (Exception e) {
@@ -163,20 +165,21 @@ class StudentDaoIT {
             Student student = new Student();
             while (results.next()) {
                 student.setClassName(results.getString(1));
-                student.setLastName(results.getString(2));
-                student.setFirstName(results.getString(3));
-                student.setFees(results.getDouble(4));
-                student.setVS(results.getInt(5));
-                student.setMotherPhone(results.getString(6));
-                student.setFatherPhone(results.getString(7));
-                student.setMotherEmail(results.getString(8));
-                student.setFatherEmail(results.getString(9));
-                student.setNotes(results.getString(10));
-                student.setSchoolStage(results.getString(11));
-                student.setPaymentNotes(results.getString(12));
-                student.setShouldPay(results.getDouble(13));
-                student.setPayed(results.getDouble(14));
-                student.setSummaryLastYear(results.getDouble(15));
+                student.setClassId(results.getInt(2));
+                student.setLastName(results.getString(3));
+                student.setFirstName(results.getString(4));
+                student.setFees(results.getDouble(5));
+                student.setVS(results.getInt(6));
+                student.setMotherPhone(results.getString(7));
+                student.setFatherPhone(results.getString(8));
+                student.setMotherEmail(results.getString(9));
+                student.setFatherEmail(results.getString(10));
+                student.setNotes(results.getString(11));
+                student.setSchoolStage(results.getString(12));
+                student.setPaymentNotes(results.getString(13));
+                student.setShouldPay(results.getDouble(14));
+                student.setPayed(results.getDouble(15));
+                student.setSummaryLastYear(results.getDouble(16));
             }
             return student;
         } catch (SQLException e) {
@@ -196,7 +199,7 @@ class StudentDaoIT {
             studentDao.deleteStudent(vs);
             students = studentDao.queryAllStudents();
             assertNotEquals(students.get(0), studentToDelete);
-            studentDao.insertStudent(studentToDelete, 2);
+            studentDao.insertStudent(studentToDelete);
             students = studentDao.queryAllStudents();
             assertEquals(students.get(0), studentToDelete);
         } catch (Exception e) {
@@ -212,10 +215,11 @@ class StudentDaoIT {
         studentToDelete.setFirstName("firstName");
         studentToDelete.setSchoolStage("MŠ");
         studentToDelete.setClassName("POHÁDKA");
+        studentToDelete.setClassId(1);
         try {
             List<Student> students = studentDao.queryAllStudents();
             int sizeBeforeInsert = students.size();
-            studentDao.insertStudent(studentToDelete, 1);
+            studentDao.insertStudent(studentToDelete);
             students = studentDao.queryAllStudents();
             int sizeAfterInsert = students.size();
             assertEquals(--sizeAfterInsert, sizeBeforeInsert);
@@ -233,8 +237,8 @@ class StudentDaoIT {
         try {
             studentDao.deleteStudent(0);
             fail();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception ignored) {
+
         }
     }
 }

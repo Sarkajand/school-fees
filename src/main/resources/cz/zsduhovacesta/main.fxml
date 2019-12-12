@@ -9,9 +9,9 @@
         <HBox>
             <MenuBar>
                 <Menu text="menu">
-                    <MenuItem text="třídy" onAction="#showClasses"/>
+                    <MenuItem text="třídy"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="záloha databáze" onAction="#backupDatabase"/>
+                    <MenuItem text="záloha databáze"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="další možnosti?"/>
                 </Menu>
@@ -36,13 +36,13 @@
                                 <ToggleGroup fx:id="schoolStageToggleGroup"/>
                             </fx:define>
                             <RadioButton text="všichni" toggleGroup="$schoolStageToggleGroup" selected="true"
-                                         onAction="#listStudents"/>
-                            <RadioButton text="ZŠ" toggleGroup="$schoolStageToggleGroup" onAction="#listStudents"/>
-                            <RadioButton text="MŠ" toggleGroup="$schoolStageToggleGroup" onAction="#listStudents"/>
+                                        fx:id="allStudentsRadioButton" onAction="#listStudentsBySchoolStage"/>
+                            <RadioButton text="ZŠ" toggleGroup="$schoolStageToggleGroup"
+                                         fx:id="zsRadioButton" onAction="#listStudentsBySchoolStage"/>
+                            <RadioButton text="MŠ" toggleGroup="$schoolStageToggleGroup"
+                                         onAction="#listStudentsBySchoolStage"/>
                             <Label text="třídy:"/>
-                            <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnStudentsTab"
-                                       onAction="#listStudentsByClass">
-                            </ChoiceBox>
+                            <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnStudentsTab" onAction="#listStudentsByClass"/>
                             <Button text="nový žák" onAction="#newStudent"/>
                             <Button text="upravit žáka" onAction="#editStudent"/>
                             <Button text="smazat žáka" onAction="#deleteStudent"/>

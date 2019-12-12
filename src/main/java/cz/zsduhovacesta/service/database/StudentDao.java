@@ -154,21 +154,22 @@ public class StudentDao {
 
     private Student setStudent(ResultSet results) throws SQLException {
         Student student = new Student();
-        student.setClassName(results.getString(INDEX_STUDENT_LIST_CLASS_NAME));
-        student.setLastName(results.getString(INDEX_STUDENT_LIST_LAST_NAME));
-        student.setFirstName(results.getString(INDEX_STUDENT_LIST_FIRST_NAME));
-        student.setFees(results.getDouble(INDEX_STUDENT_LIST_FEES));
-        student.setVS(results.getInt(INDEX_STUDENT_LIST_VS));
-        student.setMotherPhone(results.getString(INDEX_STUDENT_LIST_MOTHER_PHONE));
-        student.setFatherPhone(results.getString(INDEX_STUDENT_LIST_FATHER_PHONE));
-        student.setMotherEmail(results.getString(INDEX_STUDENT_LIST_MOTHER_EMAIL));
-        student.setFatherEmail(results.getString(INDEX_STUDENT_LIST_FATHER_EMAIL));
-        student.setNotes(results.getString(INDEX_STUDENT_LIST_NOTES));
-        student.setSchoolStage(results.getString(INDEX_STUDENT_LIST_STAGE));
-        student.setPaymentNotes(results.getString(INDEX_STUDENT_LIST_PAYMENT_NOTES));
-        student.setShouldPay(results.getDouble(INDEX_STUDENT_LIST_SHOULD_PAY));
-        student.setPayed(results.getDouble(INDEX_STUDENT_LIST_PAYED));
-        student.setSummaryLastYear(results.getDouble(INDEX_STUDENT_LIST_SUMMARY_LAST_YEAR));
+        student.setClassName(results.getString(1));
+        student.setClassId(results.getInt(2));
+        student.setLastName(results.getString(3));
+        student.setFirstName(results.getString(4));
+        student.setFees(results.getDouble(5));
+        student.setVS(results.getInt(6));
+        student.setMotherPhone(results.getString(7));
+        student.setFatherPhone(results.getString(8));
+        student.setMotherEmail(results.getString(9));
+        student.setFatherEmail(results.getString(10));
+        student.setNotes(results.getString(11));
+        student.setSchoolStage(results.getString(12));
+        student.setPaymentNotes(results.getString(13));
+        student.setShouldPay(results.getDouble(14));
+        student.setPayed(results.getDouble(15));
+        student.setSummaryLastYear(results.getDouble(16));
         return student;
     }
 
@@ -202,8 +203,8 @@ public class StudentDao {
         }
     }
 
-    public void insertStudent(Student student, int classId) throws Exception {
-        setValuesForInsertingStudent(student, classId);
+    public void insertStudent(Student student) throws Exception {
+        setValuesForInsertingStudent(student);
 
         int affectedRecords = insertStudent.executeUpdate();
         if (affectedRecords != 1) {
@@ -211,11 +212,11 @@ public class StudentDao {
         }
     }
 
-    private void setValuesForInsertingStudent(Student student, int classId) throws SQLException {
+    private void setValuesForInsertingStudent(Student student) throws SQLException {
         insertStudent.setInt(INDEX_STUDENT_VS, student.getVS());
         insertStudent.setString(INDEX_STUDENT_LAST_NAME, student.getLastName());
         insertStudent.setString(INDEX_STUDENT_FIRST_NAME, student.getFirstName());
-        insertStudent.setInt(INDEX_STUDENT_CLASS, classId);
+        insertStudent.setInt(INDEX_STUDENT_CLASS, student.getClassId());
         insertStudent.setDouble(INDEX_STUDENT_FEES, student.getFees());
         insertStudent.setString(INDEX_STUDENT_MOTHER_PHONE, student.getMotherPhone());
         insertStudent.setString(INDEX_STUDENT_FATHER_PHONE, student.getFatherPhone());

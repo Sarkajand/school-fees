@@ -4,8 +4,8 @@ module schoolFees {
     requires javafx.controls;
     requires java.sql;
     requires java.base;
-    requires commons.csv;
     requires slf4j.api;
+    requires log4j;
 
 
     opens cz.zsduhovacesta;

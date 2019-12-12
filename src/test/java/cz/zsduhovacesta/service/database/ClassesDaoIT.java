@@ -1,6 +1,7 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.Classes;
+import javafx.fxml.FXML;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -59,7 +60,7 @@ class ClassesDaoIT {
 
     @Test
     void listClassesNames() {
-        List<String> classesNames = classesDao.listClassesNames();
+        List<String> classesNames = classesDao.queryClassesNames();
         List<String> controlList = new ArrayList<>();
         controlList.add("POHÁDKA");
         controlList.add("PODMOŘSKÝ SVĚT");
@@ -72,12 +73,18 @@ class ClassesDaoIT {
 
     @Test
     void listClasses() {
-        List<Classes> classes = classesDao.listClasses();
+        List<Classes> classes = classesDao.queryAllClasses();
         int size = classes.size();
         assertEquals(6, size);
         assertEquals("POHÁDKA", classes.get(0).getClassName());
         assertEquals("ZŠ", classes.get(5).getStage());
     }
+
+//    @Test
+//    void getClassIdByClassName () {
+//        int classId = classesDao.queryClassIdByClassName("POHÁDKA");
+//        assertEquals(1, classId);
+//    }
 
     @Test
     void insertClass() {
@@ -86,7 +93,7 @@ class ClassesDaoIT {
         classToInsert.setStage("MŠ");
         try {
             classesDao.insertClass(classToInsert);
-            List<Classes> classes = classesDao.listClasses();
+            List<Classes> classes = classesDao.queryAllClasses();
             int size = classes.size();
             assertEquals(7, size);
         } catch (Exception e) {
@@ -101,10 +108,10 @@ class ClassesDaoIT {
         classToEdit.setClassName("newName");
         classToEdit.setStage("newStage");
         try {
-            List<Classes> classes = classesDao.listClasses();
+            List<Classes> classes = classesDao.queryAllClasses();
             assertNotEquals(classToEdit,classes.get(0));
             classesDao.editClass(classToEdit);
-            classes = classesDao.listClasses();
+            classes = classesDao.queryAllClasses();
             assertEquals(classToEdit, classes.get(0));
         } catch (Exception e) {
             fail();
@@ -131,7 +138,7 @@ class ClassesDaoIT {
         classToDelete.setClassId(1);
         try {
             classesDao.deleteClass(classToDelete);
-            List<Classes> classes = classesDao.listClasses();
+            List<Classes> classes = classesDao.queryAllClasses();
             int size = classes.size();
             assertEquals(5, size);
         } catch (Exception e) {

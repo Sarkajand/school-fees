@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import org.apache.log4j.BasicConfigurator;
 
 
 import cz.zsduhovacesta.controller.*;
@@ -18,6 +19,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        BasicConfigurator.configure();
     }
 
     @Override
@@ -25,11 +27,11 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-//        controller.listStudents();
-//        controller.setClassesChoiceBoxOnStudentsTab();
+        controller.listStudents();
+        controller.setClassesChoiceBoxOnStudentsTab();
 
         primaryStage.setTitle("Školné");
-        primaryStage.setScene(new Scene(root, 1400, 800));
+        primaryStage.setScene(new Scene(root, 1500, 800));
         primaryStage.show();
     }
 
@@ -39,12 +41,12 @@ public class Main extends Application {
         try {
             DaoManager.getInstance().open();
         } catch (SQLException e) {
-            System.out.println("Fatal Error: Couldn't connect database");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Chyba spojení s databází");
-            alert.setContentText("Nepodařilo se navázat spojení s databází");
-            alert.showAndWait();
-            Platform.exit();
+//            System.out.println("Fatal Error: Couldn't connect database");
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Chyba spojení s databází");
+//            alert.setContentText("Nepodařilo se navázat spojení s databází");
+//            alert.showAndWait();
+//            Platform.exit();
         }
     }
 

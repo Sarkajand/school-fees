@@ -1,6 +1,7 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.Classes;
+import javafx.fxml.FXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,8 @@ public class ClassesDao {
 
     public static final String QUERY_CLASSES =
             "SELECT * FROM " + TABLE_CLASSES;
+    public static final String QUERY_CLASS_ID_BY_CLASS_NAME =
+            "SELECT " + COLUMN_CLASSES_ID + " FROM " + TABLE_CLASSES + " WHERE " + COLUMN_CLASSES_CLASS_NAME + " = ?";
     public static final String INSERT_CLASS =
             "INSERT INTO " + TABLE_CLASSES + " (" + COLUMN_CLASSES_STAGE + ", " + COLUMN_CLASSES_CLASS_NAME + ") VALUES (?, ?)";
     public static final String EDIT_CLASS =
@@ -35,6 +38,7 @@ public class ClassesDao {
             "DELETE FROM " + TABLE_CLASSES + " WHERE " + COLUMN_CLASSES_ID + " = ?";
 
     private PreparedStatement queryClasses;
+    private PreparedStatement queryClassIdByClassName;
     private PreparedStatement insertClass;
     private PreparedStatement editClass;
     private PreparedStatement deleteClass;
@@ -42,6 +46,7 @@ public class ClassesDao {
     ClassesDao(Connection connection) throws SQLException {
         try {
             queryClasses = connection.prepareStatement(QUERY_CLASSES);
+            queryClassIdByClassName = connection.prepareStatement(QUERY_CLASS_ID_BY_CLASS_NAME);
             insertClass = connection.prepareStatement(INSERT_CLASS);
             editClass = connection.prepareStatement(EDIT_CLASS);
             deleteClass = connection.prepareStatement(DELETE_CLASS);
@@ -55,6 +60,9 @@ public class ClassesDao {
         try {
             if (queryClasses != null) {
                 queryClasses.close();
+            }
+            if (queryClassIdByClassName != null) {
+                queryClassIdByClassName.close();
             }
             if (insertClass != null) {
                 insertClass.close();
@@ -71,7 +79,7 @@ public class ClassesDao {
         }
     }
 
-    public List<String> listClassesNames() {
+    public List<String> queryClassesNames() {
         try {
             ResultSet results = queryClasses.executeQuery();
             List<String> classesNames = new ArrayList<>();
@@ -85,7 +93,7 @@ public class ClassesDao {
         }
     }
 
-    public List<Classes> listClasses() {
+    public List<Classes> queryAllClasses() {
         try {
             ResultSet results = queryClasses.executeQuery();
             List<Classes> classes = new ArrayList<>();
@@ -106,6 +114,17 @@ public class ClassesDao {
         newClass.setClassName(results.getString(INDEX_CLASSES_NAME));
         newClass.setStage(results.getString(INDEX_CLASSES_STAGE));
         return newClass;
+    }
+
+    public int queryClassIdByClassName (String className) {
+        try {
+            queryClassIdByClassName.setString(1, className);
+            ResultSet results = queryClassIdByClassName.executeQuery();
+            return results.getInt(1);
+        } catch (SQLException e) {
+            logger.warn("Query class id failed: ", e);
+            return -1;
+        }
     }
 
     public void insertClass(Classes classes) throws Exception {
