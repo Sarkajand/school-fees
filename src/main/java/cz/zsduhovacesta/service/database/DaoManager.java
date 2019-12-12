@@ -105,6 +105,22 @@ public class DaoManager {
         studentDao.deleteStudent(vs);
     }
 
+    public void insertClass (Classes newClass) throws Exception {
+        classesDao.insertClass(newClass);
+    }
+
+    public void editClass (Classes classToEdit) throws Exception{
+        classesDao.editClass(classToEdit);
+    }
+
+    public void deleteClassWithAllStudents (Classes classToDelete) throws Exception{
+        List<Student> studentsFromClass = studentDao.queryStudentsByClass(classToDelete.getClassName());
+        for (Student student : studentsFromClass) {
+            studentDao.deleteStudent(student.getVS());
+        }
+        classesDao.deleteClass(classToDelete);
+    }
+
 
 
 

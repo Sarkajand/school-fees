@@ -4,7 +4,6 @@ import cz.zsduhovacesta.model.Student;
 import cz.zsduhovacesta.service.database.DaoManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,7 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -70,8 +68,6 @@ public class Controller {
                 StudentController studentController = setStudentDialogAndGetController("Nový žák", null);
                 if (studentController.isSaveClicked()) {
                     Student student = studentController.handleSave();
-//                    String className = student.getClassName();
-//                    int classId = DaoManager.getInstance().queryClassIdByClassName(className);
                     insertStudent(student);
                     listStudentsBySchoolStage();
                 }
@@ -122,8 +118,6 @@ public class Controller {
                 if (studentController.isSaveClicked()) {
                     DaoManager.getInstance().deleteStudent(student.getVS());
                     Student editedStudent = studentController.handleSave();
-//                    String className = editedStudent.getClassName();
-////                    int classId = DaoManager.getInstance().queryClassIdByClassName(className);
                     DaoManager.getInstance().insertStudent(editedStudent);
                     listStudentsBySchoolStage();
                 }
@@ -134,7 +128,7 @@ public class Controller {
     }
 
     public void deleteStudent() {
-        final Student student = (Student) studentsTable.getSelectionModel().getSelectedItem();
+        final Student student = studentsTable.getSelectionModel().getSelectedItem();
         if (student == null) {
             showAlert("Chyba, není vybraný žák", "Musíte vybrat žáka");
         } else {
@@ -151,6 +145,32 @@ public class Controller {
                     showAlert("Chyba", "Nepodařilo se smazat studenta");
                 }
             }
+        }
+    }
+
+    public void showClasses () {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Controller.class.getResource("classes.fxml"));
+            BorderPane page = loader.load();
+
+            Stage classesStage = new Stage();
+            classesStage.setTitle("Nový žák");
+            classesStage.initModality(Modality.WINDOW_MODAL);
+            classesStage.initOwner(mainWindow.getScene().getWindow());
+            Scene scene = new Scene(page);
+            classesStage.setScene(scene);
+
+            ClassesController controller = loader.getController();
+            controller.setStage(classesStage);
+
+            classesStage.showAndWait();
+
+            setClassesChoiceBoxOnStudentsTab();
+            listStudents();
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

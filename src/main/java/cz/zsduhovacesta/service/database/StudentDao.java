@@ -33,38 +33,10 @@ public class StudentDao {
     public static final String COLUMN_STUDENTS_PAYED = "payed";
     public static final String COLUMN_STUDENTS_SUMMARY_LAST_YEAR = "summary_last_year";
 
-    public static final int INDEX_STUDENT_VS = 1;
-    public static final int INDEX_STUDENT_LAST_NAME = 2;
-    public static final int INDEX_STUDENT_FIRST_NAME = 3;
-    public static final int INDEX_STUDENT_CLASS = 4;
-    public static final int INDEX_STUDENT_FEES = 5;
-    public static final int INDEX_STUDENT_MOTHER_PHONE = 6;
-    public static final int INDEX_STUDENT_FATHER_PHONE = 7;
-    public static final int INDEX_STUDENT_MOTHER_EMAIL = 8;
-    public static final int INDEX_STUDENT_FATHER_EMAIL = 9;
-    public static final int INDEX_STUDENT_NOTES = 10;
-    public static final int INDEX_STUDENT_PAYMENT_NOTES = 11;
-    public static final int INDEX_STUDENT_SHOULD_PAY = 12;
-    public static final int INDEX_STUDENT_PAYED = 13;
 
     public static final String VIEW_STUDENT_LIST = "students_list";
     public static final String COLUMN_STUDENT_LIST_STAGE = "stage";
     public static final String COLUMN_STUDENTS_LIST_CLASS = "class_name";
-    public static final int INDEX_STUDENT_LIST_CLASS_NAME = 1;
-    public static final int INDEX_STUDENT_LIST_LAST_NAME = 2;
-    public static final int INDEX_STUDENT_LIST_FIRST_NAME = 3;
-    public static final int INDEX_STUDENT_LIST_FEES = 4;
-    public static final int INDEX_STUDENT_LIST_VS = 5;
-    public static final int INDEX_STUDENT_LIST_MOTHER_PHONE = 6;
-    public static final int INDEX_STUDENT_LIST_FATHER_PHONE = 7;
-    public static final int INDEX_STUDENT_LIST_MOTHER_EMAIL = 8;
-    public static final int INDEX_STUDENT_LIST_FATHER_EMAIL = 9;
-    public static final int INDEX_STUDENT_LIST_NOTES = 10;
-    public static final int INDEX_STUDENT_LIST_STAGE = 11;
-    public static final int INDEX_STUDENT_LIST_PAYMENT_NOTES = 12;
-    public static final int INDEX_STUDENT_LIST_SHOULD_PAY = 13;
-    public static final int INDEX_STUDENT_LIST_PAYED = 14;
-    public static final int INDEX_STUDENT_LIST_SUMMARY_LAST_YEAR = 15;
 
     public static final String QUERY_ALL_STUDENTS =
             "SELECT * FROM " + VIEW_STUDENT_LIST;
@@ -213,19 +185,19 @@ public class StudentDao {
     }
 
     private void setValuesForInsertingStudent(Student student) throws SQLException {
-        insertStudent.setInt(INDEX_STUDENT_VS, student.getVS());
-        insertStudent.setString(INDEX_STUDENT_LAST_NAME, student.getLastName());
-        insertStudent.setString(INDEX_STUDENT_FIRST_NAME, student.getFirstName());
-        insertStudent.setInt(INDEX_STUDENT_CLASS, student.getClassId());
-        insertStudent.setDouble(INDEX_STUDENT_FEES, student.getFees());
-        insertStudent.setString(INDEX_STUDENT_MOTHER_PHONE, student.getMotherPhone());
-        insertStudent.setString(INDEX_STUDENT_FATHER_PHONE, student.getFatherPhone());
-        insertStudent.setString(INDEX_STUDENT_MOTHER_EMAIL, student.getMotherEmail());
-        insertStudent.setString(INDEX_STUDENT_FATHER_EMAIL, student.getFatherEmail());
-        insertStudent.setString(INDEX_STUDENT_NOTES, student.getNotes());
-        insertStudent.setString(INDEX_STUDENT_PAYMENT_NOTES, student.getPaymentNotes());
-        insertStudent.setDouble(INDEX_STUDENT_SHOULD_PAY, student.getShouldPay());
-        insertStudent.setDouble(INDEX_STUDENT_PAYED, student.getPayed());
+        insertStudent.setInt(1, student.getVS());
+        insertStudent.setString(2, student.getLastName());
+        insertStudent.setString(3, student.getFirstName());
+        insertStudent.setInt(4, student.getClassId());
+        insertStudent.setDouble(5, student.getFees());
+        insertStudent.setString(6, student.getMotherPhone());
+        insertStudent.setString(7, student.getFatherPhone());
+        insertStudent.setString(8, student.getMotherEmail());
+        insertStudent.setString(9, student.getFatherEmail());
+        insertStudent.setString(10, student.getNotes());
+        insertStudent.setString(11, student.getPaymentNotes());
+        insertStudent.setDouble(12, student.getShouldPay());
+        insertStudent.setDouble(13, student.getPayed());
     }
 
     public void deleteStudent(int VS) throws Exception {

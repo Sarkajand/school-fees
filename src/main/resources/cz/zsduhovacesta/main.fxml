@@ -9,7 +9,7 @@
         <HBox>
             <MenuBar>
                 <Menu text="menu">
-                    <MenuItem text="třídy"/>
+                    <MenuItem text="třídy" onAction="#showClasses"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="záloha databáze"/>
                     <SeparatorMenuItem/>

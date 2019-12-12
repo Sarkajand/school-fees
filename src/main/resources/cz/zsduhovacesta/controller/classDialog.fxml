@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="cz.zsduhovacesta.controller.ClassDialogController"
+            prefHeight="200.0" prefWidth="300.0">
+    <center>
+        <GridPane vgap="10" hgap="10" alignment="CENTER">
+            <Label text="jméno třídy" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="classNameTextField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Vyber ZŠ nebo MŠ" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <ChoiceBox fx:id="stageChoiceBox" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                <String fx:value="ZŠ"/>
+                <String fx:value="MŠ"/>
+            </ChoiceBox>
+        </GridPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="20" prefHeight="50">
+            <padding>
+                <Insets bottom="20"/>
+                <Insets right="20"/>
+            </padding>
+            <Button text="Odejít beze změny" onAction="#handleCancel"/>
+            <Button text="Uložit" onAction="#handleSave"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
