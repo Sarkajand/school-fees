@@ -97,7 +97,7 @@ public class TransactionDao {
         transaction.setVS(results.getInt(INDEX_TRANSACTIONS_LIST_VS));
         transaction.setLastName(results.getString(INDEX_TRANSACTIONS_LIST_LAST_NAME));
         transaction.setFirstName(results.getString(INDEX_TRANSACTIONS_LIST_FIRST_NAME));
-        transaction.setAmount(results.getDouble(INDEX_TRANSACTIONS_LIST_AMOUNT));
+        transaction.setAmount(results.getInt(INDEX_TRANSACTIONS_LIST_AMOUNT));
         transaction.setPaymentMethod(results.getString(INDEX_TRANSACTIONS_LIST_PAYMENT_METHOD));
         transaction.setTransactionNotes(results.getString(INDEX_TRANSACTIONS_LIST_PAYMENT_NOTES));
         transaction.setBankStatement(results.getInt(INDEX_TRANSACTIONS_LIST_BANK_STATEMENT));

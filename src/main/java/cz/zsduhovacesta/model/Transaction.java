@@ -13,7 +13,7 @@ public class Transaction {
     private SimpleIntegerProperty VS;
     private SimpleStringProperty lastName;
     private SimpleStringProperty firstName;
-    private SimpleDoubleProperty amount;
+    private SimpleIntegerProperty amount;
     private SimpleStringProperty paymentMethod;
     private SimpleStringProperty transactionNotes;
     private SimpleIntegerProperty bankStatement;
@@ -24,7 +24,7 @@ public class Transaction {
         this.VS = new SimpleIntegerProperty();
         this.lastName = new SimpleStringProperty();
         this.firstName = new SimpleStringProperty();
-        this.amount = new SimpleDoubleProperty();
+        this.amount = new SimpleIntegerProperty();
         this.paymentMethod = new SimpleStringProperty();
         this.transactionNotes = new SimpleStringProperty();
         this.bankStatement = new SimpleIntegerProperty();
@@ -70,11 +70,11 @@ public class Transaction {
         this.firstName.set(firstName);
     }
 
-    public double getAmount() {
+    public int getAmount() {
         return amount.get();
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(int amount) {
         this.amount.set(amount);
     }
 

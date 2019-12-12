@@ -10,6 +10,7 @@ public class BankStatement {
 
     private SimpleIntegerProperty id;
     private SimpleStringProperty date;
+    private List<Transaction> transactions;
 
     public BankStatement() {
         this.id = new SimpleIntegerProperty();
@@ -32,17 +33,26 @@ public class BankStatement {
         this.date.set(date);
     }
 
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BankStatement that = (BankStatement) o;
         return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getDate(), that.getDate());
+                Objects.equals(getDate(), that.getDate()) &&
+                Objects.equals(getTransactions(), that.getTransactions());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDate());
+        return Objects.hash(getId(), getDate(), getTransactions());
     }
 }
