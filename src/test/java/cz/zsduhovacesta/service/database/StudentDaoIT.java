@@ -78,7 +78,7 @@ class StudentDaoIT {
         student.setClassName("PODMOŘSKÝ SVĚT");
         student.setLastName("Novák");
         student.setFirstName("Petr");
-        student.setFees(1500.0);
+        student.setFees(1500);
         student.setMotherPhone("731 252 396");
         student.setFatherPhone("756 249 365");
         student.setMotherEmail("matka@email.cz");
@@ -86,9 +86,9 @@ class StudentDaoIT {
         student.setNotes("poznamky");
         student.setSchoolStage("MŠ");
         student.setPaymentNotes("poznámky k platbám");
-        student.setShouldPay(0.0);
-        student.setPayed(0.0);
-        student.setSummaryLastYear(0.0);
+        student.setShouldPay(0);
+        student.setPayed(0);
+        student.setSummaryLastYear(0);
         return student;
     }
 
@@ -168,7 +168,7 @@ class StudentDaoIT {
                 student.setClassId(results.getInt(2));
                 student.setLastName(results.getString(3));
                 student.setFirstName(results.getString(4));
-                student.setFees(results.getDouble(5));
+                student.setFees(results.getInt(5));
                 student.setVS(results.getInt(6));
                 student.setMotherPhone(results.getString(7));
                 student.setFatherPhone(results.getString(8));
@@ -177,9 +177,9 @@ class StudentDaoIT {
                 student.setNotes(results.getString(11));
                 student.setSchoolStage(results.getString(12));
                 student.setPaymentNotes(results.getString(13));
-                student.setShouldPay(results.getDouble(14));
-                student.setPayed(results.getDouble(15));
-                student.setSummaryLastYear(results.getDouble(16));
+                student.setShouldPay(results.getInt(14));
+                student.setPayed(results.getInt(15));
+                student.setSummaryLastYear(results.getInt(16));
             }
             return student;
         } catch (SQLException e) {

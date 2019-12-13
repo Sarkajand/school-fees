@@ -79,6 +79,7 @@ class TransactionDaoIT {
         transaction.setAmount(1300);
         transaction.setPaymentMethod("BANK");
         transaction.setBankStatement(1);
+        transaction.setTransactionNotes("");
         return transaction;
     }
 

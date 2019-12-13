@@ -12,12 +12,15 @@ import java.util.List;
 
 public class CsvReader {
 
+    private String date;
+    private int bankStatementId;
+
     public BankStatement readNewBankStatement (String CSVFilePath) throws Exception {
         BankStatement bankStatement = new BankStatement();
         List<Transaction> transactions = new ArrayList<>();
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(CSVFilePath), StandardCharsets.UTF_8)) {
             String lineWithNumber = bufferedReader.readLine();
-            int bankStatementId = getId(lineWithNumber);
+            bankStatementId = getId(lineWithNumber);
             String owner = bufferedReader.readLine();
             checkOwner(owner);
             for (int i=0; i<7; i++) {
@@ -25,19 +28,10 @@ public class CsvReader {
             }
             String headers = bufferedReader.readLine();
             checkHeaders(headers);
-            String date = "";
+
             String line = bufferedReader.readLine();
             while (line != null) {
-                Transaction transaction = new Transaction();
-                String editedLine = line.replaceAll("\"", "");
-                String[] attributes = editedLine.split(";");
-                date = attributes[1];
-                transaction.setDate(date);
-                transaction.setVS(Integer.parseInt(attributes[9]));
-                transaction.setAmount(Integer.parseInt(attributes[2]));
-                transaction.setPaymentMethod("převodem na účet");
-                transaction.setTransactionNotes(attributes[12]);
-                transaction.setBankStatement(bankStatementId);
+                Transaction transaction = setTransaction(line);
                 transactions.add(transaction);
                 line = bufferedReader.readLine();
             }
@@ -56,7 +50,7 @@ public class CsvReader {
 
     private void checkOwner (String owner) throws Exception {
         if (!owner.equals("\"Majitel účtu: ZÁKLADNÍ ŠKOLA A MATEŘSKÁ ŠKOLA DUHOVÁ CESTA, s.r.o., Havlíčkova 3675, Chomutov, 43003, Česká republika\"")){
-            throw new Exception("bank statement from wrong account");
+            throw new Exception("Owner of account doesn't match expecting");
         }
     }
 
@@ -65,5 +59,21 @@ public class CsvReader {
         if (!headers.equals(expectingHeaders)) {
             throw new Exception("Headers don´t match expecting");
         }
+    }
+
+    private Transaction setTransaction (String line) {
+        Transaction transaction = new Transaction();
+        String editedLine = line.replaceAll("\"", "");
+        String[] attributes = editedLine.split(";");
+        date = attributes[1];
+        transaction.setDate(date);
+        transaction.setVS(Integer.parseInt(attributes[9]));
+        String amountString = attributes[2].replace(",", ".");
+        double amount = Double.parseDouble(amountString);
+        transaction.setAmount((int)Math.round(amount));
+        transaction.setPaymentMethod("převodem na účet");
+        transaction.setTransactionNotes(attributes[12]);
+        transaction.setBankStatement(bankStatementId);
+        return transaction;
     }
 }

@@ -1,8 +1,8 @@
 package cz.zsduhovacesta.model;
 
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ public class Student {
     private SimpleIntegerProperty classId;
     private SimpleStringProperty lastName;
     private SimpleStringProperty firstName;
-    private SimpleDoubleProperty fees;
+    private SimpleIntegerProperty fees;
     private SimpleIntegerProperty VS;
     private SimpleStringProperty motherPhone;
     private SimpleStringProperty fatherPhone;
@@ -21,9 +21,9 @@ public class Student {
     private SimpleStringProperty fatherEmail;
     private SimpleStringProperty notes;
     private SimpleStringProperty paymentNotes;
-    private SimpleDoubleProperty shouldPay;
-    private SimpleDoubleProperty payed;
-    private SimpleDoubleProperty summaryLastYear;
+    private SimpleIntegerProperty shouldPay;
+    private SimpleIntegerProperty payed;
+    private SimpleIntegerProperty summaryLastYear;
 
 
     public Student() {
@@ -32,7 +32,7 @@ public class Student {
         this.classId = new SimpleIntegerProperty();
         this.lastName = new SimpleStringProperty();
         this.firstName = new SimpleStringProperty();
-        this.fees = new SimpleDoubleProperty();
+        this.fees = new SimpleIntegerProperty();
         this.VS = new SimpleIntegerProperty();
         this.motherPhone = new SimpleStringProperty();
         this.fatherPhone = new SimpleStringProperty();
@@ -40,9 +40,9 @@ public class Student {
         this.fatherEmail = new SimpleStringProperty();
         this.notes = new SimpleStringProperty();
         this.paymentNotes = new SimpleStringProperty();
-        this.shouldPay = new SimpleDoubleProperty();
-        this.payed = new SimpleDoubleProperty();
-        this.summaryLastYear = new SimpleDoubleProperty();
+        this.shouldPay = new SimpleIntegerProperty();
+        this.payed = new SimpleIntegerProperty();
+        this.summaryLastYear = new SimpleIntegerProperty();
     }
 
     public String getSchoolStage() {
@@ -85,11 +85,11 @@ public class Student {
         this.firstName.set(firstName);
     }
 
-    public double getFees() {
+    public int getFees() {
         return fees.get();
     }
 
-    public void setFees(double fees) {
+    public void setFees(int fees) {
         this.fees.set(fees);
     }
 
@@ -149,27 +149,27 @@ public class Student {
         this.paymentNotes.set(paymentNotes);
     }
 
-    public double getShouldPay() {
+    public int getShouldPay() {
         return shouldPay.get();
     }
 
-    public void setShouldPay(double shouldPay) {
+    public void setShouldPay(int shouldPay) {
         this.shouldPay.set(shouldPay);
     }
 
-    public double getPayed() {
+    public int getPayed() {
         return payed.get();
     }
 
-    public void setPayed(double payed) {
+    public void setPayed(int payed) {
         this.payed.set(payed);
     }
 
-    public double getSummaryLastYear () {
+    public int getSummaryLastYear () {
         return summaryLastYear.get();
     }
 
-    public void setSummaryLastYear (double summaryLastYear) {
+    public void setSummaryLastYear (int summaryLastYear) {
         this.summaryLastYear.set(summaryLastYear);
     }
 

@@ -110,7 +110,7 @@ public class StudentController {
             student.setLastName(lastNameField.getText());
             student.setFirstName(firstNameField.getText());
             student.setVS(Integer.parseInt(VSField.getText()));
-            student.setFees(Double.parseDouble(feesField.getText()));
+            student.setFees(Integer.parseInt(feesField.getText()));
             student.setMotherPhone(motherPhoneField.getText());
             student.setFatherPhone(fatherPhoneField.getText());
             student.setMotherEmail(motherEmailField.getText());
