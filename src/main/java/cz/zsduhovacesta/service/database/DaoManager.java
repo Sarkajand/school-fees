@@ -1,7 +1,9 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.model.BankStatement;
 import cz.zsduhovacesta.model.Classes;
 import cz.zsduhovacesta.model.Student;
+import cz.zsduhovacesta.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,8 +123,22 @@ public class DaoManager {
         classesDao.deleteClass(classToDelete);
     }
 
-
-
-
+    public void insertBankStatementWithAllTransactions(BankStatement bankStatement) throws Exception{
+        List<Transaction> transactions = bankStatement.getTransactions();
+        try {
+            connection.setAutoCommit(false);
+            for (Transaction transaction : transactions) {
+                transactionDao.insertTransaction(transaction);
+            }
+            bankStatementDao.insertBankStatement(bankStatement);
+            connection.commit();
+        } catch (Exception e) {
+            connection.rollback();
+            logger.error("Insertinf bank statement with all transactions failed");
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
+    }
 
 }

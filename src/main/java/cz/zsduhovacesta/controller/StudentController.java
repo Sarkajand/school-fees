@@ -75,8 +75,8 @@ public class StudentController {
         if (!VSField.getText().matches("\\d+")) {
             errorMessage += "Neplatný variabilní symbol, musí být číslo\n";
         }
-        if (!feesField.getText().matches("\\d+\\.?\\d+")) {
-            errorMessage += "Neplatné školné, musí být číslo, k oddělení desetiných míst použij tečku\n";
+        if (!feesField.getText().matches("\\d+")) {
+            errorMessage += "Neplatné školné, musí být číslo\n";
         }
         if (!motherPhoneField.getText().matches(".+") && !fatherPhoneField.getText().matches(".+")) {
             errorMessage += "Neplatný telefon, zadej alespoň jeden telefon\n";

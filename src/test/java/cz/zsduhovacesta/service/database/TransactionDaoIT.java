@@ -71,6 +71,7 @@ class TransactionDaoIT {
 
     private Transaction firstTransaction () {
         Transaction transaction = new Transaction();
+        transaction.setId(1);
         transaction.setDate("1.12.2019");
         transaction.setClassName("1.B");
         transaction.setVS(268325);
@@ -81,6 +82,18 @@ class TransactionDaoIT {
         transaction.setBankStatement(1);
         transaction.setTransactionNotes("");
         return transaction;
+    }
+
+    @Test
+    void insertTransaction () {
+        try {
+            Transaction transaction = firstTransaction();
+            transactionDao.insertTransaction(transaction);
+            List<Transaction> transactions = transactionDao.queryAllTransactions();
+            assertEquals(4, transactions.size());
+        } catch (Exception e) {
+            fail();
+        }
     }
 
 }

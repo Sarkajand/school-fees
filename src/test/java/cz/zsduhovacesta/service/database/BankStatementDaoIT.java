@@ -75,4 +75,18 @@ class BankStatementDaoIT {
         return bankStatement;
     }
 
+    @Test
+    void insertBankStatement () {
+        BankStatement bankStatement = new BankStatement();
+        bankStatement.setId(111);
+        bankStatement.setDate("1.1.2020");
+        try {
+            bankStatementDao.insertBankStatement(bankStatement);
+            List<BankStatement> bankStatements = bankStatementDao.queryBankStatements();
+            assertEquals(3, bankStatements.size());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
 }

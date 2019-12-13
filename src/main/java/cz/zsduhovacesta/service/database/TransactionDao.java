@@ -18,17 +18,13 @@ public class TransactionDao {
 
     public static final String TABLE_TRANSACTIONS = "transactions";
     public static final String COLUMN_TRANSACTIONS_ID = "_id";
+    public static final String COLUMN_DATE = "_date";
     public static final String COLUMN_TRANSACTIONS_BANK_STATEMENT = "bank_statement";
     public static final String COLUMN_TRANSACTIONS_VS = "VS";
     public static final String COLUMN_TRANSACTIONS_AMOUNT = "amount";
     public static final String COLUMN_TRANSACTIONS_PAYMENT_METHOD = "payment_method";
     public static final String COLUMN_TRANSACTIONS_NOTES = "notes";
-    public static final int INDEX_TRANSACTION_ID = 1;
-    public static final int INDEX_TRANSACTION_BANK_STATEMENT = 2;
-    public static final int INDEX_TRANSACTION_VS = 3;
-    public static final int INDEX_TRANSACTION_AMOUNT = 4;
-    public static final int INDEX_TRANSACTION_PAYMENT_METHOD = 5;
-    public static final int INDEX_TRANSACTION_NOTES = 6;
+
 
     public static final String VIEW_TRANSACTIONS_LIST = "transactions_list";
     public static final int INDEX_TRANSACTIONS_LIST_ID = 1;
@@ -44,12 +40,18 @@ public class TransactionDao {
 
     public static final String QUERY_ALL_TRANSACTIONS =
             "SELECT * FROM " + VIEW_TRANSACTIONS_LIST;
+    public static final String INSERT_TRANSACTION =
+            "INSERT INTO " + TABLE_TRANSACTIONS + "(" + COLUMN_DATE + ", " + COLUMN_TRANSACTIONS_BANK_STATEMENT + ", " +
+                    COLUMN_TRANSACTIONS_VS + ", " + COLUMN_TRANSACTIONS_AMOUNT + ", " +
+                    COLUMN_TRANSACTIONS_PAYMENT_METHOD + ", " + COLUMN_TRANSACTIONS_NOTES + ") VALUES (?, ?, ?, ?, ?, ?)";
 
     private PreparedStatement queryAllTransactions;
+    private PreparedStatement insertTransaction;
 
     TransactionDao(Connection connection) throws SQLException {
         try {
             queryAllTransactions = connection.prepareStatement(QUERY_ALL_TRANSACTIONS);
+            insertTransaction = connection.prepareStatement(INSERT_TRANSACTION);
         } catch (SQLException e) {
             logger.error("Couldn't create prepared statement for StudentDao", e);
             throw e;
@@ -60,6 +62,9 @@ public class TransactionDao {
         try {
             if (queryAllTransactions != null) {
                 queryAllTransactions.close();
+            }
+            if (insertTransaction != null) {
+                insertTransaction.close();
             }
         } catch (SQLException e) {
             logger.error("Couldn't close prepared statement in TransactionDao: ", e);
@@ -92,6 +97,7 @@ public class TransactionDao {
 
     private Transaction setTransaction(ResultSet results) throws SQLException {
         Transaction transaction = new Transaction();
+        transaction.setId(results.getInt(INDEX_TRANSACTIONS_LIST_ID));
         transaction.setDate(results.getString(INDEX_TRANSACTIONS_LIST_DATE));
         transaction.setClassName(results.getString(INDEX_TRANSACTIONS_LIST_CLASS_NAME));
         transaction.setVS(results.getInt(INDEX_TRANSACTIONS_LIST_VS));
@@ -104,4 +110,16 @@ public class TransactionDao {
         return transaction;
     }
 
+    public void insertTransaction (Transaction transaction) throws Exception {
+        insertTransaction.setString(1, transaction.getDate());
+        insertTransaction.setInt(2, transaction.getBankStatement());
+        insertTransaction.setInt(3, transaction.getVS());
+        insertTransaction.setInt(4, transaction.getAmount());
+        insertTransaction.setString(5, transaction.getPaymentMethod());
+        insertTransaction.setString(6, transaction.getTransactionNotes());
+        int affectedRecords = insertTransaction.executeUpdate();
+        if (affectedRecords != 1) {
+            throw new Exception("Inserting transaction failed");
+        }
+    }
 }

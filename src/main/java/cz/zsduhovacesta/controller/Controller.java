@@ -1,6 +1,8 @@
 package cz.zsduhovacesta.controller;
 
+import cz.zsduhovacesta.model.BankStatement;
 import cz.zsduhovacesta.model.Student;
+import cz.zsduhovacesta.service.csv.CsvReader;
 import cz.zsduhovacesta.service.database.DaoManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,9 +16,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -171,6 +175,25 @@ public class Controller {
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public void importBankStatement () {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Přidej bankovní výpis");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("csv soubory", "*.csv"));
+        File file = fileChooser.showOpenDialog(stage);
+        String path = "";
+        CsvReader csvReader = new CsvReader();
+        if (file != null) {
+            path = file.getAbsolutePath();
+        }
+        try{
+            BankStatement bankStatement = csvReader.readNewBankStatement(path);
+            DaoManager.getInstance().insertBankStatementWithAllTransactions(bankStatement);
+        } catch (Exception e) {
+            showAlert("Chyba", "nepodařilo se nahrát bankovní účet");
         }
     }
 }

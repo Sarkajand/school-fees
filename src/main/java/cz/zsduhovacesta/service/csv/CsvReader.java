@@ -67,7 +67,10 @@ public class CsvReader {
         String[] attributes = editedLine.split(";");
         date = attributes[1];
         transaction.setDate(date);
-        transaction.setVS(Integer.parseInt(attributes[9]));
+        String variableSymbol = attributes[9];
+        if (variableSymbol.length() > 0) {
+            transaction.setVS(Integer.parseInt(attributes[9]));
+        }
         String amountString = attributes[2].replace(",", ".");
         double amount = Double.parseDouble(amountString);
         transaction.setAmount((int)Math.round(amount));

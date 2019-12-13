@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CsvReaderIT {
 
-    CsvReader csvReader = new CsvReader();
-    String path = "D:\\Java\\MyProjects\\csv\\Vypis_z_uctu-55332010_20190711-20190711_cislo-150.csv";
-    String pathToFileWithWrongOwner = "D:\\Java\\MyProjects\\csv\\wrong_owner.csv";
-    String pathToFileWithWrongHeaders = "D:\\Java\\MyProjects\\csv\\wrong_headers.csv";
-    String pathToAnotherFile = "D:\\Java\\MyProjects\\csv\\Vypis_z_uctu-55332010_20191122-20191122_cislo-265.csv";
+    private CsvReader csvReader = new CsvReader();
+    private String path = "D:\\Java\\MyProjects\\csv\\Vypis_z_uctu-55332010_20190711-20190711_cislo-150.csv";
+    private String pathToFileWithWrongOwner = "D:\\Java\\MyProjects\\csv\\wrong_owner.csv";
+    private String pathToFileWithWrongHeaders = "D:\\Java\\MyProjects\\csv\\wrong_headers.csv";
+    private String pathToAnotherFile = "D:\\Java\\MyProjects\\csv\\Vypis_z_uctu-55332010_20191122-20191122_cislo-265.csv";
 
     @Test
     void readNewBankStatement() {
@@ -58,7 +58,16 @@ class CsvReaderIT {
         }
     }
 
-
-
-
+    @Test
+    void readAnotherFiles () {
+        String pathToFileWithTransactionWithoutVs = "D:\\Java\\MyProjects\\csv\\Vypis_z_uctu-55332010_20190909-20190909_cislo-202.csv";
+        String anotherFile = "D:\\Java\\MyProjects\\csv\\Vypis_z_uctu-55332010_20191121-20191121_cislo-264.csv";
+        try{
+            csvReader.readNewBankStatement(pathToFileWithTransactionWithoutVs);
+            csvReader.readNewBankStatement(anotherFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 }

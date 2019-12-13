@@ -25,12 +25,16 @@ public class BankStatementDao {
 
     public static final String QUERY_BANK_STATEMENTS =
             "SELECT * FROM " + TABLE_BANK_STATEMENT;
+    public static final String INSERT_BANK_STATEMENT =
+            "INSERT INTO " + TABLE_BANK_STATEMENT + " VALUES (?, ?)";
 
     private PreparedStatement queryBankStatements;
+    private PreparedStatement insertBankStatement;
 
     BankStatementDao(Connection connection) throws SQLException {
         try {
             queryBankStatements = connection.prepareStatement(QUERY_BANK_STATEMENTS);
+            insertBankStatement = connection.prepareStatement(INSERT_BANK_STATEMENT);
         } catch (SQLException e) {
             logger.error("Couldn't create prepared statement for StudentDao", e);
             throw e;
@@ -41,6 +45,9 @@ public class BankStatementDao {
         try {
             if (queryBankStatements != null) {
                 queryBankStatements.close();
+            }
+            if (insertBankStatement != null) {
+                insertBankStatement.close();
             }
         } catch (SQLException e) {
             logger.error("Couldn't close prepared statement in StudentDao: ", e);
@@ -67,6 +74,15 @@ public class BankStatementDao {
             bankStatements.add(bankStatement);
         }
         return bankStatements;
+    }
+
+    public void insertBankStatement (BankStatement bankStatement) throws Exception {
+        insertBankStatement.setInt(1, bankStatement.getId());
+        insertBankStatement.setString(2, bankStatement.getDate());
+        int affectedRecords = insertBankStatement.executeUpdate();
+        if (affectedRecords != 1) {
+            throw new Exception("Inserting bank statement failed");
+        }
     }
 
 

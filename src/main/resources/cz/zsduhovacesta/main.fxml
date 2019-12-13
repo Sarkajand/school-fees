@@ -127,8 +127,7 @@
                             <padding>
                                 <Insets left="20"/>
                             </padding>
-                            <Button text="Import CSV"/>
-                            <Button text="Zadat nový ručně"/>
+                            <Button text="přidej Bankovní výpis" onAction="#importBankStatement"/>
                         </HBox>
                     </top>
                     <center>

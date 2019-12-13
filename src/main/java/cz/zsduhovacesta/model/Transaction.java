@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class Transaction {
 
+    private int Id;
     private SimpleStringProperty date;
     private SimpleStringProperty className;
     private SimpleIntegerProperty VS;
@@ -27,6 +28,14 @@ public class Transaction {
         this.paymentMethod = new SimpleStringProperty();
         this.transactionNotes = new SimpleStringProperty();
         this.bankStatement = new SimpleIntegerProperty();
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
     }
 
     public String getDate() {
@@ -106,7 +115,8 @@ public class Transaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Objects.equals(getDate(), that.getDate()) &&
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getDate(), that.getDate()) &&
                 Objects.equals(getClassName(), that.getClassName()) &&
                 Objects.equals(getVS(), that.getVS()) &&
                 Objects.equals(getLastName(), that.getLastName()) &&
@@ -119,6 +129,6 @@ public class Transaction {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDate(), getClassName(), getVS(), getLastName(), getFirstName(), getAmount(), getPaymentMethod(), getTransactionNotes(), getBankStatement());
+        return Objects.hash(getId(), getDate(), getClassName(), getVS(), getLastName(), getFirstName(), getAmount(), getPaymentMethod(), getTransactionNotes(), getBankStatement());
     }
 }

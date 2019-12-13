@@ -2,11 +2,9 @@ package cz.zsduhovacesta;
 
 import cz.zsduhovacesta.service.database.DaoManager;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.apache.log4j.BasicConfigurator;
 
@@ -41,7 +39,6 @@ public class Main extends Application {
         try {
             DaoManager.getInstance().open();
         } catch (SQLException e) {
-//            System.out.println("Fatal Error: Couldn't connect database");
 //            Alert alert = new Alert(Alert.AlertType.ERROR);
 //            alert.setTitle("Chyba spojení s databází");
 //            alert.setContentText("Nepodařilo se navázat spojení s databází");
