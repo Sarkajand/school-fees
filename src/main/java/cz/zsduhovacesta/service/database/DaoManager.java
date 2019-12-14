@@ -99,8 +99,18 @@ public class DaoManager {
         studentDao.insertStudent(student);
     }
 
-    public void editStudent (Student studentToEdit, Student editedStudent, int classId) {
-//        todo
+    public void editStudent (int vs, Student editedStudent) throws Exception{
+        try {
+            connection.setAutoCommit(false);
+            studentDao.deleteStudent(vs);
+            studentDao.insertStudent(editedStudent);
+        } catch (Exception e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
+
     }
 
     public void deleteStudent (int vs) throws Exception {

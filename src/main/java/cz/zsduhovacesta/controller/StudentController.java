@@ -54,7 +54,7 @@ public class StudentController {
         lastNameField.setText(student.getLastName());
         firstNameField.setText(student.getFirstName());
         VSField.setText(Integer.toString(student.getVS()));
-        feesField.setText(Double.toString(student.getFees()));
+        feesField.setText(Integer.toString(student.getFees()));
         motherPhoneField.setText(student.getMotherPhone());
         fatherPhoneField.setText(student.getFatherPhone());
         motherEmailField.setText(student.getMotherEmail());

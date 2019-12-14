@@ -136,9 +136,8 @@ public class Controller {
             try {
                 StudentController studentController = setStudentDialogAndGetController("Upravit žáka", student);
                 if (studentController.isSaveClicked()) {
-                    DaoManager.getInstance().deleteStudent(student.getVS());
                     Student editedStudent = studentController.handleSave();
-                    DaoManager.getInstance().insertStudent(editedStudent);
+                    DaoManager.getInstance().editStudent(student.getVS(), editedStudent);
                     listStudentsBySchoolStage();
                 }
             } catch (Exception e) {
