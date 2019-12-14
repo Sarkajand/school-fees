@@ -78,7 +78,7 @@ public class BankStatementDao {
 
     public void insertBankStatement (BankStatement bankStatement) throws Exception {
         insertBankStatement.setInt(1, bankStatement.getId());
-        insertBankStatement.setString(2, bankStatement.getDate());
+        insertBankStatement.setString(2, bankStatement.getStringDate());
         int affectedRecords = insertBankStatement.executeUpdate();
         if (affectedRecords != 1) {
             throw new Exception("Inserting bank statement failed");

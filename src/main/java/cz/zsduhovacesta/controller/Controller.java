@@ -13,6 +13,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -22,6 +24,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Optional;
 
 public class Controller {
@@ -33,11 +37,38 @@ public class Controller {
     private ToggleGroup schoolStageToggleGroup;
     @FXML
     private ChoiceBox<String> classesChoiceBoxOnStudentsTab;
+    @FXML
+    private TableView<BankStatement> bankStatementsTable;
+    @FXML
+    private TableColumn <BankStatement, LocalDate> bankStatementTableColumnDate;
 
     private ObservableList<Student> students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
+    private ObservableList<BankStatement> bankStatements = FXCollections.observableList(DaoManager.getInstance().listBankStatements());
 
     public void listStudents () {
         studentsTable.itemsProperty().set(students);
+    }
+
+    public void listBankStatements () {
+        bankStatementsTable.itemsProperty().set(bankStatements);
+//        bankStatementTableColumnDate.setCellFactory((column -> {
+//            TableCell<BankStatement, LocalDate> cell = new TableCell<>() {
+//                private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+//
+//                @Override
+//                protected void updateItem(LocalDate item, boolean empty) {
+//                    super.updateItem(item, empty);
+//                    if(empty) {
+//                        setText(null);
+//                    }
+//                    else {
+//                        setText(format.format(item));
+//                    }
+//                }
+//            };
+//
+//            return cell;
+//        }));
     }
 
     @FXML

@@ -123,6 +123,10 @@ public class DaoManager {
         classesDao.deleteClass(classToDelete);
     }
 
+    public List<BankStatement> listBankStatements () {
+        return bankStatementDao.queryBankStatements();
+    }
+
     public void insertBankStatementWithAllTransactions(BankStatement bankStatement) throws Exception{
         List<Transaction> transactions = bankStatement.getTransactions();
         try {

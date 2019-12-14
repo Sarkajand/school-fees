@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zsduhovacesta.controller.Controller" fx:id="mainWindow">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.zsduhovacesta.controller.Controller"
+            fx:id="mainWindow">
     <top>
         <HBox>
             <MenuBar>
@@ -36,13 +37,14 @@
                                 <ToggleGroup fx:id="schoolStageToggleGroup"/>
                             </fx:define>
                             <RadioButton text="všichni" toggleGroup="$schoolStageToggleGroup" selected="true"
-                                        fx:id="allStudentsRadioButton" onAction="#listStudentsBySchoolStage"/>
+                                         fx:id="allStudentsRadioButton" onAction="#listStudentsBySchoolStage"/>
                             <RadioButton text="ZŠ" toggleGroup="$schoolStageToggleGroup"
                                          fx:id="zsRadioButton" onAction="#listStudentsBySchoolStage"/>
                             <RadioButton text="MŠ" toggleGroup="$schoolStageToggleGroup"
                                          onAction="#listStudentsBySchoolStage"/>
                             <Label text="třídy:"/>
-                            <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnStudentsTab" onAction="#listStudentsByClass"/>
+                            <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnStudentsTab"
+                                       onAction="#listStudentsByClass"/>
                             <Button text="nový žák" onAction="#newStudent"/>
                             <Button text="upravit žáka" onAction="#editStudent"/>
                             <Button text="smazat žáka" onAction="#deleteStudent"/>
@@ -131,10 +133,18 @@
                         </HBox>
                     </top>
                     <center>
-                        <TableView>
+                        <TableView fx:id="bankStatementsTable">
                             <columns>
-                                <TableColumn prefWidth="150" text="datum"/>
-                                <TableColumn prefWidth="150" text="číslo výpisu"/>
+                                <TableColumn fx:id="bankStatementTableColumnDate" prefWidth="150" text="datum">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="date"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="číslo výpisu">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="id"/>
+                                    </cellValueFactory>
+                                </TableColumn>
                             </columns>
                         </TableView>
                     </center>
