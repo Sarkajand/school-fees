@@ -14,7 +14,7 @@ public class CustomDate extends java.util.Date {
         return new SimpleDateFormat("dd.MM.yyyy").format(this);
     }
 
-    public static CustomDate fromString (String strDate) {
+    static CustomDate fromString (String strDate) {
         try {
             Date date = new SimpleDateFormat("dd.MM.yyyy").parse(strDate);
             long longDate = date.getTime();

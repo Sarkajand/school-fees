@@ -37,9 +37,9 @@
                                 <ToggleGroup fx:id="schoolStageToggleGroup"/>
                             </fx:define>
                             <RadioButton text="všichni" toggleGroup="$schoolStageToggleGroup" selected="true"
-                                         fx:id="allStudentsRadioButton" onAction="#listStudentsBySchoolStage"/>
+                                         onAction="#listStudentsBySchoolStage"/>
                             <RadioButton text="ZŠ" toggleGroup="$schoolStageToggleGroup"
-                                         fx:id="zsRadioButton" onAction="#listStudentsBySchoolStage"/>
+                                         onAction="#listStudentsBySchoolStage"/>
                             <RadioButton text="MŠ" toggleGroup="$schoolStageToggleGroup"
                                          onAction="#listStudentsBySchoolStage"/>
                             <Label text="třídy:"/>
@@ -135,7 +135,7 @@
                     <center>
                         <TableView fx:id="bankStatementsTable">
                             <columns>
-                                <TableColumn fx:id="bankStatementTableColumnDate" prefWidth="150" text="datum">
+                                <TableColumn  prefWidth="150" text="datum">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="date"/>
                                     </cellValueFactory>
@@ -167,16 +167,48 @@
                         </HBox>
                     </top>
                     <center>
-                        <TableView>
+                        <TableView fx:id="transactionsTable">
                             <columns>
-                                <TableColumn prefWidth="150" text="Datum"/>
-                                <TableColumn prefWidth="150" text="Třída"/>
-                                <TableColumn prefWidth="150" text="Variabilní symbol"/>
-                                <TableColumn prefWidth="150" text="Příjmení"/>
-                                <TableColumn prefWidth="150" text="Jméno"/>
-                                <TableColumn prefWidth="150" text="Částka"/>
-                                <TableColumn prefWidth="150" text="Způsob platby"/>
-                                <TableColumn prefWidth="300" text="zpráva pro příjemce"/>
+                                <TableColumn prefWidth="150" text="Datum">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="date"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Třída">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="className"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Variabilní symbol">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="vs"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Příjmení">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="lastName"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Jméno">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="firstName"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Částka">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="amount"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Způsob platby">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="paymentMethod"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="300" text="zpráva pro příjemce">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="transactionNotes"/>
+                                    </cellValueFactory>
+                                </TableColumn>
                             </columns>
                         </TableView>
                     </center>

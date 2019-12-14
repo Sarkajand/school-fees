@@ -74,7 +74,7 @@ class TransactionDaoIT {
         transaction.setId(1);
         transaction.setDate("1.12.2019");
         transaction.setClassName("1.B");
-        transaction.setVS(268325);
+        transaction.setVs(268325);
         transaction.setLastName("Novotná");
         transaction.setFirstName("Anna");
         transaction.setAmount(1300);

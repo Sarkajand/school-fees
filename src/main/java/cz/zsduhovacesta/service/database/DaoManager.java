@@ -100,7 +100,7 @@ public class DaoManager {
     }
 
     public void editStudent (Student studentToEdit, Student editedStudent, int classId) {
-
+//        todo
     }
 
     public void deleteStudent (int vs) throws Exception {
@@ -127,6 +127,10 @@ public class DaoManager {
         return bankStatementDao.queryBankStatements();
     }
 
+    public List<Transaction> listTransactions () {
+        return transactionDao.queryAllTransactions();
+    }
+
     public void insertBankStatementWithAllTransactions(BankStatement bankStatement) throws Exception{
         List<Transaction> transactions = bankStatement.getTransactions();
         try {
@@ -138,7 +142,7 @@ public class DaoManager {
             connection.commit();
         } catch (Exception e) {
             connection.rollback();
-            logger.error("Insertinf bank statement with all transactions failed");
+            logger.error("Inserting bank statement with all transactions failed");
             throw e;
         } finally {
             connection.setAutoCommit(true);

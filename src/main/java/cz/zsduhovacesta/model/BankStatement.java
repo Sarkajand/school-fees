@@ -3,12 +3,7 @@ package cz.zsduhovacesta.model;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class BankStatement {
@@ -17,7 +12,6 @@ public class BankStatement {
     private SimpleObjectProperty<CustomDate> date;
     private List<Transaction> transactions;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.UK);
 
     public BankStatement() {
         this.id = new SimpleIntegerProperty();

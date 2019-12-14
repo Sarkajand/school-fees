@@ -2,6 +2,7 @@ package cz.zsduhovacesta.controller;
 
 import cz.zsduhovacesta.model.BankStatement;
 import cz.zsduhovacesta.model.Student;
+import cz.zsduhovacesta.model.Transaction;
 import cz.zsduhovacesta.service.csv.CsvReader;
 import cz.zsduhovacesta.service.database.DaoManager;
 import javafx.collections.FXCollections;
@@ -13,8 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -24,8 +23,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Optional;
 
 public class Controller {
@@ -40,10 +37,11 @@ public class Controller {
     @FXML
     private TableView<BankStatement> bankStatementsTable;
     @FXML
-    private TableColumn <BankStatement, LocalDate> bankStatementTableColumnDate;
+    private TableView<Transaction> transactionsTable;
 
     private ObservableList<Student> students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
     private ObservableList<BankStatement> bankStatements = FXCollections.observableList(DaoManager.getInstance().listBankStatements());
+    private ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactions());
 
     public void listStudents () {
         studentsTable.itemsProperty().set(students);
@@ -51,25 +49,12 @@ public class Controller {
 
     public void listBankStatements () {
         bankStatementsTable.itemsProperty().set(bankStatements);
-//        bankStatementTableColumnDate.setCellFactory((column -> {
-//            TableCell<BankStatement, LocalDate> cell = new TableCell<>() {
-//                private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-//
-//                @Override
-//                protected void updateItem(LocalDate item, boolean empty) {
-//                    super.updateItem(item, empty);
-//                    if(empty) {
-//                        setText(null);
-//                    }
-//                    else {
-//                        setText(format.format(item));
-//                    }
-//                }
-//            };
-//
-//            return cell;
-//        }));
     }
+
+    public void listTransactions () {
+        transactionsTable.itemsProperty().set(transactions);
+    }
+
 
     @FXML
     public void listStudentsBySchoolStage() {

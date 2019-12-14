@@ -1,6 +1,7 @@
 package cz.zsduhovacesta.model;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Objects;
@@ -8,9 +9,9 @@ import java.util.Objects;
 public class Transaction {
 
     private int Id;
-    private SimpleStringProperty date;
+    private SimpleObjectProperty<CustomDate> date;
     private SimpleStringProperty className;
-    private SimpleIntegerProperty VS;
+    private SimpleIntegerProperty vs;
     private SimpleStringProperty lastName;
     private SimpleStringProperty firstName;
     private SimpleIntegerProperty amount;
@@ -19,9 +20,9 @@ public class Transaction {
     private SimpleIntegerProperty bankStatement;
 
     public Transaction() {
-        this.date = new SimpleStringProperty();
+        this.date = new SimpleObjectProperty<>();
         this.className = new SimpleStringProperty();
-        this.VS = new SimpleIntegerProperty();
+        this.vs = new SimpleIntegerProperty();
         this.lastName = new SimpleStringProperty();
         this.firstName = new SimpleStringProperty();
         this.amount = new SimpleIntegerProperty();
@@ -37,13 +38,17 @@ public class Transaction {
     public void setId(int id) {
         Id = id;
     }
-
-    public String getDate() {
+    public CustomDate getDate() {
         return date.get();
     }
 
+    public String getStringDate() {
+        return date.get().toString();
+    }
+
     public void setDate(String date) {
-        this.date.set(date);
+        CustomDate myDate = CustomDate.fromString(date);
+        this.date.set(myDate);
     }
 
     public String getClassName() {
@@ -54,12 +59,12 @@ public class Transaction {
         this.className.set(className);
     }
 
-    public int getVS() {
-        return VS.get();
+    public int getVs() {
+        return vs.get();
     }
 
-    public void setVS(int VS) {
-        this.VS.set(VS);
+    public void setVs(int vs) {
+        this.vs.set(vs);
     }
 
     public String getLastName() {
@@ -116,9 +121,9 @@ public class Transaction {
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
         return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getDate(), that.getDate()) &&
+                Objects.equals(getStringDate(), that.getStringDate()) &&
                 Objects.equals(getClassName(), that.getClassName()) &&
-                Objects.equals(getVS(), that.getVS()) &&
+                Objects.equals(getVs(), that.getVs()) &&
                 Objects.equals(getLastName(), that.getLastName()) &&
                 Objects.equals(getFirstName(), that.getFirstName()) &&
                 Objects.equals(getAmount(), that.getAmount()) &&
@@ -129,6 +134,6 @@ public class Transaction {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDate(), getClassName(), getVS(), getLastName(), getFirstName(), getAmount(), getPaymentMethod(), getTransactionNotes(), getBankStatement());
+        return Objects.hash(getId(), getStringDate(), getClassName(), getVs(), getLastName(), getFirstName(), getAmount(), getPaymentMethod(), getTransactionNotes(), getBankStatement());
     }
 }

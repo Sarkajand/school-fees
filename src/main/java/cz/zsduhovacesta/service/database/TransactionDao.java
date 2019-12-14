@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TransactionDao {
 
-    final Logger logger = LoggerFactory.getLogger(TransactionDao.class);
+    private final Logger logger = LoggerFactory.getLogger(TransactionDao.class);
 
     public static final String TABLE_TRANSACTIONS = "transactions";
     public static final String COLUMN_TRANSACTIONS_ID = "_id";
@@ -100,7 +100,7 @@ public class TransactionDao {
         transaction.setId(results.getInt(INDEX_TRANSACTIONS_LIST_ID));
         transaction.setDate(results.getString(INDEX_TRANSACTIONS_LIST_DATE));
         transaction.setClassName(results.getString(INDEX_TRANSACTIONS_LIST_CLASS_NAME));
-        transaction.setVS(results.getInt(INDEX_TRANSACTIONS_LIST_VS));
+        transaction.setVs(results.getInt(INDEX_TRANSACTIONS_LIST_VS));
         transaction.setLastName(results.getString(INDEX_TRANSACTIONS_LIST_LAST_NAME));
         transaction.setFirstName(results.getString(INDEX_TRANSACTIONS_LIST_FIRST_NAME));
         transaction.setAmount(results.getInt(INDEX_TRANSACTIONS_LIST_AMOUNT));
@@ -111,9 +111,9 @@ public class TransactionDao {
     }
 
     public void insertTransaction (Transaction transaction) throws Exception {
-        insertTransaction.setString(1, transaction.getDate());
+        insertTransaction.setString(1, transaction.getStringDate());
         insertTransaction.setInt(2, transaction.getBankStatement());
-        insertTransaction.setInt(3, transaction.getVS());
+        insertTransaction.setInt(3, transaction.getVs());
         insertTransaction.setInt(4, transaction.getAmount());
         insertTransaction.setString(5, transaction.getPaymentMethod());
         insertTransaction.setString(6, transaction.getTransactionNotes());
