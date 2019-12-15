@@ -95,6 +95,10 @@ public class DaoManager {
         return classesDao.queryClassIdByClassName(className);
     }
 
+    public Student queryStudentByVs (int vs) {
+        return studentDao.queryStudentByVs(vs);
+    }
+
     public void insertStudent (Student student) throws Exception {
         studentDao.insertStudent(student);
     }
@@ -157,6 +161,10 @@ public class DaoManager {
         } finally {
             connection.setAutoCommit(true);
         }
+    }
+
+    public void insertTransaction (Transaction transaction) throws Exception{
+        transactionDao.insertTransaction(transaction);
     }
 
 }

@@ -157,7 +157,7 @@
                             <padding>
                                 <Insets left="20"/>
                             </padding>
-                            <Button text="nová transakce hotově"/>
+                            <Button text="nová transakce" onAction="#newTransaction"/>
                             <Button text="upravit"/>
                             <Button text="smazat"/>
                             <Label text="         Najít podle VS:"/>

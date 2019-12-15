@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class StudentDaoIT {
@@ -240,5 +241,17 @@ class StudentDaoIT {
         } catch (Exception ignored) {
 
         }
+    }
+
+    @Test
+    void queryStudentByVs () {
+        Student student = studentDao.queryStudentByVs(254325);
+        assertEquals(firstStudentInDatabase(), student);
+    }
+
+    @Test
+    void queryNotExistingStudentByVs () {
+        Student student = studentDao.queryStudentByVs(999);
+        assertNull(student);
     }
 }

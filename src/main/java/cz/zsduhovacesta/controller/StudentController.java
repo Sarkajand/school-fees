@@ -50,7 +50,8 @@ public class StudentController {
         return saveClicked;
     }
 
-    public void setFields(Student student) {
+    public void setFields(Object object) {
+        Student student = (Student) object;
         lastNameField.setText(student.getLastName());
         firstNameField.setText(student.getFirstName());
         VSField.setText(Integer.toString(student.getVS()));

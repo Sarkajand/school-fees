@@ -14,7 +14,7 @@
             <TextField fx:id="lastNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
             <Label text="Jméno" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
             <TextField fx:id="firstNameField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-            <Label text="Třídy" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Label text="Třída" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
             <ChoiceBox fx:id="editStudentClassesChoiceBox" GridPane.rowIndex="2" GridPane.columnIndex="1"
                        prefWidth="250"/>
             <Label text="Variabilní symbol" GridPane.rowIndex="3" GridPane.columnIndex="0"/>

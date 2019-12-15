@@ -44,7 +44,6 @@ public class StudentDao {
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + COLUMN_STUDENT_LIST_STAGE + " = ?";
     public static final String QUERY_STUDENTS_BY_CLASS =
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + COLUMN_STUDENTS_LIST_CLASS + " = ?";
-    //    todo - zatim nemam metodu pro hledání podle vs, nevim jestli jí budu potřebovat - případně nezapomenout smazat
     public static final String QUERY_STUDENT_BY_VS =
             "SELECT * FROM " + VIEW_STUDENT_LIST + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
     public static final String INSERT_STUDENT =
@@ -104,11 +103,7 @@ public class StudentDao {
     public List<Student> queryAllStudents() {
         try {
             ResultSet results = queryAllStudents.executeQuery();
-            if (results == null) {
-                return Collections.emptyList();
-            } else {
-                return setStudents(results);
-            }
+            return setStudents(results);
         } catch (SQLException e) {
             logger.warn("Query all students failed: " + e.getMessage());
             return Collections.emptyList();
@@ -149,11 +144,7 @@ public class StudentDao {
         try {
             queryStudentsBySchoolStage.setString(1, schoolStage);
             ResultSet results = queryStudentsBySchoolStage.executeQuery();
-            if (results == null) {
-                return Collections.emptyList();
-            } else {
-                return setStudents(results);
-            }
+            return setStudents(results);
         } catch (SQLException e) {
             logger.warn("Query students by school stage failed: ", e);
             return Collections.emptyList();
@@ -164,14 +155,21 @@ public class StudentDao {
         try {
             queryStudentsByClass.setString(1, className);
             ResultSet results = queryStudentsByClass.executeQuery();
-            if (results == null) {
-                return Collections.emptyList();
-            } else {
-                return setStudents(results);
-            }
+            return setStudents(results);
         } catch (SQLException e) {
             logger.warn("Query students by class failed: ", e);
             return Collections.emptyList();
+        }
+    }
+
+    public Student queryStudentByVs (int vs) {
+        try {
+            queryStudentByVs.setInt(1, vs);
+            ResultSet results = queryStudentByVs.executeQuery();
+            return setStudent(results);
+        } catch (SQLException e) {
+            logger.warn("query student by vs failed:", e);
+            return null;
         }
     }
 

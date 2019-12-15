@@ -20,6 +20,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,18 +42,19 @@ public class Controller {
     private TableView<Transaction> transactionsTable;
 
     private ObservableList<Student> students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
-    private ObservableList<BankStatement> bankStatements = FXCollections.observableList(DaoManager.getInstance().listBankStatements());
-    private ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactions());
+    private final Logger logger = LoggerFactory.getLogger(Controller.class);
 
-    public void listStudents () {
+    public void listStudents() {
         studentsTable.itemsProperty().set(students);
     }
 
-    public void listBankStatements () {
+    public void listBankStatements() {
+        ObservableList<BankStatement> bankStatements = FXCollections.observableList(DaoManager.getInstance().listBankStatements());
         bankStatementsTable.itemsProperty().set(bankStatements);
     }
 
-    public void listTransactions () {
+    public void listTransactions() {
+        ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactions());
         transactionsTable.itemsProperty().set(transactions);
     }
 
@@ -84,42 +87,44 @@ public class Controller {
 
     @FXML
     public void newStudent() {
-            try {
-                StudentController studentController = setStudentDialogAndGetController("Nový žák", null);
-                if (studentController.isSaveClicked()) {
-                    Student student = studentController.handleSave();
-                    insertStudent(student);
-                    listStudentsBySchoolStage();
-                }
-            } catch (Exception e) {
-                showAlert("Chyba", "Nepodařilo se vložit žáka");
+        try {
+            FXMLLoader loader = getLoaderWithSetResource("studentDialog.fxml");
+            Stage stage = prepareStage("Nový žák", loader);
+            StudentController studentController = loader.getController();
+            studentController.setStage(stage);
+            stage.showAndWait();
+            if (studentController.isSaveClicked()) {
+                Student student = studentController.handleSave();
+                insertStudent(student);
+                listStudentsBySchoolStage();
             }
+        } catch (Exception e) {
+            logger.error("Method newStudent in Controller failed: ",e);
+            showAlert("Chyba", "Nepodařilo se vložit žáka");
+        }
     }
 
     private void insertStudent(Student student) throws Exception {
         DaoManager.getInstance().insertStudent(student);
     }
 
-    private StudentController setStudentDialogAndGetController(String title, Student student) throws IOException {
+    private FXMLLoader getLoaderWithSetResource (String resource) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Controller.class.getResource("studentDialog.fxml"));
-        BorderPane page = loader.load();
-
-        Stage studentStage = new Stage();
-        studentStage.setTitle(title);
-        studentStage.initModality(Modality.WINDOW_MODAL);
-        studentStage.initOwner(mainWindow.getScene().getWindow());
-        Scene scene = new Scene(page);
-        studentStage.setScene(scene);
-
-        StudentController controller = loader.getController();
-        controller.setStage(studentStage);
-        if (student != null) {
-            controller.setFields(student);
-        }
-        studentStage.showAndWait();
-        return controller;
+        loader.setLocation(Controller.class.getResource(resource));
+        return loader;
     }
+
+    private Stage prepareStage(String title, FXMLLoader loader) throws IOException{
+        BorderPane page = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle(title);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(mainWindow.getScene().getWindow());
+        Scene scene = new Scene(page);
+        stage.setScene(scene);
+        return stage;
+    }
+
 
     private void showAlert(String title, String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -134,13 +139,19 @@ public class Controller {
             showAlert("Chyba, není vybraný žák", "Musíte vybrat žáka");
         } else {
             try {
-                StudentController studentController = setStudentDialogAndGetController("Upravit žáka", student);
+                FXMLLoader loader = getLoaderWithSetResource("studentDialog.fxml");
+                Stage stage = prepareStage("Upravit žáka", loader);
+                StudentController studentController = loader.getController();
+                studentController.setStage(stage);
+                studentController.setFields(student);
+                stage.showAndWait();
                 if (studentController.isSaveClicked()) {
                     Student editedStudent = studentController.handleSave();
                     DaoManager.getInstance().editStudent(student.getVS(), editedStudent);
                     listStudentsBySchoolStage();
                 }
             } catch (Exception e) {
+                logger.error("Method editStudent in Controller failed: ",e);
                 showAlert("Chyba", "Nepodařilo se upravit žáka");
             }
         }
@@ -161,54 +172,64 @@ public class Controller {
                     DaoManager.getInstance().deleteStudent(student.getVS());
                     listStudentsBySchoolStage();
                 } catch (Exception e) {
+                    logger.error("Method deleteStudent in Controller failed: ",e);
                     showAlert("Chyba", "Nepodařilo se smazat studenta");
                 }
             }
         }
     }
 
-    public void showClasses () {
+    public void showClasses() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Controller.class.getResource("classes.fxml"));
-            BorderPane page = loader.load();
-
-            Stage classesStage = new Stage();
-            classesStage.setTitle("Nový žák");
-            classesStage.initModality(Modality.WINDOW_MODAL);
-            classesStage.initOwner(mainWindow.getScene().getWindow());
-            Scene scene = new Scene(page);
-            classesStage.setScene(scene);
-
+            FXMLLoader loader = getLoaderWithSetResource("classes.fxml");
+            Stage stage = prepareStage("Třídy", loader);
             ClassesController controller = loader.getController();
-            controller.setStage(classesStage);
-
-            classesStage.showAndWait();
-
+            controller.setStage(stage);
+            stage.showAndWait();
             setClassesChoiceBoxOnStudentsTab();
-            listStudents();
-
+            listStudentsBySchoolStage();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            logger.error("Method showClasses in Controller failed: ",e);
         }
     }
 
-    public void importBankStatement () {
+    public void importBankStatement() {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Přidej bankovní výpis");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("csv soubory", "*.csv"));
         File file = fileChooser.showOpenDialog(stage);
-        String path = "";
+        String path;
         CsvReader csvReader = new CsvReader();
         if (file != null) {
             path = file.getAbsolutePath();
+            try {
+                BankStatement bankStatement = csvReader.readNewBankStatement(path);
+                DaoManager.getInstance().insertBankStatementWithAllTransactions(bankStatement);
+                listBankStatements();
+                listTransactions();
+            } catch (Exception e) {
+                logger.error("Method importBankStatement in Controller failed: ",e);
+                showAlert("Chyba", "nepodařilo se nahrát bankovní účet");
+            }
         }
-        try{
-            BankStatement bankStatement = csvReader.readNewBankStatement(path);
-            DaoManager.getInstance().insertBankStatementWithAllTransactions(bankStatement);
+    }
+
+    public void newTransaction () {
+        try {
+            FXMLLoader loader = getLoaderWithSetResource("transactionDialog.fxml");
+            Stage stage = prepareStage("Nová transakce", loader);
+            TransactionDialogController controller = loader.getController();
+            controller.setStage(stage);
+            stage.showAndWait();
+            if (controller.isSaveClicked()) {
+                Transaction transaction = controller.handleSave();
+                DaoManager.getInstance().insertTransaction(transaction);
+                listTransactions();
+            }
         } catch (Exception e) {
-            showAlert("Chyba", "nepodařilo se nahrát bankovní účet");
+            logger.error("Method newTransaction in Controller failed: ",e);
+            showAlert("Chyba", "Nepodařilo se vložit transakci");
         }
     }
 }
