@@ -167,4 +167,12 @@ public class DaoManager {
         transactionDao.insertTransaction(transaction);
     }
 
+    public void editTransaction (Transaction transaction) throws Exception {
+        transactionDao.editTransaction(transaction);
+    }
+
+    public void deleteTransaction (Transaction transaction) throws Exception {
+        transactionDao.deleteTransaction(transaction);
+    }
+
 }

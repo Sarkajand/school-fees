@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Transaction {
 
-    private int Id;
+    private int id;
     private SimpleObjectProperty<CustomDate> date;
     private SimpleStringProperty className;
     private SimpleIntegerProperty vs;
@@ -32,11 +32,11 @@ public class Transaction {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
     public CustomDate getDate() {
         return date.get();

@@ -165,7 +165,7 @@ public class Controller {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Smazat žáka");
             alert.setContentText("Chcete smazat žáka: " + student.getLastName() + " " + student.getFirstName() +
-                    "? \n pro potvrzení stiskni ok, pro zrušení stiskni Cancel");
+                    "? \n pro potvrzení stiskni OK, pro zrušení stiskni Cancel");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
@@ -230,6 +230,50 @@ public class Controller {
         } catch (Exception e) {
             logger.error("Method newTransaction in Controller failed: ",e);
             showAlert("Chyba", "Nepodařilo se vložit transakci");
+        }
+    }
+
+    public void editTransaction () {
+        final Transaction transaction = transactionsTable.getSelectionModel().getSelectedItem();
+        try {
+            FXMLLoader loader = getLoaderWithSetResource("transactionDialog.fxml");
+            Stage stage = prepareStage("Upravit transakci", loader);
+            TransactionDialogController controller = loader.getController();
+            controller.setStage(stage);
+            controller.setFields(transaction);
+            stage.showAndWait();
+            if (controller.isSaveClicked()) {
+                Transaction editedTransaction = controller.handleSave();
+                editedTransaction.setId(transaction.getId());
+                DaoManager.getInstance().editTransaction(editedTransaction);
+                listTransactions();
+            }
+        } catch (Exception e) {
+            logger.error("Method newTransaction in Controller failed: ",e);
+            showAlert("Chyba", "Nepodařilo se vložit transakci");
+        }
+    }
+
+    public void deleteTransaction () {
+        final Transaction transaction = transactionsTable.getSelectionModel().getSelectedItem();
+        if (transaction == null) {
+            showAlert("Chyba, není vybraná transakce", "Musíte vybrat transakci");
+        } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Smazat transakci");
+            alert.setContentText("Chcete smazat transakci z  " + transaction.getDate() + "\n \tod: " +
+                    transaction.getLastName() + " " + transaction.getFirstName() +
+                    "? \n pro potvrzení stiskni OK, pro zrušení stiskni Cancel");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    DaoManager.getInstance().deleteTransaction(transaction);
+                    listTransactions();
+                } catch (Exception e) {
+                    logger.error("Method deleteTransaction in Controller failed: ", e);
+                    showAlert("Chyba", "Nepodařilo se smazat transakci");
+                }
+            }
         }
     }
 }

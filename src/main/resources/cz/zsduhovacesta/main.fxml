@@ -158,8 +158,8 @@
                                 <Insets left="20"/>
                             </padding>
                             <Button text="nová transakce" onAction="#newTransaction"/>
-                            <Button text="upravit"/>
-                            <Button text="smazat"/>
+                            <Button text="upravit" onAction="#editTransaction"/>
+                            <Button text="smazat" onAction="#deleteTransaction"/>
                             <Label text="         Najít podle VS:"/>
                             <TextField/>
                             <Label text="        Najít podle příjmení:"/>
@@ -168,6 +168,15 @@
                     </top>
                     <center>
                         <TableView fx:id="transactionsTable">
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem text="upravit" onAction="#editTransaction"/>
+                                        <SeparatorMenuItem/>
+                                        <MenuItem text="smazat" onAction="#deleteTransaction"/>
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
                             <columns>
                                 <TableColumn prefWidth="150" text="Datum">
                                     <cellValueFactory>

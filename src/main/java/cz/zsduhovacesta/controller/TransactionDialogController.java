@@ -54,8 +54,12 @@ public class TransactionDialogController {
 
     public void setFields (Object object) {
         Transaction transaction = (Transaction) object;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate date = LocalDate.parse(transaction.getStringDate(), formatter);
+        datePicker.setValue(date);
         vsField.setText(Integer.toString(transaction.getVs()));
         amountField.setText(Integer.toString(transaction.getAmount()));
+        paymentMethodChoiceBox.setValue(transaction.getPaymentMethod());
         bankStatementNumberField.setText(Integer.toString(transaction.getBankStatement()));
         notesArea.setText(transaction.getTransactionNotes());
     }

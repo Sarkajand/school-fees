@@ -44,14 +44,25 @@ public class TransactionDao {
             "INSERT INTO " + TABLE_TRANSACTIONS + "(" + COLUMN_DATE + ", " + COLUMN_TRANSACTIONS_BANK_STATEMENT + ", " +
                     COLUMN_TRANSACTIONS_VS + ", " + COLUMN_TRANSACTIONS_AMOUNT + ", " +
                     COLUMN_TRANSACTIONS_PAYMENT_METHOD + ", " + COLUMN_TRANSACTIONS_NOTES + ") VALUES (?, ?, ?, ?, ?, ?)";
+    public static final String EDIT_TRANSACTION =
+            "UPDATE " + TABLE_TRANSACTIONS + " SET " + COLUMN_DATE + " = ? , " + COLUMN_TRANSACTIONS_BANK_STATEMENT + " = ?, " +
+                    COLUMN_TRANSACTIONS_VS + " = ?, " + COLUMN_TRANSACTIONS_AMOUNT + " = ?, " +
+                    COLUMN_TRANSACTIONS_PAYMENT_METHOD + " = ?, " + COLUMN_TRANSACTIONS_NOTES + " = ?" +
+                    " WHERE " + COLUMN_TRANSACTIONS_ID + " = ?";
+    public static final String DELETE_TRANSACTION =
+            "DELETE FROM " + TABLE_TRANSACTIONS + " WHERE " + COLUMN_TRANSACTIONS_ID + " = ?";
 
     private PreparedStatement queryAllTransactions;
     private PreparedStatement insertTransaction;
+    private PreparedStatement editTransaction;
+    private PreparedStatement deleteTransaction;
 
     TransactionDao(Connection connection) throws SQLException {
         try {
             queryAllTransactions = connection.prepareStatement(QUERY_ALL_TRANSACTIONS);
             insertTransaction = connection.prepareStatement(INSERT_TRANSACTION);
+            editTransaction = connection.prepareStatement(EDIT_TRANSACTION);
+            deleteTransaction = connection.prepareStatement(DELETE_TRANSACTION);
         } catch (SQLException e) {
             logger.error("Couldn't create prepared statement for StudentDao", e);
             throw e;
@@ -65,6 +76,12 @@ public class TransactionDao {
             }
             if (insertTransaction != null) {
                 insertTransaction.close();
+            }
+            if (editTransaction != null) {
+                editTransaction.close();
+            }
+            if (deleteTransaction != null) {
+                deleteTransaction.close();
             }
         } catch (SQLException e) {
             logger.error("Couldn't close prepared statement in TransactionDao: ", e);
@@ -120,6 +137,28 @@ public class TransactionDao {
         int affectedRecords = insertTransaction.executeUpdate();
         if (affectedRecords != 1) {
             throw new Exception("Inserting transaction failed");
+        }
+    }
+
+    public void editTransaction (Transaction transaction) throws Exception {
+        editTransaction.setString(1, transaction.getStringDate());
+        editTransaction.setInt(2, transaction.getBankStatement());
+        editTransaction.setInt(3, transaction.getVs());
+        editTransaction.setInt(4, transaction.getAmount());
+        editTransaction.setString(5, transaction.getPaymentMethod());
+        editTransaction.setString(6, transaction.getTransactionNotes());
+        editTransaction.setInt(7, transaction.getId());
+        int affectedRecords = editTransaction.executeUpdate();
+        if (affectedRecords != 1) {
+            throw new Exception("Editing transaction failed");
+        }
+    }
+
+    public void deleteTransaction (Transaction transaction) throws Exception{
+        deleteTransaction.setInt(1, transaction.getId());
+        int affectedRecords = deleteTransaction.executeUpdate();
+        if (affectedRecords != 1) {
+            throw new Exception("Deleting transaction failed");
         }
     }
 }
