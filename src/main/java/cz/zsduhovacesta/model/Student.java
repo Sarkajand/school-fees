@@ -24,6 +24,8 @@ public class Student {
     private SimpleIntegerProperty shouldPay;
     private SimpleIntegerProperty payed;
     private SimpleIntegerProperty summaryLastYear;
+    private SimpleIntegerProperty overPayment;
+    private SimpleIntegerProperty underPayment;
 
 
     public Student() {
@@ -43,6 +45,22 @@ public class Student {
         this.shouldPay = new SimpleIntegerProperty();
         this.payed = new SimpleIntegerProperty();
         this.summaryLastYear = new SimpleIntegerProperty();
+        this.overPayment = new SimpleIntegerProperty();
+        this.underPayment = new SimpleIntegerProperty();
+    }
+
+    public void countOverPayment () {
+        int overPayment = summaryLastYear.get() + payed.get() - shouldPay.get();
+        if (overPayment > 0) {
+            this.overPayment.set(overPayment);
+        } else this.overPayment.set(0);
+    }
+
+    public void countUnderPayment() {
+        int underPayment = shouldPay.get() - summaryLastYear.get() + payed.get();
+        if (underPayment > 0) {
+            this.underPayment.set(underPayment);
+        } else this.underPayment.set(0);
     }
 
     public String getSchoolStage() {
@@ -171,6 +189,22 @@ public class Student {
 
     public void setSummaryLastYear (int summaryLastYear) {
         this.summaryLastYear.set(summaryLastYear);
+    }
+
+    public int getOverPayment() {
+        return overPayment.get();
+    }
+
+    public void setOverPayment(int overPayment) {
+        this.overPayment.set(overPayment);
+    }
+
+    public int getUnderPayment() {
+        return underPayment.get();
+    }
+
+    public void setUnderPayment(int underPayment) {
+        this.underPayment.set(underPayment);
     }
 
     @Override

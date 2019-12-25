@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class DaoManager {
@@ -173,6 +175,21 @@ public class DaoManager {
 
     public void deleteTransaction (Transaction transaction) throws Exception {
         transactionDao.deleteTransaction(transaction);
+    }
+
+    public List<Transaction> listTransactionByVs (int vs) throws Exception {
+        return transactionDao.queryTransactionByVs(vs);
+    }
+
+    public void backupDatabase () throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+        StringBuilder sb = new StringBuilder("backup to src\\main\\resources\\database\\backup\\zaloha-");
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm");
+        sb.append(formatter.format(date));
+        sb.append(".db");
+        connection.createStatement().executeUpdate(sb.toString());
+        connection.close();
     }
 
 }

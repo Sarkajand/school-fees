@@ -40,6 +40,8 @@ public class TransactionDao {
 
     public static final String QUERY_ALL_TRANSACTIONS =
             "SELECT * FROM " + VIEW_TRANSACTIONS_LIST;
+    public static final String QUERY_TRANSACTION_BY_VS =
+            "SELECT * FROM " + VIEW_TRANSACTIONS_LIST + " WHERE " + COLUMN_TRANSACTIONS_VS + " = ?";
     public static final String INSERT_TRANSACTION =
             "INSERT INTO " + TABLE_TRANSACTIONS + "(" + COLUMN_DATE + ", " + COLUMN_TRANSACTIONS_BANK_STATEMENT + ", " +
                     COLUMN_TRANSACTIONS_VS + ", " + COLUMN_TRANSACTIONS_AMOUNT + ", " +
@@ -53,6 +55,7 @@ public class TransactionDao {
             "DELETE FROM " + TABLE_TRANSACTIONS + " WHERE " + COLUMN_TRANSACTIONS_ID + " = ?";
 
     private PreparedStatement queryAllTransactions;
+    private PreparedStatement queryTransactionByVs;
     private PreparedStatement insertTransaction;
     private PreparedStatement editTransaction;
     private PreparedStatement deleteTransaction;
@@ -60,6 +63,7 @@ public class TransactionDao {
     TransactionDao(Connection connection) throws SQLException {
         try {
             queryAllTransactions = connection.prepareStatement(QUERY_ALL_TRANSACTIONS);
+            queryTransactionByVs = connection.prepareStatement(QUERY_TRANSACTION_BY_VS);
             insertTransaction = connection.prepareStatement(INSERT_TRANSACTION);
             editTransaction = connection.prepareStatement(EDIT_TRANSACTION);
             deleteTransaction = connection.prepareStatement(DELETE_TRANSACTION);
@@ -73,6 +77,9 @@ public class TransactionDao {
         try {
             if (queryAllTransactions != null) {
                 queryAllTransactions.close();
+            }
+            if (queryTransactionByVs != null) {
+                queryTransactionByVs.close();
             }
             if (insertTransaction != null) {
                 insertTransaction.close();
@@ -125,6 +132,12 @@ public class TransactionDao {
         transaction.setTransactionNotes(results.getString(INDEX_TRANSACTIONS_LIST_PAYMENT_NOTES));
         transaction.setBankStatement(results.getInt(INDEX_TRANSACTIONS_LIST_BANK_STATEMENT));
         return transaction;
+    }
+
+    public List<Transaction> queryTransactionByVs(int vs) throws Exception{
+        queryTransactionByVs.setInt(1, vs);
+        ResultSet results = queryTransactionByVs.executeQuery();
+        return setTransactions(results);
     }
 
     public void insertTransaction (Transaction transaction) throws Exception {

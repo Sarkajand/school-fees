@@ -12,7 +12,7 @@
                 <Menu text="menu">
                     <MenuItem text="třídy" onAction="#showClasses"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="záloha databáze"/>
+                    <MenuItem text="záloha databáze" onAction="#backupDatabase"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="další možnosti?"/>
                 </Menu>
@@ -55,6 +55,8 @@
                             <contextMenu>
                                 <ContextMenu>
                                     <items>
+                                        <MenuItem text="kopírovat vs" onAction="#copyVs"/>
+                                        <SeparatorMenuItem/>
                                         <MenuItem text="upravit" onAction="#editStudent"/>
                                         <SeparatorMenuItem/>
                                         <MenuItem text="smazat" onAction="#deleteStudent"/>
@@ -160,10 +162,9 @@
                             <Button text="nová transakce" onAction="#newTransaction"/>
                             <Button text="upravit" onAction="#editTransaction"/>
                             <Button text="smazat" onAction="#deleteTransaction"/>
-                            <Label text="         Najít podle VS:"/>
-                            <TextField/>
-                            <Label text="        Najít podle příjmení:"/>
-                            <TextField/>
+                            <Button text="najít podle VS:" onAction="#listTransactionByVs"/>
+                            <TextField fx:id="vsFieldOnTransactionTab"/>
+                            <Button text="všechny transakce" onAction="#listTransactions"/>
                         </HBox>
                     </top>
                     <center>
@@ -230,23 +231,69 @@
                             <padding>
                                 <Insets left="20"/>
                             </padding>
-                            <Label text="třídy"/>
-                            <ChoiceBox/>
+                            <fx:define>
+                                <ToggleGroup fx:id="schoolStageToggleGroupOnSummary"/>
+                            </fx:define>
+                            <RadioButton text="všichni" toggleGroup="$schoolStageToggleGroupOnSummary" selected="true"
+                                         onAction="#listStudentsBySchoolStageOnSummary"/>
+                            <RadioButton text="ZŠ" toggleGroup="$schoolStageToggleGroupOnSummary"
+                                         onAction="#listStudentsBySchoolStageOnSummary"/>
+                            <RadioButton text="MŠ" toggleGroup="$schoolStageToggleGroupOnSummary"
+                                         onAction="#listStudentsBySchoolStageOnSummary"/>
+                            <Label text="třídy:"/>
+                            <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnSummaryTab"
+                                       onAction="#listStudentsByClassOnSummary"/>
                             <Button text="Export CSV"/>
                         </HBox>
                     </top>
                     <center>
-                        <TableView>
+                        <TableView fx:id="summaryTable">
                             <columns>
-                                <TableColumn prefWidth="100" text="Třída"/>
-                                <TableColumn prefWidth="150" text="Příjmení"/>
-                                <TableColumn prefWidth="150" text="Jméno"/>
-                                <TableColumn prefWidth="150" text="Variabilní symbol"/>
-                                <TableColumn prefWidth="150" text="Má dát"/>
-                                <TableColumn prefWidth="150" text="Dal"/>
-                                <TableColumn prefWidth="150" text="Přeplatek"/>
-                                <TableColumn prefWidth="150" text="Nedoplatek"/>
-                                <TableColumn prefWidth="150" text="poznámky k platbám"/>
+                                <TableColumn prefWidth="100" text="Třída">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="className"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Příjmení">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="LastName"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Jméno">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="FirstName"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Variabilní symbol">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="VS"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Má dát">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="shouldPay"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Dal">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="payed"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Přeplatek">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="overPayment"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="Nedoplatek">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="underPayment"/>
+                                    </cellValueFactory>
+                                </TableColumn>
+                                <TableColumn prefWidth="150" text="poznámky k platbám">
+                                    <cellValueFactory>
+                                        <PropertyValueFactory property="paymentNotes"/>
+                                    </cellValueFactory>
+                                </TableColumn>
                             </columns>
                         </TableView>
                     </center>

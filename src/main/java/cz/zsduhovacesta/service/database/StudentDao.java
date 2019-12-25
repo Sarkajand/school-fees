@@ -137,6 +137,8 @@ public class StudentDao {
         student.setShouldPay(results.getInt(14));
         student.setPayed(results.getInt(15));
         student.setSummaryLastYear(results.getInt(16));
+        student.countOverPayment();
+        student.countUnderPayment();
         return student;
     }
 
@@ -205,4 +207,6 @@ public class StudentDao {
             throw new Exception("Deleting student failed");
         }
     }
+
+
 }

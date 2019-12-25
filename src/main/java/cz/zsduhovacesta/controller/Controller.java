@@ -15,7 +15,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -25,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class Controller {
@@ -40,6 +44,14 @@ public class Controller {
     private TableView<BankStatement> bankStatementsTable;
     @FXML
     private TableView<Transaction> transactionsTable;
+    @FXML
+    private TextField vsFieldOnTransactionTab;
+    @FXML
+    private TableView<Student> summaryTable;
+    @FXML
+    private ChoiceBox<String> classesChoiceBoxOnSummaryTab;
+    @FXML
+    private ToggleGroup schoolStageToggleGroupOnSummary;
 
     private ObservableList<Student> students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
     private final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -58,6 +70,10 @@ public class Controller {
         transactionsTable.itemsProperty().set(transactions);
     }
 
+    public void listSummary() {
+        summaryTable.itemsProperty().set(students);
+    }
+
 
     @FXML
     public void listStudentsBySchoolStage() {
@@ -74,8 +90,27 @@ public class Controller {
     }
 
     @FXML
+    public void listStudentsBySchoolStageOnSummary () {
+        classesChoiceBoxOnSummaryTab.valueProperty().set(null);
+        RadioButton selectedRadioButton = (RadioButton) schoolStageToggleGroupOnSummary.getSelectedToggle();
+        String selectedSchoolStage = selectedRadioButton.getText();
+        if (selectedSchoolStage.equals("všichni")) {
+            students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
+            listSummary();
+        } else {
+            students = FXCollections.observableList(DaoManager.getInstance().listStudentsBySchoolStage(selectedSchoolStage));
+            listSummary();
+        }
+    }
+
+    @FXML
     public void setClassesChoiceBoxOnStudentsTab() {
         classesChoiceBoxOnStudentsTab.setItems(FXCollections.observableArrayList(DaoManager.getInstance().listClassesNames()));
+    }
+
+    @FXML
+    public void setClassesChoiceBoxOnSummaryTab() {
+        classesChoiceBoxOnSummaryTab.setItems(FXCollections.observableArrayList(DaoManager.getInstance().listClassesNames()));
     }
 
     @FXML
@@ -83,6 +118,13 @@ public class Controller {
         String className = classesChoiceBoxOnStudentsTab.getSelectionModel().getSelectedItem();
         students = FXCollections.observableList(DaoManager.getInstance().listStudentsByClass(className));
         listStudents();
+    }
+
+    @FXML
+    public void listStudentsByClassOnSummary() {
+        String className = classesChoiceBoxOnSummaryTab.getSelectionModel().getSelectedItem();
+        students = FXCollections.observableList(DaoManager.getInstance().listStudentsByClass(className));
+        listSummary();
     }
 
     @FXML
@@ -275,5 +317,37 @@ public class Controller {
                 }
             }
         }
+    }
+
+    public void listTransactionByVs() {
+        try {
+            int vs = Integer.parseInt(vsFieldOnTransactionTab.getText());
+            ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactionByVs(vs));
+            transactionsTable.itemsProperty().set(transactions);
+        } catch (Exception e) {
+            logger.warn("List transactions by vs failed", e);
+            showAlert("Chyba", "transakce se nepodařilo najít");
+        }
+    }
+
+    public void backupDatabase () {
+        try {
+            DaoManager.getInstance().backupDatabase();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Záloha databáze");
+            alert.setContentText("Záloha databáze byla vytvořena");
+            alert.showAndWait();
+        } catch (SQLException e ){
+            logger.error("Backup database failed",e);
+            showAlert("Chyba", "Nepodařilo se vytvořit zálohu databáze");
+        }
+    }
+
+    public void copyVs() {
+        Student student = studentsTable.getSelectionModel().getSelectedItem();
+        String vs = String.valueOf(student.getVS());
+        final ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString(vs);
+        Clipboard.getSystemClipboard().setContent(clipboardContent);
     }
 }

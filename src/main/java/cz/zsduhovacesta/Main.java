@@ -29,6 +29,8 @@ public class Main extends Application {
         controller.setClassesChoiceBoxOnStudentsTab();
         controller.listBankStatements();
         controller.listTransactions();
+        controller.listSummary();
+        controller.setClassesChoiceBoxOnSummaryTab();
 
         primaryStage.setTitle("Školné");
         primaryStage.setScene(new Scene(root, 1500, 800));
