@@ -13,7 +13,7 @@ class ClassesTest {
     private static Classes nullClass;
 
     @BeforeAll
-    public static void setup () {
+    public static void setup() {
         classes = new Classes();
         sameClass = classes;
         newClassWithSameValues = new Classes();
@@ -22,7 +22,6 @@ class ClassesTest {
         nullClass = null;
     }
 
-
     @Test
     void testEqualsReflexive() {
         assertEquals(classes, classes);
@@ -30,7 +29,7 @@ class ClassesTest {
     }
 
     @Test
-    void testEqualsSymmetric () {
+    void testEqualsSymmetric() {
         assertEquals(classes, sameClass);
         assertEquals(sameClass, classes);
         assertEquals(classes, newClassWithSameValues);
@@ -40,23 +39,22 @@ class ClassesTest {
     }
 
     @Test
-    void testEqualsNull () {
+    void testEqualsNull() {
         assertNotEquals(classes, nullClass);
         assertNotEquals(nullClass, differentClass);
     }
 
     @Test
-    void testEqualsTransitive () {
+    void testEqualsTransitive() {
         assertEquals(classes, sameClass);
         assertEquals(sameClass, newClassWithSameValues);
         assertEquals(classes, newClassWithSameValues);
     }
 
     @Test
-    void testHashCode () {
+    void testHashCode() {
         assertEquals(classes.hashCode(), sameClass.hashCode());
         assertEquals(classes.hashCode(), newClassWithSameValues.hashCode());
         assertNotEquals(classes.hashCode(), differentClass.hashCode());
     }
-
 }

@@ -121,7 +121,7 @@ public class Transaction {
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
         return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getStringDate(), that.getStringDate()) &&
+                Objects.equals(getDate(), that.getDate()) &&
                 Objects.equals(getClassName(), that.getClassName()) &&
                 Objects.equals(getVs(), that.getVs()) &&
                 Objects.equals(getLastName(), that.getLastName()) &&
@@ -134,6 +134,7 @@ public class Transaction {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getStringDate(), getClassName(), getVs(), getLastName(), getFirstName(), getAmount(), getPaymentMethod(), getTransactionNotes(), getBankStatement());
+        return Objects.hash(getId(), getDate(), getClassName(), getVs(), getLastName(), getFirstName(),
+                getAmount(), getPaymentMethod(), getTransactionNotes(), getBankStatement());
     }
 }

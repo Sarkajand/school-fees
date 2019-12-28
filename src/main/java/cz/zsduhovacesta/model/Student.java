@@ -50,17 +50,13 @@ public class Student {
     }
 
     public void countOverPayment () {
-        int overPayment = summaryLastYear.get() + payed.get() - shouldPay.get();
-        if (overPayment > 0) {
-            this.overPayment.set(overPayment);
-        } else this.overPayment.set(0);
+        int overPayment = (summaryLastYear.get() + payed.get()) - shouldPay.get();
+        this.overPayment.set(Math.max(overPayment, 0));
     }
 
     public void countUnderPayment() {
-        int underPayment = shouldPay.get() - summaryLastYear.get() + payed.get();
-        if (underPayment > 0) {
-            this.underPayment.set(underPayment);
-        } else this.underPayment.set(0);
+        int underPayment = shouldPay.get() - (summaryLastYear.get() + payed.get());
+        this.underPayment.set(Math.max(underPayment, 0));
     }
 
     public String getSchoolStage() {
@@ -195,16 +191,8 @@ public class Student {
         return overPayment.get();
     }
 
-    public void setOverPayment(int overPayment) {
-        this.overPayment.set(overPayment);
-    }
-
     public int getUnderPayment() {
         return underPayment.get();
-    }
-
-    public void setUnderPayment(int underPayment) {
-        this.underPayment.set(underPayment);
     }
 
     @Override
@@ -227,11 +215,15 @@ public class Student {
                 Objects.equals(getPaymentNotes(), student.getPaymentNotes()) &&
                 Objects.equals(getShouldPay(), student.getShouldPay()) &&
                 Objects.equals(getPayed(), student.getPayed()) &&
-                Objects.equals(getSummaryLastYear(), student.getSummaryLastYear());
+                Objects.equals(getSummaryLastYear(), student.getSummaryLastYear()) &&
+                Objects.equals(getOverPayment(), student.getOverPayment()) &&
+                Objects.equals(getUnderPayment(), student.getUnderPayment());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSchoolStage(), getClassName(), getClassId(), getLastName(), getFirstName(), getFees(), getVS(), getMotherPhone(), getFatherPhone(), getMotherEmail(), getFatherEmail(), getNotes(), getPaymentNotes(), getShouldPay(), getPayed(), getSummaryLastYear());
+        return Objects.hash(getSchoolStage(), getClassName(), getClassId(), getLastName(), getFirstName(), getFees(),
+                getVS(), getMotherPhone(), getFatherPhone(), getMotherEmail(), getFatherEmail(), getNotes(),
+                getPaymentNotes(), getShouldPay(), getPayed(), getSummaryLastYear(),getOverPayment(), getUnderPayment());
     }
 }
