@@ -1,6 +1,8 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.Student;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,9 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StudentDao {
 
@@ -50,6 +49,8 @@ public class StudentDao {
             "INSERT INTO " + TABLE_STUDENTS + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String DELETE_STUDENT =
             "DELETE FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
+    public static final String UPDATE_SHOULD_PAY =
+            "UPDATE " + TABLE_STUDENTS + " SET " + COLUMN_STUDENTS_SHOULD_PAY + " = ? WHERE " + COLUMN_STUDENTS_VS + " = ?";
 
 
     private PreparedStatement queryAllStudents;
@@ -58,6 +59,7 @@ public class StudentDao {
     private PreparedStatement queryStudentByVs;
     private PreparedStatement insertStudent;
     private PreparedStatement deleteStudent;
+    private PreparedStatement updateShouldPay;
 
 
     StudentDao(Connection connection) throws SQLException {
@@ -68,8 +70,9 @@ public class StudentDao {
             queryStudentByVs = connection.prepareStatement(QUERY_STUDENT_BY_VS);
             insertStudent = connection.prepareStatement(INSERT_STUDENT);
             deleteStudent = connection.prepareStatement(DELETE_STUDENT);
+            updateShouldPay = connection.prepareStatement(UPDATE_SHOULD_PAY);
         } catch (SQLException e) {
-            logger.error("Couldn't create prepared statement for StudentDao", e);
+            logger.error("Couldn't create prepared statements for StudentDao", e);
             throw e;
         }
     }
@@ -93,6 +96,9 @@ public class StudentDao {
             }
             if (deleteStudent != null) {
                 deleteStudent.close();
+            }
+            if (updateShouldPay != null) {
+                updateShouldPay.close();
             }
         } catch (SQLException e) {
             logger.error("Couldn't close prepared statement in StudentDao: ", e);
@@ -208,5 +214,12 @@ public class StudentDao {
         }
     }
 
-
+    public void updateShouldPay (int vs, int shouldPay) throws Exception {
+        updateShouldPay.setInt(1, shouldPay);
+        updateShouldPay.setInt(2, vs);
+        int affectedRecords = updateShouldPay.executeUpdate();
+        if (affectedRecords != 1) {
+            throw new Exception("Updating should pay failed");
+        }
+    }
 }

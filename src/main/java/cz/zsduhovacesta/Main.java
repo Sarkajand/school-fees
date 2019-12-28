@@ -42,6 +42,7 @@ public class Main extends Application {
         super.init();
         try {
             DaoManager.getInstance().open();
+            DaoManager.getInstance().checkFeesHistoryLastUpdate();
         } catch (SQLException e) {
 //            Alert alert = new Alert(Alert.AlertType.ERROR);
 //            alert.setTitle("Chyba spojení s databází");

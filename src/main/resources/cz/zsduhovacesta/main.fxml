@@ -137,7 +137,7 @@
                     <center>
                         <TableView fx:id="bankStatementsTable">
                             <columns>
-                                <TableColumn  prefWidth="150" text="datum">
+                                <TableColumn prefWidth="150" text="datum">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="date"/>
                                     </cellValueFactory>
@@ -244,10 +244,18 @@
                             <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnSummaryTab"
                                        onAction="#listStudentsByClassOnSummary"/>
                             <Button text="Export CSV"/>
+                            <Button text="Historie školného žáka" onAction="#showFeesHistoryDialog"/>
                         </HBox>
                     </top>
                     <center>
                         <TableView fx:id="summaryTable">
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem text="hostorie školného" onAction="#showFeesHistoryDialog"/>
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
                             <columns>
                                 <TableColumn prefWidth="100" text="Třída">
                                     <cellValueFactory>

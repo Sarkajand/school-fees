@@ -1,6 +1,7 @@
 package cz.zsduhovacesta.controller;
 
 import cz.zsduhovacesta.model.BankStatement;
+import cz.zsduhovacesta.model.FeesHistory;
 import cz.zsduhovacesta.model.Student;
 import cz.zsduhovacesta.model.Transaction;
 import cz.zsduhovacesta.service.csv.CsvReader;
@@ -139,6 +140,7 @@ public class Controller {
                 Student student = studentController.handleSave();
                 insertStudent(student);
                 listStudentsBySchoolStage();
+                listStudentsBySchoolStageOnSummary();
             }
         } catch (Exception e) {
             logger.error("Method newStudent in Controller failed: ",e);
@@ -175,6 +177,7 @@ public class Controller {
         alert.showAndWait();
     }
 
+    @FXML
     public void editStudent() {
         final Student student = studentsTable.getSelectionModel().getSelectedItem();
         if (student == null) {
@@ -191,6 +194,7 @@ public class Controller {
                     Student editedStudent = studentController.handleSave();
                     DaoManager.getInstance().editStudent(student.getVS(), editedStudent);
                     listStudentsBySchoolStage();
+                    listStudentsBySchoolStageOnSummary();
                 }
             } catch (Exception e) {
                 logger.error("Method editStudent in Controller failed: ",e);
@@ -199,6 +203,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void deleteStudent() {
         final Student student = studentsTable.getSelectionModel().getSelectedItem();
         if (student == null) {
@@ -213,6 +218,7 @@ public class Controller {
                 try {
                     DaoManager.getInstance().deleteStudent(student.getVS());
                     listStudentsBySchoolStage();
+                    listStudentsBySchoolStageOnSummary();
                 } catch (Exception e) {
                     logger.error("Method deleteStudent in Controller failed: ",e);
                     showAlert("Chyba", "Nepodařilo se smazat studenta");
@@ -221,6 +227,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void showClasses() {
         try {
             FXMLLoader loader = getLoaderWithSetResource("classes.fxml");
@@ -235,6 +242,35 @@ public class Controller {
         }
     }
 
+    @FXML
+    public void showFeesHistoryDialog() {
+        final Student student = summaryTable.getSelectionModel().getSelectedItem();
+        if (student == null) {
+            showAlert("Chyba, není vybraný žák", "Musíte vybrat žáka");
+        } else {
+            try {
+                FXMLLoader loader = getLoaderWithSetResource("feesHistoryDialog.fxml");
+                Stage stage = prepareStage("Historie školného", loader);
+                FeesHistoryDialogController controller = loader.getController();
+                controller.setStage(stage);
+                FeesHistory feesHistory = DaoManager.getInstance().queryFeesHistoryByStudentVs(student.getVS());
+                controller.setFields(feesHistory);
+                stage.showAndWait();
+                if (controller.isSaveClicked()) {
+                    FeesHistory editedFeesHistory = controller.handleSave();
+                    editedFeesHistory.setStudentVs(feesHistory.getStudentVs());
+                    editedFeesHistory.setLastUpdate(feesHistory.getLastUpdate());
+                    DaoManager.getInstance().updateFeesHistoryByUser(editedFeesHistory);
+                    listStudentsBySchoolStageOnSummary();
+                }
+            } catch (Exception e) {
+                logger.error("Method showFeesHistoryDialog in Controller failed: ",e);
+                showAlert("Chyba", "Nepodařilo se upravit historii školného");
+            }
+        }
+    }
+
+    @FXML
     public void importBankStatement() {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
@@ -257,6 +293,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void newTransaction () {
         try {
             FXMLLoader loader = getLoaderWithSetResource("transactionDialog.fxml");
@@ -275,6 +312,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void editTransaction () {
         final Transaction transaction = transactionsTable.getSelectionModel().getSelectedItem();
         try {
@@ -296,6 +334,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void deleteTransaction () {
         final Transaction transaction = transactionsTable.getSelectionModel().getSelectedItem();
         if (transaction == null) {
@@ -319,6 +358,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void listTransactionByVs() {
         try {
             int vs = Integer.parseInt(vsFieldOnTransactionTab.getText());
@@ -330,6 +370,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void backupDatabase () {
         try {
             DaoManager.getInstance().backupDatabase();
@@ -343,6 +384,7 @@ public class Controller {
         }
     }
 
+    @FXML
     public void copyVs() {
         Student student = studentsTable.getSelectionModel().getSelectedItem();
         String vs = String.valueOf(student.getVS());

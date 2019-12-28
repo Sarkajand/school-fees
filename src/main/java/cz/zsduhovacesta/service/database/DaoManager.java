@@ -1,9 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
-import cz.zsduhovacesta.model.BankStatement;
-import cz.zsduhovacesta.model.Classes;
-import cz.zsduhovacesta.model.Student;
-import cz.zsduhovacesta.model.Transaction;
+import cz.zsduhovacesta.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +28,7 @@ public class DaoManager {
     private ClassesDao classesDao;
     private BankStatementDao bankStatementDao;
     private TransactionDao transactionDao;
+    private FeesHistoryDao feesHistoryDao;
 
     private DaoManager () {
 
@@ -45,6 +45,7 @@ public class DaoManager {
             this.classesDao = new ClassesDao(connection);
             this.bankStatementDao = new BankStatementDao(connection);
             this.transactionDao = new TransactionDao(connection);
+            this.feesHistoryDao = new FeesHistoryDao(connection);
         } catch (SQLException e) {
             logger.error("Couldn't connect to database: ", e);
             throw e;
@@ -64,6 +65,9 @@ public class DaoManager {
             }
             if (classesDao != null) {
                 classesDao.close();
+            }
+            if (feesHistoryDao != null) {
+                feesHistoryDao.close();
             }
             if (connection != null) {
                 connection.close();
@@ -103,6 +107,11 @@ public class DaoManager {
 
     public void insertStudent (Student student) throws Exception {
         studentDao.insertStudent(student);
+        createFeesHistoryForNewStudent(student.getVS());
+    }
+
+    private void createFeesHistoryForNewStudent (int vs) throws Exception {
+        feesHistoryDao.insertFeesHistory(vs);
     }
 
     public void editStudent (int vs, Student editedStudent) throws Exception{
@@ -110,6 +119,9 @@ public class DaoManager {
             connection.setAutoCommit(false);
             studentDao.deleteStudent(vs);
             studentDao.insertStudent(editedStudent);
+            if (vs != editedStudent.getVS()) {
+                feesHistoryDao.updateVs(vs, editedStudent.getVS());
+            }
         } catch (Exception e) {
             connection.rollback();
             throw e;
@@ -121,6 +133,7 @@ public class DaoManager {
 
     public void deleteStudent (int vs) throws Exception {
         studentDao.deleteStudent(vs);
+        feesHistoryDao.deleteFeesHistory(vs);
     }
 
     public void insertClass (Classes newClass) throws Exception {
@@ -137,6 +150,53 @@ public class DaoManager {
             studentDao.deleteStudent(student.getVS());
         }
         classesDao.deleteClass(classToDelete);
+    }
+
+    public void updateFeesHistoryByUser (FeesHistory feesHistory) throws Exception{
+        feesHistoryDao.updateAllMonthsByUser(feesHistory);
+        updateStudentShouldPay(feesHistory.getStudentVs());
+    }
+
+    public FeesHistory queryFeesHistoryByStudentVs (int vs) {
+        return feesHistoryDao.queryFeesHistoryByStudentVs(vs);
+    }
+
+    public void checkFeesHistoryLastUpdate () {
+        Calendar calendar = Calendar.getInstance();
+        int actualMonth = calendar.get(Calendar.MONTH) +1;
+        int actualDayInMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        List<FeesHistory> feesHistories= new ArrayList<>();
+        if (actualDayInMonth < 15) {
+            feesHistories = queryFeesHistoriesWithWrongLastUpdate(actualMonth-1);
+        } else {
+
+            feesHistories = queryFeesHistoriesWithWrongLastUpdate(actualMonth);
+        }
+        if (feesHistories.size() > 0) {
+            try {
+                updateShouldPayAndFeesHistory(actualMonth, feesHistories);
+            } catch (Exception e) {
+                logger.error("Monthly updating fees history and should pay failed: ", e);
+            }
+        }
+    }
+
+    public List<FeesHistory> queryFeesHistoriesWithWrongLastUpdate (int lastUpdate) {
+        return feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(lastUpdate);
+    }
+
+    public void updateShouldPayAndFeesHistory (int actualMonth, List<FeesHistory> feesHistories) throws Exception {
+        for (FeesHistory feesHistory : feesHistories) {
+            Student student = queryStudentByVs(feesHistory.getStudentVs());
+            feesHistoryDao.updateActualMonth(actualMonth, student);
+            updateStudentShouldPay(feesHistory.getStudentVs());
+        }
+    }
+
+    private void updateStudentShouldPay (int vs) throws Exception{
+        FeesHistory feesHistory = queryFeesHistoryByStudentVs(vs);
+        int shouldPay = feesHistory.countShouldPay();
+        studentDao.updateShouldPay(vs, shouldPay);
     }
 
     public List<BankStatement> listBankStatements () {

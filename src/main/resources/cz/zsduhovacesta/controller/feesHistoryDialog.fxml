@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="cz.zsduhovacesta.controller.FeesHistoryDialogController"
+            prefHeight="400.0" prefWidth="600.0">
+    <center>
+        <GridPane vgap="10" hgap="10" alignment="CENTER">
+            <Label text="Leden" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="januaryTextField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Únor" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="februaryTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Březen" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="marchTextField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Duben" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="aprilTextField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Květen" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="mayTextField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Červen" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="juneTextField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Červenec" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <TextField fx:id="julyTextField" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label text="Srpen" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+            <TextField fx:id="augustTextField" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            <Label text="Září" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+            <TextField fx:id="septemberTextField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+            <Label text="Říjen" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+            <TextField fx:id="octoberTextField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+            <Label text="Listopad" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+            <TextField fx:id="novemberTextField" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+            <Label text="Prosinec" GridPane.rowIndex="11" GridPane.columnIndex="0"/>
+            <TextField fx:id="decemberTextField" GridPane.rowIndex="11" GridPane.columnIndex="1"/>
+        </GridPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="20" prefHeight="50">
+            <padding>
+                <Insets bottom="20"/>
+                <Insets right="20"/>
+            </padding>
+            <Button text="Odejít beze změny" onAction="#handleCancel"/>
+            <Button text="Uložit změny" onAction="#handleSave"/>
+        </HBox>
+    </bottom>
+</BorderPane>
