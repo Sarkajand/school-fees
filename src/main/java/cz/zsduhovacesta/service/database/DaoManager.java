@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,7 @@ public class DaoManager {
     private TransactionDao transactionDao;
     private FeesHistoryDao feesHistoryDao;
 
-    private DaoManager () {
+    private DaoManager() {
 
     }
 
@@ -38,7 +37,7 @@ public class DaoManager {
         return instance;
     }
 
-    public void open () throws Exception {
+    public void open() throws Exception {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
             this.studentDao = new StudentDao(connection);
@@ -52,7 +51,7 @@ public class DaoManager {
         }
     }
 
-    public void close () {
+    public void close() {
         try {
             if (studentDao != null) {
                 studentDao.close();
@@ -77,44 +76,44 @@ public class DaoManager {
         }
     }
 
-    public List<Student> listAllStudents () {
+    public List<Student> listAllStudents() {
         return studentDao.queryAllStudents();
     }
 
-    public List<Student> listStudentsBySchoolStage (String schoolStage) {
+    public List<Student> listStudentsBySchoolStage(String schoolStage) {
         return studentDao.queryStudentsBySchoolStage(schoolStage);
     }
 
-    public List<Student> listStudentsByClass (String className) {
+    public List<Student> listStudentsByClass(String className) {
         return studentDao.queryStudentsByClass(className);
     }
 
-    public List<String> listClassesNames () {
+    public List<String> listClassesNames() {
         return classesDao.queryClassesNames();
     }
 
-    public List<Classes> listAllClasses () {
+    public List<Classes> listAllClasses() {
         return classesDao.queryAllClasses();
     }
 
-    public int queryClassIdByClassName (String className) {
+    public int queryClassIdByClassName(String className) {
         return classesDao.queryClassIdByClassName(className);
     }
 
-    public Student queryStudentByVs (int vs) {
+    public Student queryStudentByVs(int vs) {
         return studentDao.queryStudentByVs(vs);
     }
 
-    public void insertStudent (Student student) throws Exception {
+    public void insertStudent(Student student) throws Exception {
         studentDao.insertStudent(student);
         createFeesHistoryForNewStudent(student.getVS());
     }
 
-    private void createFeesHistoryForNewStudent (int vs) throws Exception {
+    private void createFeesHistoryForNewStudent(int vs) throws Exception {
         feesHistoryDao.insertFeesHistory(vs);
     }
 
-    public void editStudent (int vs, Student editedStudent) throws Exception{
+    public void editStudent(int vs, Student editedStudent) throws Exception {
         try {
             connection.setAutoCommit(false);
             studentDao.deleteStudent(vs);
@@ -128,23 +127,22 @@ public class DaoManager {
         } finally {
             connection.setAutoCommit(true);
         }
-
     }
 
-    public void deleteStudent (int vs) throws Exception {
+    public void deleteStudent(int vs) throws Exception {
         studentDao.deleteStudent(vs);
         feesHistoryDao.deleteFeesHistory(vs);
     }
 
-    public void insertClass (Classes newClass) throws Exception {
+    public void insertClass(Classes newClass) throws Exception {
         classesDao.insertClass(newClass);
     }
 
-    public void editClass (Classes classToEdit) throws Exception{
+    public void editClass(Classes classToEdit) throws Exception {
         classesDao.editClass(classToEdit);
     }
 
-    public void deleteClassWithAllStudents (Classes classToDelete) throws Exception{
+    public void deleteClassWithAllStudents(Classes classToDelete) throws Exception {
         List<Student> studentsFromClass = studentDao.queryStudentsByClass(classToDelete.getClassName());
         for (Student student : studentsFromClass) {
             studentDao.deleteStudent(student.getVS());
@@ -152,25 +150,30 @@ public class DaoManager {
         classesDao.deleteClass(classToDelete);
     }
 
-    public void updateFeesHistoryByUser (FeesHistory feesHistory) throws Exception{
+    public void updateFeesHistoryByUser(FeesHistory feesHistory) throws Exception {
         feesHistoryDao.updateAllMonthsByUser(feesHistory);
         updateStudentShouldPay(feesHistory.getStudentVs());
     }
 
-    public FeesHistory queryFeesHistoryByStudentVs (int vs) {
+    private void updateStudentShouldPay(int vs) throws Exception {
+        FeesHistory feesHistory = queryFeesHistoryByStudentVs(vs);
+        int shouldPay = feesHistory.countShouldPay();
+        studentDao.updateShouldPay(vs, shouldPay);
+    }
+
+    public FeesHistory queryFeesHistoryByStudentVs(int vs) {
         return feesHistoryDao.queryFeesHistoryByStudentVs(vs);
     }
 
-    public void checkFeesHistoryLastUpdate () {
+    public void automaticUpdateShouldPayAndFeesHistory() {
         Calendar calendar = Calendar.getInstance();
-        int actualMonth = calendar.get(Calendar.MONTH) +1;
+        int actualMonth = calendar.get(Calendar.MONTH) + 1;
         int actualDayInMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        List<FeesHistory> feesHistories= new ArrayList<>();
+        List<FeesHistory> feesHistories;
         if (actualDayInMonth < 15) {
-            feesHistories = queryFeesHistoriesWithWrongLastUpdate(actualMonth-1);
+            feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(actualMonth - 1);
         } else {
-
-            feesHistories = queryFeesHistoriesWithWrongLastUpdate(actualMonth);
+            feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(actualMonth);
         }
         if (feesHistories.size() > 0) {
             try {
@@ -181,11 +184,7 @@ public class DaoManager {
         }
     }
 
-    public List<FeesHistory> queryFeesHistoriesWithWrongLastUpdate (int lastUpdate) {
-        return feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(lastUpdate);
-    }
-
-    public void updateShouldPayAndFeesHistory (int actualMonth, List<FeesHistory> feesHistories) throws Exception {
+    private void updateShouldPayAndFeesHistory(int actualMonth, List<FeesHistory> feesHistories) throws Exception {
         for (FeesHistory feesHistory : feesHistories) {
             Student student = queryStudentByVs(feesHistory.getStudentVs());
             feesHistoryDao.updateActualMonth(actualMonth, student);
@@ -193,21 +192,15 @@ public class DaoManager {
         }
     }
 
-    private void updateStudentShouldPay (int vs) throws Exception{
-        FeesHistory feesHistory = queryFeesHistoryByStudentVs(vs);
-        int shouldPay = feesHistory.countShouldPay();
-        studentDao.updateShouldPay(vs, shouldPay);
-    }
-
-    public List<BankStatement> listBankStatements () {
+    public List<BankStatement> listBankStatements() {
         return bankStatementDao.queryBankStatements();
     }
 
-    public List<Transaction> listTransactions () {
-        return transactionDao.queryAllTransactions();
+    public List<Transaction> listTransactionsFromExistingStudents() {
+        return transactionDao.queryAllTransactionsFromExistingStudent();
     }
 
-    public void insertBankStatementWithAllTransactions(BankStatement bankStatement) throws Exception{
+    public void insertBankStatementWithAllTransactions(BankStatement bankStatement) throws Exception {
         List<Transaction> transactions = bankStatement.getTransactions();
         try {
             connection.setAutoCommit(false);
@@ -225,31 +218,29 @@ public class DaoManager {
         }
     }
 
-    public void insertTransaction (Transaction transaction) throws Exception{
+    public void insertTransaction(Transaction transaction) throws Exception {
         transactionDao.insertTransaction(transaction);
     }
 
-    public void editTransaction (Transaction transaction) throws Exception {
+    public void editTransaction(Transaction transaction) throws Exception {
         transactionDao.editTransaction(transaction);
     }
 
-    public void deleteTransaction (Transaction transaction) throws Exception {
+    public void deleteTransaction(Transaction transaction) throws Exception {
         transactionDao.deleteTransaction(transaction);
     }
 
-    public List<Transaction> listTransactionByVs (int vs) throws Exception {
-        return transactionDao.queryTransactionByVs(vs);
+    public List<Transaction> listTransactionByVs(int vs) {
+        return transactionDao.queryTransactionByVsFromExistingStudent(vs);
     }
 
-    public void backupDatabase () throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:");
-        StringBuilder sb = new StringBuilder("backup to src\\main\\resources\\database\\backup\\zaloha-");
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm");
-        sb.append(formatter.format(date));
-        sb.append(".db");
-        connection.createStatement().executeUpdate(sb.toString());
-        connection.close();
+    public void backupDatabase() throws SQLException {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite::memory:")) {
+            Date date = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm");
+            String sql = "backup to src\\main\\resources\\database\\backup\\zaloha-" +
+                    formatter.format(date) + ".db";
+            connection.createStatement().executeUpdate(sql);
+        }
     }
-
 }

@@ -96,7 +96,7 @@ public class TransactionDao {
         }
     }
 
-    public List<Transaction> queryAllTransactions() {
+    public List<Transaction> queryAllTransactionsFromExistingStudent() {
         try {
             ResultSet results = queryAllTransactions.executeQuery();
             if (results == null) {
@@ -134,13 +134,18 @@ public class TransactionDao {
         return transaction;
     }
 
-    public List<Transaction> queryTransactionByVs(int vs) throws Exception{
-        queryTransactionByVs.setInt(1, vs);
-        ResultSet results = queryTransactionByVs.executeQuery();
-        return setTransactions(results);
+    public List<Transaction> queryTransactionByVsFromExistingStudent(int vs) {
+        try {
+            queryTransactionByVs.setInt(1, vs);
+            ResultSet results = queryTransactionByVs.executeQuery();
+            return setTransactions(results);
+        } catch (SQLException e) {
+            logger.error("Query Transactions by vs from existing students failed: ", e);
+            return Collections.emptyList();
+        }
     }
 
-    public void insertTransaction (Transaction transaction) throws Exception {
+    public void insertTransaction(Transaction transaction) throws Exception {
         insertTransaction.setString(1, transaction.getStringDate());
         insertTransaction.setInt(2, transaction.getBankStatement());
         insertTransaction.setInt(3, transaction.getVs());
@@ -153,7 +158,7 @@ public class TransactionDao {
         }
     }
 
-    public void editTransaction (Transaction transaction) throws Exception {
+    public void editTransaction(Transaction transaction) throws Exception {
         editTransaction.setString(1, transaction.getStringDate());
         editTransaction.setInt(2, transaction.getBankStatement());
         editTransaction.setInt(3, transaction.getVs());
@@ -167,7 +172,7 @@ public class TransactionDao {
         }
     }
 
-    public void deleteTransaction (Transaction transaction) throws Exception{
+    public void deleteTransaction(Transaction transaction) throws Exception {
         deleteTransaction.setInt(1, transaction.getId());
         int affectedRecords = deleteTransaction.executeUpdate();
         if (affectedRecords != 1) {

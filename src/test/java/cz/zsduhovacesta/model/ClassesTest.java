@@ -1,35 +1,31 @@
 package cz.zsduhovacesta.model;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class ClassesTest {
-    private static Classes classes;
-    private static Classes sameClass;
-    private static Classes newClassWithSameValues;
-    private static Classes differentClass;
-    private static Classes nullClass;
+public class ClassesTest {
+    private Classes classes = new Classes();
+    private Classes sameClass = classes;
+    private Classes newClassWithSameValues = new Classes();
+    private Classes differentClass = createDifferentClass();
+    private Classes nullClass = null;
 
-    @BeforeAll
-    public static void setup() {
-        classes = new Classes();
-        sameClass = classes;
-        newClassWithSameValues = new Classes();
-        differentClass = new Classes();
-        differentClass.setClassName("Test");
-        nullClass = null;
+    private static Classes createDifferentClass() {
+        Classes classes = new Classes();
+        classes.setClassName("Class");
+        return classes;
     }
 
     @Test
-    void testEqualsReflexive() {
+    public void testEqualsReflexive() {
         assertEquals(classes, classes);
         assertEquals(classes, sameClass);
     }
 
     @Test
-    void testEqualsSymmetric() {
+    public void testEqualsSymmetric() {
         assertEquals(classes, sameClass);
         assertEquals(sameClass, classes);
         assertEquals(classes, newClassWithSameValues);
@@ -39,20 +35,20 @@ class ClassesTest {
     }
 
     @Test
-    void testEqualsNull() {
+    public void testEqualsNull() {
         assertNotEquals(classes, nullClass);
         assertNotEquals(nullClass, differentClass);
     }
 
     @Test
-    void testEqualsTransitive() {
+    public void testEqualsTransitive() {
         assertEquals(classes, sameClass);
         assertEquals(sameClass, newClassWithSameValues);
         assertEquals(classes, newClassWithSameValues);
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         assertEquals(classes.hashCode(), sameClass.hashCode());
         assertEquals(classes.hashCode(), newClassWithSameValues.hashCode());
         assertNotEquals(classes.hashCode(), differentClass.hashCode());

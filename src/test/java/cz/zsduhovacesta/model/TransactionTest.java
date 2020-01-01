@@ -1,37 +1,32 @@
 package cz.zsduhovacesta.model;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class TransactionTest {
+public class TransactionTest {
 
-    private static Transaction transaction;
-    private static Transaction sameTransaction;
-    private static Transaction newTransactionWithSameValues;
-    private static Transaction differentTransaction;
-    private static Transaction nullTransaction;
+    private Transaction transaction = new Transaction();
+    private Transaction sameTransaction = transaction;
+    private Transaction newTransactionWithSameValues = new Transaction();
+    private Transaction differentTransaction = createDifferentTransaction();
+    private Transaction nullTransaction = null;
 
-    @BeforeAll
-    public static void setup() {
-        transaction = new Transaction();
-        sameTransaction = transaction;
-        newTransactionWithSameValues = new Transaction();
-        differentTransaction = new Transaction();
-        differentTransaction.setAmount(111);
-        nullTransaction = null;
+    private static Transaction createDifferentTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setAmount(111);
+        return transaction;
     }
 
     @Test
-    void testEqualsReflexive() {
+    public void testEqualsReflexive() {
         assertEquals(transaction, transaction);
         assertEquals(transaction, sameTransaction);
     }
 
     @Test
-    void testEqualsSymmetric() {
+    public void testEqualsSymmetric() {
         assertEquals(transaction, sameTransaction);
         assertEquals(sameTransaction, transaction);
         assertEquals(transaction, newTransactionWithSameValues);
@@ -41,27 +36,27 @@ class TransactionTest {
     }
 
     @Test
-    void testEqualsNull() {
+    public void testEqualsNull() {
         assertNotEquals(transaction, nullTransaction);
         assertNotEquals(nullTransaction, differentTransaction);
     }
 
     @Test
-    void testEqualsTransitive() {
+    public void testEqualsTransitive() {
         assertEquals(transaction, sameTransaction);
         assertEquals(sameTransaction, newTransactionWithSameValues);
         assertEquals(transaction, newTransactionWithSameValues);
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         assertEquals(transaction.hashCode(), sameTransaction.hashCode());
         assertEquals(transaction.hashCode(), newTransactionWithSameValues.hashCode());
         assertNotEquals(transaction.hashCode(), differentTransaction.hashCode());
     }
 
     @Test
-    void setDate() {
+    public void testSetDate() {
         Transaction transaction = new Transaction();
         transaction.setDate("25.08.2019");
         CustomDate transactionDate = transaction.getDate();
@@ -69,7 +64,7 @@ class TransactionTest {
     }
 
     @Test
-    void getStringDate() {
+    public void testGetStringDate() {
         Transaction transaction = new Transaction();
         transaction.setDate("08.10.2001");
         assertEquals("08.10.2001", transaction.getStringDate());

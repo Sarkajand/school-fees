@@ -67,7 +67,7 @@ public class Controller {
     }
 
     public void listTransactions() {
-        ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactions());
+        ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactionsFromExistingStudents());
         transactionsTable.itemsProperty().set(transactions);
     }
 

@@ -1,7 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.Classes;
-import javafx.fxml.FXML;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -80,11 +79,11 @@ class ClassesDaoIT {
         assertEquals("ZŠ", classes.get(5).getStage());
     }
 
-//    @Test
-//    void getClassIdByClassName () {
-//        int classId = classesDao.queryClassIdByClassName("POHÁDKA");
-//        assertEquals(1, classId);
-//    }
+    @Test
+    void getClassIdByClassName () {
+        int classId = classesDao.queryClassIdByClassName("POHÁDKA");
+        assertEquals(1, classId);
+    }
 
     @Test
     void insertClass() {

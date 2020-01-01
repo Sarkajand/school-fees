@@ -244,14 +244,27 @@ class StudentDaoIT {
     }
 
     @Test
-    void queryStudentByVs () {
+    void queryStudentByVs() {
         Student student = studentDao.queryStudentByVs(254325);
         assertEquals(firstStudentInDatabase(), student);
     }
 
     @Test
-    void queryNotExistingStudentByVs () {
+    void queryNotExistingStudentByVs() {
         Student student = studentDao.queryStudentByVs(999);
         assertNull(student);
+    }
+
+    @Test
+    void updateShouldPay() {
+        try{
+            Student student = studentDao.queryStudentByVs(254325);
+            assertEquals(0, student.getShouldPay());
+            studentDao.updateShouldPay(254325, 150);
+            student = studentDao.queryStudentByVs(254325);
+            assertEquals(150, student.getShouldPay());
+        } catch (Exception e) {
+            fail();
+        }
     }
 }

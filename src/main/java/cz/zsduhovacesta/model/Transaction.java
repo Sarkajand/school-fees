@@ -38,6 +38,7 @@ public class Transaction {
     public void setId(int id) {
         this.id = id;
     }
+
     public CustomDate getDate() {
         return date.get();
     }

@@ -1,36 +1,32 @@
 package cz.zsduhovacesta.model;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class BankStatementTest {
+public class BankStatementTest {
 
-    private static BankStatement bankStatement;
-    private static BankStatement sameBankStatement;
-    private static BankStatement newBankStatementWithSameValues;
-    private static BankStatement differentBankStatement;
-    private static BankStatement nullBankStatement;
+    private static BankStatement bankStatement = new BankStatement();
+    private static BankStatement sameBankStatement = bankStatement;
+    private static BankStatement newBankStatementWithSameValues = new BankStatement();
+    private static BankStatement differentBankStatement = createDifferentBankStatement();
+    private static BankStatement nullBankStatement = null;
 
-    @BeforeAll
-    public static void setup() {
-        bankStatement = new BankStatement();
-        sameBankStatement = bankStatement;
-        newBankStatementWithSameValues = new BankStatement();
-        differentBankStatement = new BankStatement();
-        differentBankStatement.setId(111);
-        nullBankStatement = null;
+    private static BankStatement createDifferentBankStatement() {
+        BankStatement bankStatement = new BankStatement();
+        bankStatement.setId(111);
+        return bankStatement;
     }
 
     @Test
-    void testEqualsReflexive() {
+    public void testEqualsReflexive() {
         assertEquals(bankStatement, bankStatement);
         assertEquals(bankStatement, sameBankStatement);
     }
 
     @Test
-    void testEqualsSymmetric() {
+    public void testEqualsSymmetric() {
         assertEquals(bankStatement, sameBankStatement);
         assertEquals(sameBankStatement, bankStatement);
         assertEquals(bankStatement, newBankStatementWithSameValues);
@@ -40,20 +36,20 @@ class BankStatementTest {
     }
 
     @Test
-    void testEqualsNull() {
+    public void testEqualsNull() {
         assertNotEquals(bankStatement, nullBankStatement);
         assertNotEquals(nullBankStatement, differentBankStatement);
     }
 
     @Test
-    void testEqualsTransitive() {
+    public void testEqualsTransitive() {
         assertEquals(bankStatement, sameBankStatement);
         assertEquals(sameBankStatement, newBankStatementWithSameValues);
         assertEquals(bankStatement, newBankStatementWithSameValues);
     }
 
     @Test
-    void testHashCode() {
+    public void testHashCode() {
         assertEquals(bankStatement.hashCode(), sameBankStatement.hashCode());
         assertEquals(bankStatement.hashCode(), newBankStatementWithSameValues.hashCode());
         assertNotEquals(bankStatement.hashCode(), differentBankStatement.hashCode());

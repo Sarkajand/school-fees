@@ -170,7 +170,7 @@ public class StudentDao {
         }
     }
 
-    public Student queryStudentByVs (int vs) {
+    public Student queryStudentByVs(int vs) {
         try {
             queryStudentByVs.setInt(1, vs);
             ResultSet results = queryStudentByVs.executeQuery();
@@ -214,7 +214,7 @@ public class StudentDao {
         }
     }
 
-    public void updateShouldPay (int vs, int shouldPay) throws Exception {
+    public void updateShouldPay(int vs, int shouldPay) throws Exception {
         updateShouldPay.setInt(1, shouldPay);
         updateShouldPay.setInt(2, vs);
         int affectedRecords = updateShouldPay.executeUpdate();

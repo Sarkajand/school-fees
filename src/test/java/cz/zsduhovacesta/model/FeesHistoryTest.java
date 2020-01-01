@@ -2,10 +2,12 @@ package cz.zsduhovacesta.model;
 
 import org.junit.jupiter.api.Test;
 
-class FeesHistoryTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class FeesHistoryTest {
 
     @Test
-    void countShouldPay() {
+    public void testCountShouldPay() {
         FeesHistory newFeesHistory = new FeesHistory();
         FeesHistory feesHistory = new FeesHistory();
         feesHistory.setJanuary(10);
@@ -20,7 +22,7 @@ class FeesHistoryTest {
         feesHistory.setOctober(10);
         feesHistory.setNovember(10);
         feesHistory.setDecember(10);
-        assert newFeesHistory.countShouldPay() == 0;
-        assert feesHistory.countShouldPay() == 120;
+        assertEquals(0, newFeesHistory.countShouldPay());
+        assertEquals(120, feesHistory.countShouldPay());
     }
 }

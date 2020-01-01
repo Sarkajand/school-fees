@@ -146,7 +146,7 @@ public class FeesHistory {
         this.lastUpdate = lastUpdate;
     }
 
-    public int countShouldPay () {
+    public int countShouldPay() {
         return january + february + march + april + may + june +
                 july + august + september + october + november + december;
     }

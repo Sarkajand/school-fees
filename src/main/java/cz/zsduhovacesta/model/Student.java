@@ -49,7 +49,7 @@ public class Student {
         this.underPayment = new SimpleIntegerProperty();
     }
 
-    public void countOverPayment () {
+    public void countOverPayment() {
         int overPayment = (summaryLastYear.get() + payed.get()) - shouldPay.get();
         this.overPayment.set(Math.max(overPayment, 0));
     }
@@ -75,11 +75,11 @@ public class Student {
         this.className.set(className);
     }
 
-    public int getClassId () {
+    public int getClassId() {
         return this.classId.get();
     }
 
-    public void setClassId (int classId) {
+    public void setClassId(int classId) {
         this.classId.set(classId);
     }
 
@@ -179,11 +179,11 @@ public class Student {
         this.payed.set(payed);
     }
 
-    public int getSummaryLastYear () {
+    public int getSummaryLastYear() {
         return summaryLastYear.get();
     }
 
-    public void setSummaryLastYear (int summaryLastYear) {
+    public void setSummaryLastYear(int summaryLastYear) {
         this.summaryLastYear.set(summaryLastYear);
     }
 
@@ -206,7 +206,7 @@ public class Student {
                 Objects.equals(getLastName(), student.getLastName()) &&
                 Objects.equals(getFirstName(), student.getFirstName()) &&
                 Objects.equals(getFees(), student.getFees()) &&
-                Objects.equals(getVS(),student.getVS()) &&
+                Objects.equals(getVS(), student.getVS()) &&
                 Objects.equals(getMotherPhone(), student.getMotherPhone()) &&
                 Objects.equals(getFatherPhone(), student.getFatherPhone()) &&
                 Objects.equals(getMotherEmail(), student.getMotherEmail()) &&
@@ -224,6 +224,6 @@ public class Student {
     public int hashCode() {
         return Objects.hash(getSchoolStage(), getClassName(), getClassId(), getLastName(), getFirstName(), getFees(),
                 getVS(), getMotherPhone(), getFatherPhone(), getMotherEmail(), getFatherEmail(), getNotes(),
-                getPaymentNotes(), getShouldPay(), getPayed(), getSummaryLastYear(),getOverPayment(), getUnderPayment());
+                getPaymentNotes(), getShouldPay(), getPayed(), getSummaryLastYear(), getOverPayment(), getUnderPayment());
     }
 }
