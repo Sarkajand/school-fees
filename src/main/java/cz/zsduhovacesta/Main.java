@@ -53,6 +53,7 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        DaoManager.getInstance().automaticDatabaseBackup();
         DaoManager.getInstance().close();
     }
 

@@ -252,4 +252,16 @@ public class DaoManager {
             connection.createStatement().executeUpdate(sql);
         }
     }
+
+    public void automaticDatabaseBackup() {
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        if (dayOfWeek == 5) {
+            try {
+            backupDatabase();
+            } catch (SQLException e) {
+                logger.error("Automatic database backup failed: ", e);
+            }
+        }
+    }
 }
