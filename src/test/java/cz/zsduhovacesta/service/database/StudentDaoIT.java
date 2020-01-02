@@ -267,4 +267,47 @@ class StudentDaoIT {
             fail();
         }
     }
+
+    @Test
+    void testUpdatePayed() {
+        try{
+            studentDao.updatePayed(254325, 1500);
+            Student student = studentDao.queryStudentByVs(254325);
+            assertEquals(1500, student.getPayed());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    void testUpdatePayedZero() {
+        try{
+            studentDao.updatePayed(254325, 0);
+            Student student = studentDao.queryStudentByVs(254325);
+            assertEquals(0, student.getPayed());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    void testUpdateNegativePayed() {
+        try{
+            studentDao.updatePayed(254325, -1500);
+            Student student = studentDao.queryStudentByVs(254325);
+            assertEquals(-1500, student.getPayed());
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    void testUpdatePayedNotExistingStudentThrowException() {
+        try{
+            studentDao.updatePayed(555, 1500);
+            fail("should throw exception");
+        } catch (Exception ignored) {
+
+        }
+    }
 }

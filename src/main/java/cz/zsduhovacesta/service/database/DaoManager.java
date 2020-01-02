@@ -205,7 +205,7 @@ public class DaoManager {
         try {
             connection.setAutoCommit(false);
             for (Transaction transaction : transactions) {
-                transactionDao.insertTransaction(transaction);
+                insertTransaction(transaction);
             }
             bankStatementDao.insertBankStatement(bankStatement);
             connection.commit();
@@ -220,14 +220,23 @@ public class DaoManager {
 
     public void insertTransaction(Transaction transaction) throws Exception {
         transactionDao.insertTransaction(transaction);
+        updateStudentPayed(transaction);
+    }
+
+    private void updateStudentPayed(Transaction transaction) throws Exception{
+        int vs = transaction.getVs();
+        int payed = transactionDao.countStudentPayed(vs);
+        studentDao.updatePayed(vs, payed);
     }
 
     public void editTransaction(Transaction transaction) throws Exception {
         transactionDao.editTransaction(transaction);
+        updateStudentPayed(transaction);
     }
 
     public void deleteTransaction(Transaction transaction) throws Exception {
         transactionDao.deleteTransaction(transaction);
+        updateStudentPayed(transaction);
     }
 
     public List<Transaction> listTransactionByVs(int vs) {

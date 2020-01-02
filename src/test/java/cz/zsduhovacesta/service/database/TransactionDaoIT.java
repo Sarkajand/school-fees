@@ -162,4 +162,24 @@ class TransactionDaoIT {
             fail();
         }
     }
+
+    @Test
+    void testCountStudentPayedForExistingStudentWithOneTransaction() {
+        assertEquals(1500, transactionDao.countStudentPayed(568325));
+    }
+
+    @Test
+    void testCountStudentPayedForExistingStudentWithTransactions() {
+        assertEquals(2600, transactionDao.countStudentPayed(268325));
+    }
+
+    @Test
+    void testCountStudentPayedForExistingStudentWithoutTransactions() {
+        assertEquals(0, transactionDao.countStudentPayed(254387));
+    }
+
+    @Test
+    void testCountStudentPayedForNotExistingStudentReturnZero() {
+        assertEquals(0, transactionDao.countStudentPayed(111));
+    }
 }

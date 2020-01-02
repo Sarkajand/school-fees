@@ -385,9 +385,13 @@ public class DaoManagerTest {
 
     @Test
     public void testInsertTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setVs(111);
+        when(transactionDao.countStudentPayed(111)).thenReturn(500);
         try {
-            daoManager.insertTransaction(new Transaction());
+            daoManager.insertTransaction(transaction);
             verify(transactionDao, times(1)).insertTransaction(any());
+            verify(studentDao, times(1)).updatePayed(111,500);
         } catch (Exception e) {
             fail();
         }
@@ -395,9 +399,13 @@ public class DaoManagerTest {
 
     @Test
     public void testEditTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setVs(456);
+        when(transactionDao.countStudentPayed(456)).thenReturn(159);
         try {
-            daoManager.editTransaction(new Transaction());
+            daoManager.editTransaction(transaction);
             verify(transactionDao, times(1)).editTransaction(any());
+            verify(studentDao, times(1)).updatePayed(456,159);
         } catch (Exception e) {
             fail();
         }
@@ -405,9 +413,13 @@ public class DaoManagerTest {
 
     @Test
     public void testDeleteTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setVs(753159);
+        when(transactionDao.countStudentPayed(753159)).thenReturn(-1547);
         try {
-            daoManager.deleteTransaction(new Transaction());
+            daoManager.deleteTransaction(transaction);
             verify(transactionDao, times(1)).deleteTransaction(any());
+            verify(studentDao, times(1)).updatePayed(753159,-1547);
         } catch (Exception e) {
             fail();
         }

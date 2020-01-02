@@ -179,4 +179,13 @@ public class TransactionDao {
             throw new Exception("Deleting transaction failed");
         }
     }
+
+    public int countStudentPayed(int studentVs) {
+        List<Transaction> transactions = queryTransactionByVsFromExistingStudent(studentVs);
+        int sum = 0;
+        for(Transaction transaction : transactions) {
+            sum += transaction.getAmount();
+        }
+        return sum;
+    }
 }

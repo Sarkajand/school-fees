@@ -286,6 +286,7 @@ public class Controller {
                 DaoManager.getInstance().insertBankStatementWithAllTransactions(bankStatement);
                 listBankStatements();
                 listTransactions();
+                listStudentsBySchoolStageOnSummary();
             } catch (Exception e) {
                 logger.error("Method importBankStatement in Controller failed: ",e);
                 showAlert("Chyba", "nepodařilo se nahrát bankovní účet");
@@ -305,6 +306,7 @@ public class Controller {
                 Transaction transaction = controller.handleSave();
                 DaoManager.getInstance().insertTransaction(transaction);
                 listTransactions();
+                listStudentsBySchoolStageOnSummary();
             }
         } catch (Exception e) {
             logger.error("Method newTransaction in Controller failed: ",e);
@@ -327,6 +329,7 @@ public class Controller {
                 editedTransaction.setId(transaction.getId());
                 DaoManager.getInstance().editTransaction(editedTransaction);
                 listTransactions();
+                listStudentsBySchoolStageOnSummary();
             }
         } catch (Exception e) {
             logger.error("Method newTransaction in Controller failed: ",e);
@@ -350,6 +353,7 @@ public class Controller {
                 try {
                     DaoManager.getInstance().deleteTransaction(transaction);
                     listTransactions();
+                    listStudentsBySchoolStageOnSummary();
                 } catch (Exception e) {
                     logger.error("Method deleteTransaction in Controller failed: ", e);
                     showAlert("Chyba", "Nepodařilo se smazat transakci");

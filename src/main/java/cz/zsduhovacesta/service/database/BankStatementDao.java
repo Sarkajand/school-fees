@@ -84,6 +84,4 @@ public class BankStatementDao {
             throw new Exception("Inserting bank statement failed");
         }
     }
-
-
 }

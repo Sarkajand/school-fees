@@ -51,6 +51,8 @@ public class StudentDao {
             "DELETE FROM " + TABLE_STUDENTS + " WHERE " + COLUMN_STUDENTS_VS + " = ?";
     public static final String UPDATE_SHOULD_PAY =
             "UPDATE " + TABLE_STUDENTS + " SET " + COLUMN_STUDENTS_SHOULD_PAY + " = ? WHERE " + COLUMN_STUDENTS_VS + " = ?";
+    public static final String UPDATE_PAYED =
+            "UPDATE " + TABLE_STUDENTS + " SET " + COLUMN_STUDENTS_PAYED + " = ? WHERE " + COLUMN_STUDENTS_VS + " = ?";
 
 
     private PreparedStatement queryAllStudents;
@@ -60,6 +62,7 @@ public class StudentDao {
     private PreparedStatement insertStudent;
     private PreparedStatement deleteStudent;
     private PreparedStatement updateShouldPay;
+    private PreparedStatement updatePayed;
 
 
     StudentDao(Connection connection) throws SQLException {
@@ -71,6 +74,7 @@ public class StudentDao {
             insertStudent = connection.prepareStatement(INSERT_STUDENT);
             deleteStudent = connection.prepareStatement(DELETE_STUDENT);
             updateShouldPay = connection.prepareStatement(UPDATE_SHOULD_PAY);
+            updatePayed = connection.prepareStatement(UPDATE_PAYED);
         } catch (SQLException e) {
             logger.error("Couldn't create prepared statements for StudentDao", e);
             throw e;
@@ -99,6 +103,9 @@ public class StudentDao {
             }
             if (updateShouldPay != null) {
                 updateShouldPay.close();
+            }
+            if (updatePayed != null) {
+                updatePayed.close();
             }
         } catch (SQLException e) {
             logger.error("Couldn't close prepared statement in StudentDao: ", e);
@@ -220,6 +227,15 @@ public class StudentDao {
         int affectedRecords = updateShouldPay.executeUpdate();
         if (affectedRecords != 1) {
             throw new Exception("Updating should pay failed");
+        }
+    }
+
+    public void updatePayed(int vs, int payed) throws Exception {
+        updatePayed.setInt(1, payed);
+        updatePayed.setInt(2, vs);
+        int affectedRecords = updatePayed.executeUpdate();
+        if (affectedRecords != 1){
+            throw new Exception("Updating payed failed");
         }
     }
 }
