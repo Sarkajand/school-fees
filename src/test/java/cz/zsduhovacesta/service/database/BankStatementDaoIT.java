@@ -79,7 +79,7 @@ class BankStatementDaoIT {
     void insertBankStatement () {
         BankStatement bankStatement = new BankStatement();
         bankStatement.setId(111);
-        bankStatement.setDate("1.1.2020");
+        bankStatement.setDate("01.01.2020");
         try {
             bankStatementDao.insertBankStatement(bankStatement);
             List<BankStatement> bankStatements = bankStatementDao.queryBankStatements();
