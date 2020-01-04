@@ -5,6 +5,7 @@ import cz.zsduhovacesta.model.FeesHistory;
 import cz.zsduhovacesta.model.Student;
 import cz.zsduhovacesta.model.Transaction;
 import cz.zsduhovacesta.service.csv.CsvReader;
+import cz.zsduhovacesta.service.csv.CsvWriter;
 import cz.zsduhovacesta.service.database.DaoManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -83,25 +84,23 @@ public class Controller {
         String selectedSchoolStage = selectedRadioButton.getText();
         if (selectedSchoolStage.equals("všichni")) {
             students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
-            listStudents();
         } else {
             students = FXCollections.observableList(DaoManager.getInstance().listStudentsBySchoolStage(selectedSchoolStage));
-            listStudents();
         }
+        listStudents();
     }
 
     @FXML
-    public void listStudentsBySchoolStageOnSummary () {
+    public void listStudentsBySchoolStageOnSummary() {
         classesChoiceBoxOnSummaryTab.valueProperty().set(null);
         RadioButton selectedRadioButton = (RadioButton) schoolStageToggleGroupOnSummary.getSelectedToggle();
         String selectedSchoolStage = selectedRadioButton.getText();
         if (selectedSchoolStage.equals("všichni")) {
             students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
-            listSummary();
         } else {
             students = FXCollections.observableList(DaoManager.getInstance().listStudentsBySchoolStage(selectedSchoolStage));
-            listSummary();
         }
+        listSummary();
     }
 
     @FXML
@@ -143,7 +142,7 @@ public class Controller {
                 listStudentsBySchoolStageOnSummary();
             }
         } catch (Exception e) {
-            logger.error("Method newStudent in Controller failed: ",e);
+            logger.error("Method newStudent in Controller failed: ", e);
             showAlert("Chyba", "Nepodařilo se vložit žáka");
         }
     }
@@ -152,13 +151,13 @@ public class Controller {
         DaoManager.getInstance().insertStudent(student);
     }
 
-    private FXMLLoader getLoaderWithSetResource (String resource) {
+    private FXMLLoader getLoaderWithSetResource(String resource) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Controller.class.getResource(resource));
         return loader;
     }
 
-    private Stage prepareStage(String title, FXMLLoader loader) throws IOException{
+    private Stage prepareStage(String title, FXMLLoader loader) throws IOException {
         BorderPane page = loader.load();
         Stage stage = new Stage();
         stage.setTitle(title);
@@ -197,7 +196,7 @@ public class Controller {
                     listStudentsBySchoolStageOnSummary();
                 }
             } catch (Exception e) {
-                logger.error("Method editStudent in Controller failed: ",e);
+                logger.error("Method editStudent in Controller failed: ", e);
                 showAlert("Chyba", "Nepodařilo se upravit žáka");
             }
         }
@@ -220,7 +219,7 @@ public class Controller {
                     listStudentsBySchoolStage();
                     listStudentsBySchoolStageOnSummary();
                 } catch (Exception e) {
-                    logger.error("Method deleteStudent in Controller failed: ",e);
+                    logger.error("Method deleteStudent in Controller failed: ", e);
                     showAlert("Chyba", "Nepodařilo se smazat studenta");
                 }
             }
@@ -238,7 +237,7 @@ public class Controller {
             setClassesChoiceBoxOnStudentsTab();
             listStudentsBySchoolStage();
         } catch (IOException e) {
-            logger.error("Method showClasses in Controller failed: ",e);
+            logger.error("Method showClasses in Controller failed: ", e);
         }
     }
 
@@ -264,7 +263,7 @@ public class Controller {
                     listStudentsBySchoolStageOnSummary();
                 }
             } catch (Exception e) {
-                logger.error("Method showFeesHistoryDialog in Controller failed: ",e);
+                logger.error("Method showFeesHistoryDialog in Controller failed: ", e);
                 showAlert("Chyba", "Nepodařilo se upravit historii školného");
             }
         }
@@ -288,14 +287,14 @@ public class Controller {
                 listTransactions();
                 listStudentsBySchoolStageOnSummary();
             } catch (Exception e) {
-                logger.error("Method importBankStatement in Controller failed: ",e);
+                logger.error("Method importBankStatement in Controller failed: ", e);
                 showAlert("Chyba", "nepodařilo se nahrát bankovní účet");
             }
         }
     }
 
     @FXML
-    public void newTransaction () {
+    public void newTransaction() {
         try {
             FXMLLoader loader = getLoaderWithSetResource("transactionDialog.fxml");
             Stage stage = prepareStage("Nová transakce", loader);
@@ -309,13 +308,13 @@ public class Controller {
                 listStudentsBySchoolStageOnSummary();
             }
         } catch (Exception e) {
-            logger.error("Method newTransaction in Controller failed: ",e);
+            logger.error("Method newTransaction in Controller failed: ", e);
             showAlert("Chyba", "Nepodařilo se vložit transakci");
         }
     }
 
     @FXML
-    public void editTransaction () {
+    public void editTransaction() {
         final Transaction transaction = transactionsTable.getSelectionModel().getSelectedItem();
         try {
             FXMLLoader loader = getLoaderWithSetResource("transactionDialog.fxml");
@@ -332,13 +331,13 @@ public class Controller {
                 listStudentsBySchoolStageOnSummary();
             }
         } catch (Exception e) {
-            logger.error("Method newTransaction in Controller failed: ",e);
+            logger.error("Method newTransaction in Controller failed: ", e);
             showAlert("Chyba", "Nepodařilo se vložit transakci");
         }
     }
 
     @FXML
-    public void deleteTransaction () {
+    public void deleteTransaction() {
         final Transaction transaction = transactionsTable.getSelectionModel().getSelectedItem();
         if (transaction == null) {
             showAlert("Chyba, není vybraná transakce", "Musíte vybrat transakci");
@@ -375,15 +374,15 @@ public class Controller {
     }
 
     @FXML
-    public void backupDatabase () {
+    public void backupDatabase() {
         try {
             DaoManager.getInstance().backupDatabase();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Záloha databáze");
             alert.setContentText("Záloha databáze byla vytvořena");
             alert.showAndWait();
-        } catch (SQLException e ){
-            logger.error("Backup database failed",e);
+        } catch (SQLException e) {
+            logger.error("Backup database failed", e);
             showAlert("Chyba", "Nepodařilo se vytvořit zálohu databáze");
         }
     }
@@ -395,5 +394,21 @@ public class Controller {
         final ClipboardContent clipboardContent = new ClipboardContent();
         clipboardContent.putString(vs);
         Clipboard.getSystemClipboard().setContent(clipboardContent);
+    }
+
+    @FXML
+    public void exportDataToCsv() {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("ulož soubor");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("csv soubory", "*.csv"));
+            File file = fileChooser.showSaveDialog(new Stage());
+            if (file != null) {
+                CsvWriter csvWriter = new CsvWriter();
+                csvWriter.writeNewCsv(file);
+            }
+        } catch (IOException e) {
+            showAlert("Chyba", "Nepodařilo se exportovat a uložit data");
+        }
     }
 }

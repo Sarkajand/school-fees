@@ -173,6 +173,9 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.0</version>
+                <configuration>
+                    <forkCount>0</forkCount>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

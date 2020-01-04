@@ -243,7 +243,7 @@
                             <Label text="třídy:"/>
                             <ChoiceBox prefWidth="100" fx:id="classesChoiceBoxOnSummaryTab"
                                        onAction="#listStudentsByClassOnSummary"/>
-                            <Button text="Export CSV"/>
+                            <Button text="Export CSV" onAction="#exportDataToCsv"/>
                             <Button text="Historie školného žáka" onAction="#showFeesHistoryDialog"/>
                         </HBox>
                     </top>

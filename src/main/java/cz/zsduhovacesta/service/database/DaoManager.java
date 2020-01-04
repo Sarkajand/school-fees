@@ -16,9 +16,6 @@ public class DaoManager {
 
     final Logger logger = LoggerFactory.getLogger(DaoManager.class);
 
-    public static final String DB_NAME = "schoolFees.db";
-    public static final String CONNECTION_STRING = "jdbc:sqlite:src\\main\\resources\\database\\" + DB_NAME;
-
     private static DaoManager instance = new DaoManager();
 
     private Connection connection;
@@ -37,9 +34,9 @@ public class DaoManager {
         return instance;
     }
 
-    public void open() throws Exception {
+    public void open(Connection connection) {
         try {
-            connection = DriverManager.getConnection(CONNECTION_STRING);
+            this.connection = connection;
             this.studentDao = new StudentDao(connection);
             this.classesDao = new ClassesDao(connection);
             this.bankStatementDao = new BankStatementDao(connection);
@@ -47,7 +44,6 @@ public class DaoManager {
             this.feesHistoryDao = new FeesHistoryDao(connection);
         } catch (SQLException e) {
             logger.error("Couldn't connect to database: ", e);
-            throw e;
         }
     }
 
@@ -168,10 +164,11 @@ public class DaoManager {
     public void automaticUpdateShouldPayAndFeesHistory() {
         Calendar calendar = Calendar.getInstance();
         int actualMonth = calendar.get(Calendar.MONTH) + 1;
+        int previousMonth = getPreviousMonth(calendar);
         int actualDayInMonth = calendar.get(Calendar.DAY_OF_MONTH);
         List<FeesHistory> feesHistories;
         if (actualDayInMonth < 15) {
-            feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(actualMonth - 1);
+            feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(previousMonth);
         } else {
             feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(actualMonth);
         }
@@ -182,6 +179,11 @@ public class DaoManager {
                 logger.error("Monthly updating fees history and should pay failed: ", e);
             }
         }
+    }
+
+    private int getPreviousMonth(Calendar calendar) {
+        calendar.add(Calendar.MONTH, -1);
+        return calendar.get(Calendar.MONTH) + 1;
     }
 
     private void updateShouldPayAndFeesHistory(int actualMonth, List<FeesHistory> feesHistories) throws Exception {
@@ -223,7 +225,7 @@ public class DaoManager {
         updateStudentPayed(transaction);
     }
 
-    private void updateStudentPayed(Transaction transaction) throws Exception{
+    private void updateStudentPayed(Transaction transaction) throws Exception {
         int vs = transaction.getVs();
         int payed = transactionDao.countStudentPayed(vs);
         studentDao.updatePayed(vs, payed);
@@ -258,7 +260,7 @@ public class DaoManager {
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         if (dayOfWeek == 5) {
             try {
-            backupDatabase();
+                backupDatabase();
             } catch (SQLException e) {
                 logger.error("Automatic database backup failed: ", e);
             }

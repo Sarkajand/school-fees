@@ -9,7 +9,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.log4j.BasicConfigurator;
 
-import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class Main extends Application {
 
@@ -38,16 +39,9 @@ public class Main extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        try {
-            DaoManager.getInstance().open();
-            DaoManager.getInstance().automaticUpdateShouldPayAndFeesHistory();
-        } catch (SQLException e) {
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Chyba spojení s databází");
-//            alert.setContentText("Nepodařilo se navázat spojení s databází");
-//            alert.showAndWait();
-//            Platform.exit();
-        }
+        Connection connection = DriverManager.getConnection("jdbc:sqlite:src\\main\\resources\\database\\schoolFees.db");
+        DaoManager.getInstance().open(connection);
+        DaoManager.getInstance().automaticUpdateShouldPayAndFeesHistory();
     }
 
     @Override
