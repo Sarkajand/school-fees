@@ -27,7 +27,7 @@ public class TransactionDialogController {
     TextField amountField;
 
     @FXML
-    ChoiceBox <String> paymentMethodChoiceBox;
+    ChoiceBox<String> paymentMethodChoiceBox;
 
     @FXML
     TextField bankStatementNumberField;
@@ -38,21 +38,21 @@ public class TransactionDialogController {
     private boolean saveClicked = false;
     private Stage stage;
 
-    public void initialize () {
+    public void initialize() {
         paymentMethodChoiceBox.setValue("hotově");
         datePicker.setValue(LocalDate.now());
         bankStatementNumberField.setText("0");
     }
 
-    public void setStage (Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public boolean isSaveClicked () {
+    public boolean isSaveClicked() {
         return saveClicked;
     }
 
-    public void setFields (Object object) {
+    public void setFields(Object object) {
         Transaction transaction = (Transaction) object;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate date = LocalDate.parse(transaction.getStringDate(), formatter);
@@ -64,11 +64,11 @@ public class TransactionDialogController {
         notesArea.setText(transaction.getTransactionNotes());
     }
 
-    private boolean isInputValid () {
+    private boolean isInputValid() {
         String errorMessage = "";
         if (!vsField.getText().matches("\\d+")) {
             errorMessage += "musíte napsat variabilní symbol žáka\n";
-        }else {
+        } else {
             int vs = Integer.parseInt(vsField.getText());
             Student student = DaoManager.getInstance().queryStudentByVs(vs);
             if (student == null) {
@@ -98,7 +98,7 @@ public class TransactionDialogController {
     }
 
     @FXML
-    public Transaction handleSave () {
+    public Transaction handleSave() {
         if (isInputValid()) {
             saveClicked = true;
             Transaction transaction = new Transaction();

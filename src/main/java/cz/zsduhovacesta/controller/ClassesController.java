@@ -23,6 +23,7 @@ public class ClassesController {
     private TableView<Classes> classesTableView;
 
     private Stage classStage;
+    private DaoManager daoManager = DaoManager.getInstance();
 
     public void initialize() {
         listClasses();
@@ -33,7 +34,7 @@ public class ClassesController {
     }
 
     private void listClasses() {
-        ObservableList<Classes> classes = FXCollections.observableList(DaoManager.getInstance().listAllClasses());
+        ObservableList<Classes> classes = FXCollections.observableList(daoManager.listAllClasses());
         classesTableView.itemsProperty().set(classes);
     }
 
@@ -42,13 +43,14 @@ public class ClassesController {
             ClassDialogController controller = setClassDialogAndGetController("nová třída", null);
             if (controller.isSaveClicked()) {
                 Classes newClass = controller.handleSave();
-                DaoManager.getInstance().insertClass(newClass);
+                daoManager.insertClass(newClass);
                 listClasses();
             }
-        } catch (Exception e ) {
+        } catch (Exception e) {
             showAlert("Chyba", "Nepodařilo se vložit třídu");
         }
     }
+
     private ClassDialogController setClassDialogAndGetController(String title, Classes classes) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Controller.class.getResource("classDialog.fxml"));
@@ -88,7 +90,7 @@ public class ClassesController {
                 if (controller.isSaveClicked()) {
                     Classes editedClass = controller.handleSave();
                     editedClass.setClassId(classId);
-                    DaoManager.getInstance().editClass(editedClass);
+                    daoManager.editClass(editedClass);
                     listClasses();
                 }
             } catch (Exception e) {
@@ -110,7 +112,7 @@ public class ClassesController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
-                    DaoManager.getInstance().deleteClassWithAllStudents(classToDelete);
+                    daoManager.deleteClassWithAllStudents(classToDelete);
                     listClasses();
                 } catch (Exception e) {
                     showAlert("Chyba", "Nepodařilo se smazat třídu");

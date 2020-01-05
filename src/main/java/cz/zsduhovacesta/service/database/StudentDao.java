@@ -18,19 +18,8 @@ public class StudentDao {
 
     public static final String TABLE_STUDENTS = "students";
     public static final String COLUMN_STUDENTS_VS = "VS";
-    public static final String COLUMN_STUDENTS_LAST_NAME = "last_name";
-    public static final String COLUMN_STUDENTS_FIRST_NAME = "first_name";
-    public static final String COLUMN_STUDENTS_CLASS = "class";
-    public static final String COLUMN_STUDENTS_FEES = "fees";
-    public static final String COLUMN_STUDENTS_MOTHER_PHONE = "mother_phone";
-    public static final String COLUMN_STUDENTS_FATHER_PHONE = "father_phone";
-    public static final String COLUMN_STUDENTS_MOTHER_EMAIL = "mother_email";
-    public static final String COLUMN_STUDENTS_FATHER_EMAIL = "father_email";
-    public static final String COLUMN_STUDENTS_NOTES = "notes";
-    public static final String COLUMN_STUDENTS_PAYMENT_NOTES = "payment_notes";
     public static final String COLUMN_STUDENTS_SHOULD_PAY = "should_pay";
     public static final String COLUMN_STUDENTS_PAYED = "payed";
-    public static final String COLUMN_STUDENTS_SUMMARY_LAST_YEAR = "summary_last_year";
 
 
     public static final String VIEW_STUDENT_LIST = "students_list";
@@ -234,7 +223,7 @@ public class StudentDao {
         updatePayed.setInt(1, payed);
         updatePayed.setInt(2, vs);
         int affectedRecords = updatePayed.executeUpdate();
-        if (affectedRecords != 1){
+        if (affectedRecords != 1) {
             throw new Exception("Updating payed failed");
         }
     }

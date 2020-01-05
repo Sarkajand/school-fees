@@ -50,5 +50,4 @@ public class Main extends Application {
         DaoManager.getInstance().automaticDatabaseBackup();
         DaoManager.getInstance().close();
     }
-
 }

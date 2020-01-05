@@ -14,9 +14,9 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="cz.zsduhovacesta.controller.TransactionDialogController"
-            prefHeight="400.0" prefWidth="500.0">
+            prefHeight="380.0" prefWidth="400.0">
     <center>
-        <GridPane vgap="10" hgap="10" alignment="CENTER">
+        <GridPane vgap="20" hgap="10" alignment="CENTER">
             <Label text="Datum" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
             <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
             <Label text="Variabilní symbol" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
@@ -27,8 +27,8 @@
             <ChoiceBox fx:id="paymentMethodChoiceBox" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="180">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="hotově" />
-                        <String fx:value="převodem na účet" />
+                        <String fx:value="hotově"/>
+                        <String fx:value="převodem na účet"/>
                     </FXCollections>
                 </items>
             </ChoiceBox>
@@ -39,13 +39,13 @@
         </GridPane>
     </center>
     <bottom>
-    <HBox alignment="CENTER_RIGHT" spacing="20" prefHeight="50">
-        <padding>
-            <Insets bottom="20"/>
-            <Insets right="20"/>
-        </padding>
-        <Button text="Odejít beze změny" onAction="#handleCancel"/>
-        <Button text="Uložit" onAction="#handleSave"/>
-    </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="20" prefHeight="50">
+            <padding>
+                <Insets bottom="20"/>
+                <Insets right="20"/>
+            </padding>
+            <Button text="Uložit" onAction="#handleSave"/>
+            <Button text="Odejít beze změny" onAction="#handleCancel"/>
+        </HBox>
     </bottom>
 </BorderPane>

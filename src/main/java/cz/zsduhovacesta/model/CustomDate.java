@@ -29,6 +29,8 @@ public class CustomDate extends java.util.Date {
                 logger.warn("Parse date from string failed: ", e);
                 return null;
             }
-        } else return null;
+        } else {
+            return null;
+        }
     }
 }

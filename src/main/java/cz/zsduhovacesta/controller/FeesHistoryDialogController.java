@@ -36,15 +36,15 @@ public class FeesHistoryDialogController {
     private boolean saveClicked = false;
     private Stage stage;
 
-    public void setStage (Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public boolean isSaveClicked () {
+    public boolean isSaveClicked() {
         return saveClicked;
     }
 
-    public void setFields (FeesHistory feesHistory) {
+    public void setFields(FeesHistory feesHistory) {
         januaryTextField.setText(String.valueOf(feesHistory.getJanuary()));
         februaryTextField.setText(String.valueOf(feesHistory.getFebruary()));
         marchTextField.setText(String.valueOf(feesHistory.getMarch()));
@@ -59,7 +59,7 @@ public class FeesHistoryDialogController {
         decemberTextField.setText(String.valueOf(feesHistory.getDecember()));
     }
 
-    private boolean isInputValid () {
+    private boolean isInputValid() {
         String errorMessage = "";
         if (!januaryTextField.getText().matches("\\d+")) {
             errorMessage += "Neplatné školné za leden, musí být číslo\n";
@@ -113,7 +113,7 @@ public class FeesHistoryDialogController {
     }
 
     @FXML
-    public FeesHistory handleSave () {
+    public FeesHistory handleSave() {
         if (isInputValid()) {
             saveClicked = true;
             FeesHistory feesHistory = new FeesHistory();
@@ -137,7 +137,7 @@ public class FeesHistoryDialogController {
     }
 
     @FXML
-    public void handleCancel () {
+    public void handleCancel() {
         stage.close();
     }
 }

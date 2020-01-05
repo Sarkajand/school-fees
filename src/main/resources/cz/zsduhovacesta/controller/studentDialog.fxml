@@ -7,9 +7,9 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="cz.zsduhovacesta.controller.StudentController"
-            prefHeight="550.0" prefWidth="500.0">
+            prefHeight="620.0" prefWidth="500.0">
     <center>
-        <GridPane vgap="10" hgap="10" alignment="CENTER">
+        <GridPane vgap="20" hgap="10" alignment="CENTER">
             <Label text="Příjmení" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
             <TextField fx:id="lastNameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
             <Label text="Jméno" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
@@ -43,8 +43,8 @@
                 <Insets bottom="20"/>
                 <Insets right="20"/>
             </padding>
-            <Button text="Odejít beze změny" onAction="#handleCancel"/>
             <Button text="Uložit" onAction="#handleSave"/>
+            <Button text="Odejít beze změny" onAction="#handleCancel"/>
         </HBox>
     </bottom>
 </BorderPane>

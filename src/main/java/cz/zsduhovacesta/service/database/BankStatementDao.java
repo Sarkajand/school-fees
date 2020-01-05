@@ -18,10 +18,6 @@ public class BankStatementDao {
     final Logger logger = LoggerFactory.getLogger(BankStatementDao.class);
 
     public static final String TABLE_BANK_STATEMENT = "bank_statement";
-    public static final String COLUMN_BANK_ID = "_id";
-    public static final String COLUMN_BANK_DATE = "date";
-    public static final int INDEX_BANK_ID = 1;
-    public static final int INDEX_BANK_DATE = 2;
 
     public static final String QUERY_BANK_STATEMENTS =
             "SELECT * FROM " + TABLE_BANK_STATEMENT;
@@ -69,14 +65,14 @@ public class BankStatementDao {
         List<BankStatement> bankStatements = new ArrayList<>();
         while (results.next()) {
             BankStatement bankStatement = new BankStatement();
-            bankStatement.setId(results.getInt(INDEX_BANK_ID));
-            bankStatement.setDate(results.getString(INDEX_BANK_DATE));
+            bankStatement.setId(results.getInt(1));
+            bankStatement.setDate(results.getString(2));
             bankStatements.add(bankStatement);
         }
         return bankStatements;
     }
 
-    public void insertBankStatement (BankStatement bankStatement) throws Exception {
+    public void insertBankStatement(BankStatement bankStatement) throws Exception {
         insertBankStatement.setInt(1, bankStatement.getId());
         insertBankStatement.setString(2, bankStatement.getStringDate());
         int affectedRecords = insertBankStatement.executeUpdate();

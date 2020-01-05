@@ -18,7 +18,7 @@ public class TransactionDao {
 
     public static final String TABLE_TRANSACTIONS = "transactions";
     public static final String COLUMN_TRANSACTIONS_ID = "_id";
-    public static final String COLUMN_DATE = "_date";
+    public static final String COLUMN_TRANSACTIONS_DATE = "_date";
     public static final String COLUMN_TRANSACTIONS_BANK_STATEMENT = "bank_statement";
     public static final String COLUMN_TRANSACTIONS_VS = "VS";
     public static final String COLUMN_TRANSACTIONS_AMOUNT = "amount";
@@ -43,11 +43,11 @@ public class TransactionDao {
     public static final String QUERY_TRANSACTION_BY_VS =
             "SELECT * FROM " + VIEW_TRANSACTIONS_LIST + " WHERE " + COLUMN_TRANSACTIONS_VS + " = ?";
     public static final String INSERT_TRANSACTION =
-            "INSERT INTO " + TABLE_TRANSACTIONS + "(" + COLUMN_DATE + ", " + COLUMN_TRANSACTIONS_BANK_STATEMENT + ", " +
+            "INSERT INTO " + TABLE_TRANSACTIONS + "(" + COLUMN_TRANSACTIONS_DATE + ", " + COLUMN_TRANSACTIONS_BANK_STATEMENT + ", " +
                     COLUMN_TRANSACTIONS_VS + ", " + COLUMN_TRANSACTIONS_AMOUNT + ", " +
                     COLUMN_TRANSACTIONS_PAYMENT_METHOD + ", " + COLUMN_TRANSACTIONS_NOTES + ") VALUES (?, ?, ?, ?, ?, ?)";
     public static final String EDIT_TRANSACTION =
-            "UPDATE " + TABLE_TRANSACTIONS + " SET " + COLUMN_DATE + " = ? , " + COLUMN_TRANSACTIONS_BANK_STATEMENT + " = ?, " +
+            "UPDATE " + TABLE_TRANSACTIONS + " SET " + COLUMN_TRANSACTIONS_DATE + " = ? , " + COLUMN_TRANSACTIONS_BANK_STATEMENT + " = ?, " +
                     COLUMN_TRANSACTIONS_VS + " = ?, " + COLUMN_TRANSACTIONS_AMOUNT + " = ?, " +
                     COLUMN_TRANSACTIONS_PAYMENT_METHOD + " = ?, " + COLUMN_TRANSACTIONS_NOTES + " = ?" +
                     " WHERE " + COLUMN_TRANSACTIONS_ID + " = ?";
@@ -183,7 +183,7 @@ public class TransactionDao {
     public int countStudentPayed(int studentVs) {
         List<Transaction> transactions = queryTransactionByVsFromExistingStudent(studentVs);
         int sum = 0;
-        for(Transaction transaction : transactions) {
+        for (Transaction transaction : transactions) {
             sum += transaction.getAmount();
         }
         return sum;

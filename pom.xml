@@ -25,43 +25,22 @@
 
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-media</artifactId>
-            <version>11</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
             <version>11</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>11</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
             <version>11</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-            <version>11</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-swing</artifactId>
             <version>11</version>
         </dependency>
 
@@ -89,19 +68,6 @@
             <version>1.7.5</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>org.testfx</groupId>-->
-        <!--            <artifactId>testfx-junit5</artifactId>-->
-        <!--            <version>4.0.16-alpha</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.testfx</groupId>-->
-        <!--            <artifactId>testfx-core</artifactId>-->
-        <!--            <version>4.0.16-alpha</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -121,21 +87,17 @@
             <version>3.0.0-M4</version>
             <scope>test</scope>
         </dependency>
-
-
-
     </dependencies>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>  <!-- same as <java.version> -->
-                    <target>11</target>    <!-- same as <java.version> -->
+                    <release>11</release>
+                    <target>11</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -159,7 +121,6 @@
                     </execution>
                 </executions>
             </plugin>
-
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -185,7 +146,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

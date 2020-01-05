@@ -13,13 +13,6 @@
                     <MenuItem text="třídy" onAction="#showClasses"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="záloha databáze" onAction="#backupDatabase"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="další možnosti?"/>
-                </Menu>
-                <Menu text="něco">
-                    <MenuItem text="nevim"/>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="další možnosti"/>
                 </Menu>
             </MenuBar>
         </HBox>
@@ -214,7 +207,7 @@
                                         <PropertyValueFactory property="paymentMethod"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="300" text="zpráva pro příjemce">
+                                <TableColumn prefWidth="450" text="zpráva pro příjemce">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="transactionNotes"/>
                                     </cellValueFactory>
@@ -257,7 +250,7 @@
                                 </ContextMenu>
                             </contextMenu>
                             <columns>
-                                <TableColumn prefWidth="100" text="Třída">
+                                <TableColumn prefWidth="150" text="Třída">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="className"/>
                                     </cellValueFactory>
@@ -297,7 +290,7 @@
                                         <PropertyValueFactory property="underPayment"/>
                                     </cellValueFactory>
                                 </TableColumn>
-                                <TableColumn prefWidth="150" text="poznámky k platbám">
+                                <TableColumn prefWidth="300" text="poznámky k platbám">
                                     <cellValueFactory>
                                         <PropertyValueFactory property="paymentNotes"/>
                                     </cellValueFactory>

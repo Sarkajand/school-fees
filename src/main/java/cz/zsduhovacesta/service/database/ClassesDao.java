@@ -1,7 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
 import cz.zsduhovacesta.model.Classes;
-import javafx.fxml.FXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +20,6 @@ public class ClassesDao {
     public static final String COLUMN_CLASSES_ID = "_id";
     public static final String COLUMN_CLASSES_STAGE = "stage";
     public static final String COLUMN_CLASSES_CLASS_NAME = "class_name";
-    public static final int INDEX_CLASSES_ID = 1;
-    public static final int INDEX_CLASSES_STAGE = 2;
-    public static final int INDEX_CLASSES_NAME = 3;
 
     public static final String QUERY_CLASSES =
             "SELECT * FROM " + TABLE_CLASSES;
@@ -84,7 +80,7 @@ public class ClassesDao {
             ResultSet results = queryClasses.executeQuery();
             List<String> classesNames = new ArrayList<>();
             while (results.next()) {
-                classesNames.add(results.getString(INDEX_CLASSES_NAME));
+                classesNames.add(results.getString(3));
             }
             return classesNames;
         } catch (SQLException e) {
@@ -110,13 +106,13 @@ public class ClassesDao {
 
     private Classes setClass(ResultSet results) throws SQLException {
         Classes newClass = new Classes();
-        newClass.setClassId(results.getInt(INDEX_CLASSES_ID));
-        newClass.setClassName(results.getString(INDEX_CLASSES_NAME));
-        newClass.setStage(results.getString(INDEX_CLASSES_STAGE));
+        newClass.setClassId(results.getInt(1));
+        newClass.setClassName(results.getString(3));
+        newClass.setStage(results.getString(2));
         return newClass;
     }
 
-    public int queryClassIdByClassName (String className) {
+    public int queryClassIdByClassName(String className) {
         try {
             queryClassIdByClassName.setString(1, className);
             ResultSet results = queryClassIdByClassName.executeQuery();

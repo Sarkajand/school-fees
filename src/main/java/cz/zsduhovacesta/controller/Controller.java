@@ -55,6 +55,7 @@ public class Controller {
     @FXML
     private ToggleGroup schoolStageToggleGroupOnSummary;
 
+    private DaoManager daoManager = DaoManager.getInstance();
     private ObservableList<Student> students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
     private final Logger logger = LoggerFactory.getLogger(Controller.class);
 
@@ -63,12 +64,12 @@ public class Controller {
     }
 
     public void listBankStatements() {
-        ObservableList<BankStatement> bankStatements = FXCollections.observableList(DaoManager.getInstance().listBankStatements());
+        ObservableList<BankStatement> bankStatements = FXCollections.observableList(daoManager.listBankStatements());
         bankStatementsTable.itemsProperty().set(bankStatements);
     }
 
     public void listTransactions() {
-        ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactionsFromExistingStudents());
+        ObservableList<Transaction> transactions = FXCollections.observableList(daoManager.listTransactionsFromExistingStudents());
         transactionsTable.itemsProperty().set(transactions);
     }
 
@@ -83,9 +84,9 @@ public class Controller {
         RadioButton selectedRadioButton = (RadioButton) schoolStageToggleGroup.getSelectedToggle();
         String selectedSchoolStage = selectedRadioButton.getText();
         if (selectedSchoolStage.equals("všichni")) {
-            students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
+            students = FXCollections.observableList(daoManager.listAllStudents());
         } else {
-            students = FXCollections.observableList(DaoManager.getInstance().listStudentsBySchoolStage(selectedSchoolStage));
+            students = FXCollections.observableList(daoManager.listStudentsBySchoolStage(selectedSchoolStage));
         }
         listStudents();
     }
@@ -96,34 +97,34 @@ public class Controller {
         RadioButton selectedRadioButton = (RadioButton) schoolStageToggleGroupOnSummary.getSelectedToggle();
         String selectedSchoolStage = selectedRadioButton.getText();
         if (selectedSchoolStage.equals("všichni")) {
-            students = FXCollections.observableList(DaoManager.getInstance().listAllStudents());
+            students = FXCollections.observableList(daoManager.listAllStudents());
         } else {
-            students = FXCollections.observableList(DaoManager.getInstance().listStudentsBySchoolStage(selectedSchoolStage));
+            students = FXCollections.observableList(daoManager.listStudentsBySchoolStage(selectedSchoolStage));
         }
         listSummary();
     }
 
     @FXML
     public void setClassesChoiceBoxOnStudentsTab() {
-        classesChoiceBoxOnStudentsTab.setItems(FXCollections.observableArrayList(DaoManager.getInstance().listClassesNames()));
+        classesChoiceBoxOnStudentsTab.setItems(FXCollections.observableArrayList(daoManager.listClassesNames()));
     }
 
     @FXML
     public void setClassesChoiceBoxOnSummaryTab() {
-        classesChoiceBoxOnSummaryTab.setItems(FXCollections.observableArrayList(DaoManager.getInstance().listClassesNames()));
+        classesChoiceBoxOnSummaryTab.setItems(FXCollections.observableArrayList(daoManager.listClassesNames()));
     }
 
     @FXML
     public void listStudentsByClass() {
         String className = classesChoiceBoxOnStudentsTab.getSelectionModel().getSelectedItem();
-        students = FXCollections.observableList(DaoManager.getInstance().listStudentsByClass(className));
+        students = FXCollections.observableList(daoManager.listStudentsByClass(className));
         listStudents();
     }
 
     @FXML
     public void listStudentsByClassOnSummary() {
         String className = classesChoiceBoxOnSummaryTab.getSelectionModel().getSelectedItem();
-        students = FXCollections.observableList(DaoManager.getInstance().listStudentsByClass(className));
+        students = FXCollections.observableList(daoManager.listStudentsByClass(className));
         listSummary();
     }
 
@@ -148,7 +149,7 @@ public class Controller {
     }
 
     private void insertStudent(Student student) throws Exception {
-        DaoManager.getInstance().insertStudent(student);
+        daoManager.insertStudent(student);
     }
 
     private FXMLLoader getLoaderWithSetResource(String resource) {
@@ -191,7 +192,7 @@ public class Controller {
                 stage.showAndWait();
                 if (studentController.isSaveClicked()) {
                     Student editedStudent = studentController.handleSave();
-                    DaoManager.getInstance().editStudent(student.getVS(), editedStudent);
+                    daoManager.editStudent(student.getVS(), editedStudent);
                     listStudentsBySchoolStage();
                     listStudentsBySchoolStageOnSummary();
                 }
@@ -215,7 +216,7 @@ public class Controller {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
-                    DaoManager.getInstance().deleteStudent(student.getVS());
+                    daoManager.deleteStudent(student.getVS());
                     listStudentsBySchoolStage();
                     listStudentsBySchoolStageOnSummary();
                 } catch (Exception e) {
@@ -252,14 +253,14 @@ public class Controller {
                 Stage stage = prepareStage("Historie školného", loader);
                 FeesHistoryDialogController controller = loader.getController();
                 controller.setStage(stage);
-                FeesHistory feesHistory = DaoManager.getInstance().queryFeesHistoryByStudentVs(student.getVS());
+                FeesHistory feesHistory = daoManager.queryFeesHistoryByStudentVs(student.getVS());
                 controller.setFields(feesHistory);
                 stage.showAndWait();
                 if (controller.isSaveClicked()) {
                     FeesHistory editedFeesHistory = controller.handleSave();
                     editedFeesHistory.setStudentVs(feesHistory.getStudentVs());
                     editedFeesHistory.setLastUpdate(feesHistory.getLastUpdate());
-                    DaoManager.getInstance().updateFeesHistoryByUser(editedFeesHistory);
+                    daoManager.updateFeesHistoryByUser(editedFeesHistory);
                     listStudentsBySchoolStageOnSummary();
                 }
             } catch (Exception e) {
@@ -282,7 +283,7 @@ public class Controller {
             path = file.getAbsolutePath();
             try {
                 BankStatement bankStatement = csvReader.readNewBankStatement(path);
-                DaoManager.getInstance().insertBankStatementWithAllTransactions(bankStatement);
+                daoManager.insertBankStatementWithAllTransactions(bankStatement);
                 listBankStatements();
                 listTransactions();
                 listStudentsBySchoolStageOnSummary();
@@ -303,7 +304,7 @@ public class Controller {
             stage.showAndWait();
             if (controller.isSaveClicked()) {
                 Transaction transaction = controller.handleSave();
-                DaoManager.getInstance().insertTransaction(transaction);
+                daoManager.insertTransaction(transaction);
                 listTransactions();
                 listStudentsBySchoolStageOnSummary();
             }
@@ -326,7 +327,7 @@ public class Controller {
             if (controller.isSaveClicked()) {
                 Transaction editedTransaction = controller.handleSave();
                 editedTransaction.setId(transaction.getId());
-                DaoManager.getInstance().editTransaction(editedTransaction);
+                daoManager.editTransaction(editedTransaction);
                 listTransactions();
                 listStudentsBySchoolStageOnSummary();
             }
@@ -350,7 +351,7 @@ public class Controller {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
-                    DaoManager.getInstance().deleteTransaction(transaction);
+                    daoManager.deleteTransaction(transaction);
                     listTransactions();
                     listStudentsBySchoolStageOnSummary();
                 } catch (Exception e) {
@@ -365,18 +366,18 @@ public class Controller {
     public void listTransactionByVs() {
         try {
             int vs = Integer.parseInt(vsFieldOnTransactionTab.getText());
-            ObservableList<Transaction> transactions = FXCollections.observableList(DaoManager.getInstance().listTransactionByVs(vs));
+            ObservableList<Transaction> transactions = FXCollections.observableList(daoManager.listTransactionByVs(vs));
             transactionsTable.itemsProperty().set(transactions);
         } catch (Exception e) {
             logger.warn("List transactions by vs failed", e);
-            showAlert("Chyba", "transakce se nepodařilo najít");
+            showAlert("Chyba", "transakce se nepodařilo najít \nmusíte mít vypněný variabilní symbol");
         }
     }
 
     @FXML
     public void backupDatabase() {
         try {
-            DaoManager.getInstance().backupDatabase();
+            daoManager.backupDatabase();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Záloha databáze");
             alert.setContentText("Záloha databáze byla vytvořena");
