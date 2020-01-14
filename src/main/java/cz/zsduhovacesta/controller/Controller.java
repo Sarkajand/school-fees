@@ -1,5 +1,7 @@
 package cz.zsduhovacesta.controller;
 
+import cz.zsduhovacesta.exceptions.BankStatementFormatException;
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.BankStatement;
 import cz.zsduhovacesta.model.FeesHistory;
 import cz.zsduhovacesta.model.Student;
@@ -12,13 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
@@ -142,13 +138,17 @@ public class Controller {
                 listStudentsBySchoolStage();
                 listStudentsBySchoolStageOnSummary();
             }
-        } catch (Exception e) {
+        } catch (EditRecordException | SQLException e) {
             logger.error("Method newStudent in Controller failed: ", e);
             showAlert("Chyba", "Nepodařilo se vložit žáka");
+        } catch (IOException e) {
+            logger.error("Load page for new student dialog failed", e);
+        } catch (Exception e) {
+            logger.error("Unexpected exception: ", e);
         }
     }
 
-    private void insertStudent(Student student) throws Exception {
+    private void insertStudent(Student student) throws EditRecordException, SQLException {
         daoManager.insertStudent(student);
     }
 
@@ -196,9 +196,13 @@ public class Controller {
                     listStudentsBySchoolStage();
                     listStudentsBySchoolStageOnSummary();
                 }
-            } catch (Exception e) {
+            } catch (EditRecordException | SQLException e) {
                 logger.error("Method editStudent in Controller failed: ", e);
                 showAlert("Chyba", "Nepodařilo se upravit žáka");
+            } catch (IOException e) {
+                logger.error("Load page for edit student dialog failed", e);
+            } catch (Exception e) {
+                logger.error("Unexpected exception: ", e);
             }
         }
     }
@@ -219,9 +223,11 @@ public class Controller {
                     daoManager.deleteStudent(student.getVS());
                     listStudentsBySchoolStage();
                     listStudentsBySchoolStageOnSummary();
-                } catch (Exception e) {
+                } catch (EditRecordException | SQLException e) {
                     logger.error("Method deleteStudent in Controller failed: ", e);
-                    showAlert("Chyba", "Nepodařilo se smazat studenta");
+                    showAlert("Chyba", "Nepodařilo se smazat žáka");
+                } catch (Exception e) {
+                    logger.error("Unexpected exception: ", e);
                 }
             }
         }
@@ -259,13 +265,17 @@ public class Controller {
                 if (controller.isSaveClicked()) {
                     FeesHistory editedFeesHistory = controller.handleSave();
                     editedFeesHistory.setStudentVs(feesHistory.getStudentVs());
-                    editedFeesHistory.setLastUpdate(feesHistory.getLastUpdate());
+                    editedFeesHistory.setLastUpdateWasInMonth(feesHistory.getLastUpdateWasInMonth());
                     daoManager.updateFeesHistoryByUser(editedFeesHistory);
                     listStudentsBySchoolStageOnSummary();
                 }
-            } catch (Exception e) {
-                logger.error("Method showFeesHistoryDialog in Controller failed: ", e);
+            } catch (EditRecordException | SQLException e) {
+                logger.error("Edit feesHistory failed: ", e);
                 showAlert("Chyba", "Nepodařilo se upravit historii školného");
+            } catch (IOException e) {
+                logger.error("Load page for fees history failed: ", e);
+            } catch (Exception e) {
+                logger.error("Unexpected exception: ", e);
             }
         }
     }
@@ -287,9 +297,14 @@ public class Controller {
                 listBankStatements();
                 listTransactions();
                 listStudentsBySchoolStageOnSummary();
-            } catch (Exception e) {
+            } catch (IOException | SQLException | EditRecordException e) {
                 logger.error("Method importBankStatement in Controller failed: ", e);
                 showAlert("Chyba", "nepodařilo se nahrát bankovní účet");
+            } catch (BankStatementFormatException e) {
+                logger.error("Bank statement format doesn't match expecting: ", e);
+                showAlert("Chyba", "Majitel účtu nebo tabulka v bankovním výpisu neodpovídá očekávanému formátu");
+            } catch (Exception e) {
+                logger.error("Unexpected exception: ", e);
             }
         }
     }
@@ -308,9 +323,13 @@ public class Controller {
                 listTransactions();
                 listStudentsBySchoolStageOnSummary();
             }
-        } catch (Exception e) {
-            logger.error("Method newTransaction in Controller failed: ", e);
+        } catch (EditRecordException | SQLException e) {
+            logger.error("Insert new transaction failed: ", e);
             showAlert("Chyba", "Nepodařilo se vložit transakci");
+        } catch (IOException e) {
+            logger.error("Load page for new transaction failed: ", e);
+        } catch (Exception e) {
+            logger.error("Unexpected exception: ", e);
         }
     }
 
@@ -331,9 +350,13 @@ public class Controller {
                 listTransactions();
                 listStudentsBySchoolStageOnSummary();
             }
+        } catch (EditRecordException | SQLException e) {
+            logger.error("Edit transaction failed: ", e);
+            showAlert("Chyba", "Nepodařilo se upravit transakci");
+        } catch (IOException e) {
+            logger.error("Load page for edit transaction failed: ", e);
         } catch (Exception e) {
-            logger.error("Method newTransaction in Controller failed: ", e);
-            showAlert("Chyba", "Nepodařilo se vložit transakci");
+            logger.error("Unexpected exception: ", e);
         }
     }
 
@@ -354,9 +377,11 @@ public class Controller {
                     daoManager.deleteTransaction(transaction);
                     listTransactions();
                     listStudentsBySchoolStageOnSummary();
-                } catch (Exception e) {
-                    logger.error("Method deleteTransaction in Controller failed: ", e);
+                } catch (EditRecordException | SQLException e) {
+                    logger.error("Delete transaction failed: ", e);
                     showAlert("Chyba", "Nepodařilo se smazat transakci");
+                } catch (Exception e) {
+                    logger.error("Unexpected exception: ", e);
                 }
             }
         }
@@ -368,9 +393,10 @@ public class Controller {
             int vs = Integer.parseInt(vsFieldOnTransactionTab.getText());
             ObservableList<Transaction> transactions = FXCollections.observableList(daoManager.listTransactionByVs(vs));
             transactionsTable.itemsProperty().set(transactions);
-        } catch (Exception e) {
-            logger.warn("List transactions by vs failed", e);
+        } catch (NumberFormatException e) {
             showAlert("Chyba", "transakce se nepodařilo najít \nmusíte mít vypněný variabilní symbol");
+        } catch (Exception e) {
+            logger.error("Unexpected exception: ", e);
         }
     }
 
@@ -385,6 +411,8 @@ public class Controller {
         } catch (SQLException e) {
             logger.error("Backup database failed", e);
             showAlert("Chyba", "Nepodařilo se vytvořit zálohu databáze");
+        } catch (Exception e) {
+            logger.error("Unexpected exception: ", e);
         }
     }
 
@@ -409,6 +437,7 @@ public class Controller {
                 csvWriter.writeNewCsv(file);
             }
         } catch (IOException e) {
+            logger.error("Export data to csv failed: ", e);
             showAlert("Chyba", "Nepodařilo se exportovat a uložit data");
         }
     }

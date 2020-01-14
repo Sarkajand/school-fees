@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.PatternSyntaxException;
 
 public class CustomDate extends java.util.Date {
     static final Logger logger = LoggerFactory.getLogger(CustomDate.class);
@@ -26,11 +27,11 @@ public class CustomDate extends java.util.Date {
                 long longDate = date.getTime();
                 return new CustomDate(longDate);
             } catch (ParseException e) {
-                logger.warn("Parse date from string failed: ", e);
-                return null;
+                logger.error("Parse date from string failed: ", e);
+                throw new PatternSyntaxException("This shouldn't happen", "\\d{2}\\.\\d{2}\\.\\d{4}", -1);
             }
         } else {
-            return null;
+            throw new PatternSyntaxException("String doesn't match format", "\\d{2}\\.\\d{2}\\.\\d{4}", -1);
         }
     }
 }

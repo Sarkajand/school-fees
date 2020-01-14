@@ -1,9 +1,11 @@
 package cz.zsduhovacesta.service.csv;
 
+import cz.zsduhovacesta.exceptions.BankStatementFormatException;
 import cz.zsduhovacesta.model.BankStatement;
 import cz.zsduhovacesta.model.Transaction;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,7 +17,7 @@ public class CsvReader {
     private String date;
     private int bankStatementId;
 
-    public BankStatement readNewBankStatement(String CSVFilePath) throws Exception {
+    public BankStatement readNewBankStatement(String CSVFilePath) throws BankStatementFormatException, IOException {
         BankStatement bankStatement = new BankStatement();
         List<Transaction> transactions = new ArrayList<>();
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(CSVFilePath), StandardCharsets.UTF_8)) {
@@ -48,16 +50,16 @@ public class CsvReader {
         return Integer.parseInt(number.replace("/", ""));
     }
 
-    private void checkOwner(String owner) throws Exception {
+    private void checkOwner(String owner) throws BankStatementFormatException {
         if (!owner.equals("\"Majitel účtu: ZÁKLADNÍ ŠKOLA A MATEŘSKÁ ŠKOLA DUHOVÁ CESTA, s.r.o., Havlíčkova 3675, Chomutov, 43003, Česká republika\"")) {
-            throw new Exception("Owner of account doesn't match expecting");
+            throw new BankStatementFormatException("Owner of account doesn't match expecting");
         }
     }
 
-    private void checkHeaders(String headers) throws Exception {
+    private void checkHeaders(String headers) throws BankStatementFormatException {
         String expectingHeaders = "\"ID operace\";\"Datum\";\"Objem\";\"Měna\";\"Protiúčet\";\"Název protiúčtu\";\"Kód banky\";\"Název banky\";\"KS\";\"VS\";\"SS\";\"Poznámka\";\"Zpráva pro příjemce\";\"Typ\";\"Provedl\";\"Upřesnění\";\"Poznámka\";\"BIC\";\"ID pokynu\"";
         if (!headers.equals(expectingHeaders)) {
-            throw new Exception("Headers don´t match expecting");
+            throw new BankStatementFormatException("Headers don´t match expecting");
         }
     }
 

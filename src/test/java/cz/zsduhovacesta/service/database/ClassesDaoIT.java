@@ -19,7 +19,7 @@ class ClassesDaoIT {
     private static ClassesDao classesDao;
 
     @BeforeAll
-    public static void setup () {
+    public static void setup() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
             connection.setAutoCommit(false);
@@ -29,8 +29,8 @@ class ClassesDaoIT {
     }
 
     @AfterAll
-    public static void tearDown () {
-        try{
+    public static void tearDown() {
+        try {
             connection.close();
         } catch (SQLException e) {
             System.out.println("Closing failed: " + e.getMessage());
@@ -38,7 +38,7 @@ class ClassesDaoIT {
     }
 
     @BeforeEach
-    public void startTransaction () {
+    public void startTransaction() {
         try {
             classesDao = new ClassesDao(connection);
             connection.beginRequest();
@@ -48,7 +48,7 @@ class ClassesDaoIT {
     }
 
     @AfterEach
-    public void rollback () {
+    public void rollback() {
         try {
             connection.rollback();
             classesDao.close();
@@ -80,9 +80,19 @@ class ClassesDaoIT {
     }
 
     @Test
-    void getClassIdByClassName () {
+    void getClassIdByClassName() {
         int classId = classesDao.queryClassIdByClassName("POHÁDKA");
         assertEquals(1, classId);
+    }
+
+    @Test
+    void getIdByNotExistingName() {
+        try {
+            classesDao.queryClassIdByClassName("NotExist");
+            fail("Should throw NullPointerException");
+        } catch (NullPointerException e) {
+            assertEquals("No results from query class id by name for className NotExist", e.getMessage());
+        }
     }
 
     @Test
@@ -108,7 +118,7 @@ class ClassesDaoIT {
         classToEdit.setStage("newStage");
         try {
             List<Classes> classes = classesDao.queryAllClasses();
-            assertNotEquals(classToEdit,classes.get(0));
+            assertNotEquals(classToEdit, classes.get(0));
             classesDao.editClass(classToEdit);
             classes = classesDao.queryAllClasses();
             assertEquals(classToEdit, classes.get(0));

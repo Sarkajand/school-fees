@@ -3,8 +3,6 @@ package cz.zsduhovacesta.service.csv;
 import cz.zsduhovacesta.model.Student;
 import cz.zsduhovacesta.model.Transaction;
 import cz.zsduhovacesta.service.database.DaoManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,7 +14,6 @@ import java.util.List;
 
 public class CsvWriter {
 
-    final Logger logger = LoggerFactory.getLogger(CsvWriter.class);
     private DaoManager daoManager = DaoManager.getInstance();
 
     public void writeNewCsv(File file) throws IOException {
@@ -27,9 +24,6 @@ public class CsvWriter {
                 fileWriter.append("\n");
             }
             fileWriter.flush();
-        } catch (IOException e) {
-            logger.error("Writing csv failed: ", e);
-            throw e;
         }
     }
 

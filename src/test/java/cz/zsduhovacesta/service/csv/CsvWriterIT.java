@@ -43,7 +43,7 @@ class CsvWriterIT {
             Path newFilePath = Paths.get(file.getAbsolutePath());
             BufferedReader newFileBufferedReader = Files.newBufferedReader(newFilePath, StandardCharsets.UTF_8);
 
-            Path path = Paths.get("D:\\Java\\Projects\\schoolFees\\school-fees\\src\\test\\resources\\csv\\expected.csv");
+            Path path = Paths.get("src\\test\\resources\\csv\\expected.csv");
             BufferedReader expectedFileBufferedReader = Files.newBufferedReader(path, StandardCharsets.UTF_8);
             String expectedLine = expectedFileBufferedReader.readLine();
             while (expectedLine != null) {

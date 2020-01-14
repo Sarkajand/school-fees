@@ -1,11 +1,14 @@
 package cz.zsduhovacesta.controller;
 
 import cz.zsduhovacesta.model.Classes;
+import cz.zsduhovacesta.service.database.DaoManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class ClassDialogController {
 
@@ -31,12 +34,19 @@ public class ClassDialogController {
     }
 
     private boolean isInputValid() {
-        String errorMessage = "";
+        StringBuilder errorMessage = new StringBuilder();
         if (!classNameTextField.getText().matches(".+")) {
-            errorMessage += "Musíte napsat jméno třídy\n";
+            errorMessage.append("Musíte napsat jméno třídy\n");
+        } else {
+            List<String> classesNames = DaoManager.getInstance().listClassesNames();
+            for (String name : classesNames) {
+                if (name.equals(classNameTextField.getText())) {
+                    errorMessage.append("Třída se jménem ").append(name).append(" již existuje, prosím vyberte jiné jméno\n");
+                }
+            }
         }
         if (stageChoiceBox.getSelectionModel().getSelectedItem() == null) {
-            errorMessage += "Musíte vybrat stupeň\n";
+            errorMessage.append("Musíte vybrat stupeň\n");
         }
         if (errorMessage.length() == 0) {
             return true;
@@ -45,7 +55,7 @@ public class ClassDialogController {
             alert.initOwner(editClassStage);
             alert.setTitle("Neplatný vstup");
             alert.setHeaderText("Prosím opravte neplatná pole");
-            alert.setContentText(errorMessage);
+            alert.setContentText(errorMessage.toString());
 
             alert.showAndWait();
             return false;

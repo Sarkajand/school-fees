@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.Student;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,16 +108,18 @@ public class StudentDao {
             ResultSet results = queryAllStudents.executeQuery();
             return setStudents(results);
         } catch (SQLException e) {
-            logger.warn("Query all students failed: " + e.getMessage());
+            logger.error("Query all students failed: ", e);
             return Collections.emptyList();
         }
     }
 
     private List<Student> setStudents(ResultSet results) throws SQLException {
         List<Student> students = new ArrayList<>();
-        while (results.next()) {
-            Student student = setStudent(results);
-            students.add(student);
+        if (results.next()) {
+            do {
+                Student student = setStudent(results);
+                students.add(student);
+            } while (results.next());
         }
         return students;
     }
@@ -150,7 +153,7 @@ public class StudentDao {
             ResultSet results = queryStudentsBySchoolStage.executeQuery();
             return setStudents(results);
         } catch (SQLException e) {
-            logger.warn("Query students by school stage failed: ", e);
+            logger.error("Query students by school stage failed: ", e);
             return Collections.emptyList();
         }
     }
@@ -161,7 +164,7 @@ public class StudentDao {
             ResultSet results = queryStudentsByClass.executeQuery();
             return setStudents(results);
         } catch (SQLException e) {
-            logger.warn("Query students by class failed: ", e);
+            logger.error("Query students by class failed: ", e);
             return Collections.emptyList();
         }
     }
@@ -170,19 +173,21 @@ public class StudentDao {
         try {
             queryStudentByVs.setInt(1, vs);
             ResultSet results = queryStudentByVs.executeQuery();
-            return setStudent(results);
+            if (results.next()) {
+                return setStudent(results);
+            } else return null;
         } catch (SQLException e) {
-            logger.warn("query student by vs failed:", e);
+            logger.error("query student by vs failed:", e);
             return null;
         }
     }
 
-    public void insertStudent(Student student) throws Exception {
+    public void insertStudent(Student student) throws EditRecordException, SQLException {
         setValuesForInsertingStudent(student);
 
         int affectedRecords = insertStudent.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Inserting student failed");
+            throw new EditRecordException("Inserting student failed");
         }
     }
 
@@ -202,29 +207,29 @@ public class StudentDao {
         insertStudent.setDouble(13, student.getPayed());
     }
 
-    public void deleteStudent(int VS) throws Exception {
+    public void deleteStudent(int VS) throws EditRecordException, SQLException {
         deleteStudent.setInt(1, VS);
         int affectedRecords = deleteStudent.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Deleting student failed");
+            throw new EditRecordException("Deleting student failed");
         }
     }
 
-    public void updateShouldPay(int vs, int shouldPay) throws Exception {
+    public void updateShouldPay(int vs, int shouldPay) throws EditRecordException, SQLException {
         updateShouldPay.setInt(1, shouldPay);
         updateShouldPay.setInt(2, vs);
         int affectedRecords = updateShouldPay.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Updating should pay failed");
+            throw new EditRecordException("Updating should pay failed");
         }
     }
 
-    public void updatePayed(int vs, int payed) throws Exception {
+    public void updatePayed(int vs, int payed) throws EditRecordException, SQLException {
         updatePayed.setInt(1, payed);
         updatePayed.setInt(2, vs);
         int affectedRecords = updatePayed.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Updating payed failed");
+            throw new EditRecordException("Updating payed failed");
         }
     }
 }

@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.controller;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.Classes;
 import cz.zsduhovacesta.service.database.DaoManager;
 import javafx.collections.FXCollections;
@@ -13,8 +14,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class ClassesController {
@@ -24,6 +28,7 @@ public class ClassesController {
 
     private Stage classStage;
     private DaoManager daoManager = DaoManager.getInstance();
+    final Logger logger = LoggerFactory.getLogger(ClassesController.class);
 
     public void initialize() {
         listClasses();
@@ -46,8 +51,13 @@ public class ClassesController {
                 daoManager.insertClass(newClass);
                 listClasses();
             }
-        } catch (Exception e) {
+        } catch (EditRecordException | SQLException e) {
+            logger.error("Insert new class failed", e);
             showAlert("Chyba", "Nepodařilo se vložit třídu");
+        } catch (IOException e) {
+            logger.error("Load page for classesDialog failed: ", e);
+        } catch (Exception e) {
+            logger.error("Unexpected exception: ", e);
         }
     }
 
@@ -55,6 +65,7 @@ public class ClassesController {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Controller.class.getResource("classDialog.fxml"));
         BorderPane page = loader.load();
+
 
         Stage classDialogStage = new Stage();
         classDialogStage.setTitle(title);
@@ -93,8 +104,13 @@ public class ClassesController {
                     daoManager.editClass(editedClass);
                     listClasses();
                 }
-            } catch (Exception e) {
+            } catch (EditRecordException | SQLException e) {
+                logger.error("insert new class failed", e);
                 showAlert("Chyba", "Nepodařilo se upravit třídu");
+            } catch (IOException e) {
+                logger.error("load page for classesDialog failed: ", e);
+            } catch (Exception e) {
+                logger.error("Unexpected exception: ", e);
             }
         }
     }
@@ -114,8 +130,11 @@ public class ClassesController {
                 try {
                     daoManager.deleteClassWithAllStudents(classToDelete);
                     listClasses();
-                } catch (Exception e) {
+                } catch (EditRecordException | SQLException e) {
+                    logger.error("insert new class failed", e);
                     showAlert("Chyba", "Nepodařilo se smazat třídu");
+                } catch (Exception e) {
+                    logger.error("Unexpected exception: ", e);
                 }
             }
         }

@@ -19,7 +19,7 @@ class FeesHistoryDaoIT {
     private static FeesHistoryDao feesHistoryDao;
 
     @BeforeAll
-    public static void setup () {
+    public static void setup() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
             connection.setAutoCommit(false);
@@ -29,8 +29,8 @@ class FeesHistoryDaoIT {
     }
 
     @AfterAll
-    public static void tearDown () {
-        try{
+    public static void tearDown() {
+        try {
             connection.close();
         } catch (SQLException e) {
             System.out.println("Closing failed: " + e.getMessage());
@@ -38,7 +38,7 @@ class FeesHistoryDaoIT {
     }
 
     @BeforeEach
-    public void startTransaction () {
+    public void startTransaction() {
         try {
             feesHistoryDao = new FeesHistoryDao(connection);
             connection.beginRequest();
@@ -48,7 +48,7 @@ class FeesHistoryDaoIT {
     }
 
     @AfterEach
-    public void rollback () {
+    public void rollback() {
         try {
             connection.rollback();
             feesHistoryDao.close();
@@ -67,6 +67,11 @@ class FeesHistoryDaoIT {
         }
     }
 
+//    @Test
+//    void queryFeesHistoriesWithWrongLastUpdateNoRecords() {
+//        List<FeesHistory> feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate()
+//    }
+
     @Test
     void queryFeesHistoryByVs() {
         FeesHistory feesHistory = feesHistoryDao.queryFeesHistoryByStudentVs(254325);
@@ -80,7 +85,7 @@ class FeesHistoryDaoIT {
         feesHistoryToInsert.setStudentVs(111);
         try {
             feesHistoryDao.insertFeesHistory(111);
-            List<FeesHistory> feesHistories= feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(99);
+            List<FeesHistory> feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(99);
             assertEquals(5, feesHistories.size());
         } catch (Exception e) {
             fail();
@@ -148,7 +153,7 @@ class FeesHistoryDaoIT {
     void deleteFeesHistory() {
         List<FeesHistory> feesHistories = feesHistoryDao.queryFeesHistoriesWithWrongLastUpdate(99);
         assertEquals(4, feesHistories.size());
-        try{
+        try {
             feesHistoryDao.deleteFeesHistory(254325);
         } catch (Exception e) {
             fail();
@@ -159,10 +164,10 @@ class FeesHistoryDaoIT {
 
     @Test
     void deleteNotExistingFeesHistory() {
-        try{
+        try {
             feesHistoryDao.deleteFeesHistory(111);
             fail();
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
     }

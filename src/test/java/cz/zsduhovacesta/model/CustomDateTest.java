@@ -2,8 +2,9 @@ package cz.zsduhovacesta.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.regex.PatternSyntaxException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomDateTest {
 
@@ -11,20 +12,47 @@ public class CustomDateTest {
     public void testFromString() {
         String strDate = "12.05.2019";
         CustomDate customDate = CustomDate.fromString(strDate);
-        assert customDate != null;
         assertEquals(1557612000000L, customDate.getTime());
     }
 
     @Test
-    public void testWrongFormatOfStringReturnNull() {
-        CustomDate customDate = CustomDate.fromString("12575568578");
-        assertNull(customDate);
-        customDate = CustomDate.fromString("12/08/2008");
-        assertNull(customDate);
-        customDate = CustomDate.fromString("125.75568.4578");
-        assertNull(customDate);
-        customDate = CustomDate.fromString("abc");
-        assertNull(customDate);
+    public void testWrongFormatOfString1() {
+        try {
+            CustomDate customDate = CustomDate.fromString("12575568578");
+            fail();
+        } catch (PatternSyntaxException ignored) {
+
+        }
+    }
+
+    @Test
+    public void testWrongFormatOfString2() {
+        try {
+            CustomDate customDate = CustomDate.fromString("12/08/2008");
+            fail();
+        } catch (PatternSyntaxException ignored) {
+
+        }
+    }
+
+    @Test
+    public void testWrongFormatOfString3() {
+        try {
+            CustomDate customDate = CustomDate.fromString("abc");
+            fail();
+        } catch (PatternSyntaxException ignored) {
+
+        }
+    }
+
+    @Test
+    public void testWrongFormatOfString4() {
+        try {
+            CustomDate customDate = CustomDate.fromString("125.75568.4578");
+            fail();
+        } catch (PatternSyntaxException ignored) {
+
+        }
     }
 
     @Test
@@ -38,7 +66,6 @@ public class CustomDateTest {
     public void testFromStringToString() {
         String strDate = "01.01.2000";
         CustomDate customDate = CustomDate.fromString(strDate);
-        assert customDate != null;
         String dateToStr = customDate.toString();
         assertEquals(strDate, dateToStr);
     }

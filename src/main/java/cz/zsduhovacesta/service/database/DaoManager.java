@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,16 +101,16 @@ public class DaoManager {
         return studentDao.queryStudentByVs(vs);
     }
 
-    public void insertStudent(Student student) throws Exception {
+    public void insertStudent(Student student) throws EditRecordException, SQLException {
         studentDao.insertStudent(student);
         createFeesHistoryForNewStudent(student.getVS());
     }
 
-    private void createFeesHistoryForNewStudent(int vs) throws Exception {
+    private void createFeesHistoryForNewStudent(int vs) throws EditRecordException, SQLException {
         feesHistoryDao.insertFeesHistory(vs);
     }
 
-    public void editStudent(int vs, Student editedStudent) throws Exception {
+    public void editStudent(int vs, Student editedStudent) throws EditRecordException, SQLException {
         try {
             connection.setAutoCommit(false);
             studentDao.deleteStudent(vs);
@@ -125,20 +126,20 @@ public class DaoManager {
         }
     }
 
-    public void deleteStudent(int vs) throws Exception {
+    public void deleteStudent(int vs) throws EditRecordException, SQLException {
         studentDao.deleteStudent(vs);
         feesHistoryDao.deleteFeesHistory(vs);
     }
 
-    public void insertClass(Classes newClass) throws Exception {
+    public void insertClass(Classes newClass) throws EditRecordException, SQLException {
         classesDao.insertClass(newClass);
     }
 
-    public void editClass(Classes classToEdit) throws Exception {
+    public void editClass(Classes classToEdit) throws EditRecordException, SQLException {
         classesDao.editClass(classToEdit);
     }
 
-    public void deleteClassWithAllStudents(Classes classToDelete) throws Exception {
+    public void deleteClassWithAllStudents(Classes classToDelete) throws EditRecordException, SQLException {
         List<Student> studentsFromClass = studentDao.queryStudentsByClass(classToDelete.getClassName());
         for (Student student : studentsFromClass) {
             studentDao.deleteStudent(student.getVS());
@@ -146,12 +147,12 @@ public class DaoManager {
         classesDao.deleteClass(classToDelete);
     }
 
-    public void updateFeesHistoryByUser(FeesHistory feesHistory) throws Exception {
+    public void updateFeesHistoryByUser(FeesHistory feesHistory) throws EditRecordException, SQLException {
         feesHistoryDao.updateAllMonthsByUser(feesHistory);
         updateStudentShouldPay(feesHistory.getStudentVs());
     }
 
-    private void updateStudentShouldPay(int vs) throws Exception {
+    private void updateStudentShouldPay(int vs) throws EditRecordException, SQLException {
         FeesHistory feesHistory = queryFeesHistoryByStudentVs(vs);
         int shouldPay = feesHistory.countShouldPay();
         studentDao.updateShouldPay(vs, shouldPay);
@@ -186,7 +187,7 @@ public class DaoManager {
         return calendar.get(Calendar.MONTH) + 1;
     }
 
-    private void updateShouldPayAndFeesHistory(int actualMonth, List<FeesHistory> feesHistories) throws Exception {
+    private void updateShouldPayAndFeesHistory(int actualMonth, List<FeesHistory> feesHistories) throws EditRecordException, SQLException {
         for (FeesHistory feesHistory : feesHistories) {
             Student student = queryStudentByVs(feesHistory.getStudentVs());
             feesHistoryDao.updateActualMonth(actualMonth, student);
@@ -202,7 +203,7 @@ public class DaoManager {
         return transactionDao.queryAllTransactionsFromExistingStudent();
     }
 
-    public void insertBankStatementWithAllTransactions(BankStatement bankStatement) throws Exception {
+    public void insertBankStatementWithAllTransactions(BankStatement bankStatement) throws EditRecordException, SQLException {
         List<Transaction> transactions = bankStatement.getTransactions();
         try {
             connection.setAutoCommit(false);
@@ -220,29 +221,29 @@ public class DaoManager {
         }
     }
 
-    public void insertTransaction(Transaction transaction) throws Exception {
+    public void insertTransaction(Transaction transaction) throws EditRecordException, SQLException {
         transactionDao.insertTransaction(transaction);
         updateStudentPayed(transaction);
     }
 
-    private void updateStudentPayed(Transaction transaction) throws Exception {
+    private void updateStudentPayed(Transaction transaction) throws EditRecordException, SQLException {
         int vs = transaction.getVs();
         int payed = transactionDao.countStudentPayed(vs);
         studentDao.updatePayed(vs, payed);
     }
 
-    public void editTransaction(Transaction transaction) throws Exception {
+    public void editTransaction(Transaction transaction) throws EditRecordException, SQLException {
         transactionDao.editTransaction(transaction);
         updateStudentPayed(transaction);
     }
 
-    public void deleteTransaction(Transaction transaction) throws Exception {
+    public void deleteTransaction(Transaction transaction) throws EditRecordException, SQLException {
         transactionDao.deleteTransaction(transaction);
         updateStudentPayed(transaction);
     }
 
     public List<Transaction> listTransactionByVs(int vs) {
-        return transactionDao.queryTransactionByVsFromExistingStudent(vs);
+        return transactionDao.queryTransactionsByVsFromExistingStudent(vs);
     }
 
     public void backupDatabase() throws SQLException {

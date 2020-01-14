@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.BankStatement;
 import org.junit.jupiter.api.*;
 
@@ -18,7 +19,7 @@ class BankStatementDaoIT {
     private static BankStatementDao bankStatementDao;
 
     @BeforeAll
-    public static void setup () {
+    public static void setup() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING);
             connection.setAutoCommit(false);
@@ -28,8 +29,8 @@ class BankStatementDaoIT {
     }
 
     @AfterAll
-    public static void tearDown () {
-        try{
+    public static void tearDown() {
+        try {
             connection.close();
         } catch (SQLException e) {
             System.out.println("Closing failed: " + e.getMessage());
@@ -37,7 +38,7 @@ class BankStatementDaoIT {
     }
 
     @BeforeEach
-    public void startTransaction () {
+    public void startTransaction() {
         try {
             bankStatementDao = new BankStatementDao(connection);
             connection.beginRequest();
@@ -47,7 +48,7 @@ class BankStatementDaoIT {
     }
 
     @AfterEach
-    public void rollback () {
+    public void rollback() {
         try {
             connection.rollback();
             bankStatementDao.close();
@@ -57,8 +58,8 @@ class BankStatementDaoIT {
     }
 
     @Test
-    void listBankStatements () {
-        try{
+    void listBankStatements() {
+        try {
             List<BankStatement> bankStatements = bankStatementDao.queryBankStatements();
             int size = bankStatements.size();
             assertEquals(2, size);
@@ -68,15 +69,15 @@ class BankStatementDaoIT {
         }
     }
 
-    private BankStatement firstBankStatement () {
+    private BankStatement firstBankStatement() {
         BankStatement bankStatement = new BankStatement();
-        bankStatement.setDate("1.12.2019");
+        bankStatement.setDate("01.12.2019");
         bankStatement.setId(1);
         return bankStatement;
     }
 
     @Test
-    void insertBankStatement () {
+    void insertBankStatement() {
         BankStatement bankStatement = new BankStatement();
         bankStatement.setId(111);
         bankStatement.setDate("01.01.2020");
@@ -86,6 +87,31 @@ class BankStatementDaoIT {
             assertEquals(3, bankStatements.size());
         } catch (Exception e) {
             fail();
+        }
+    }
+
+    @Test
+    void insertExistingBankStatement() {
+        try {
+            bankStatementDao.insertBankStatement(firstBankStatement());
+            fail("Should throw exception");
+        } catch (SQLException e) {
+            assertEquals("[SQLITE_CONSTRAINT_PRIMARYKEY]  A PRIMARY KEY constraint failed " +
+                    "(UNIQUE constraint failed: bank_statement._id)", e.getMessage());
+        } catch (EditRecordException e) {
+            fail("Should throw SQLException");
+        }
+    }
+
+    @Test
+    void insertEmptyBankStatement() {
+        try {
+            bankStatementDao.insertBankStatement(new BankStatement());
+            fail("Should throw exception");
+        } catch (SQLException | EditRecordException e) {
+            fail("should throw NullPointerException");
+        } catch (NullPointerException e) {
+            assertNotNull(e);
         }
     }
 

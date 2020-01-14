@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.FeesHistory;
 import cz.zsduhovacesta.model.Student;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class FeesHistoryDao {
             "DELETE FROM " + TABLE_FEES_HISTORY + " WHERE " + COLUMN_STUDENT_VS + " = ?";
     public static final String QUERY_FEES_HISTORY_BY_STUDENT_VS =
             "SELECT * FROM " + TABLE_FEES_HISTORY + " WHERE " + COLUMN_STUDENT_VS + " = ?";
-    public static final String QUERY_FEES_HISTORY_WITH_WRONG_LAST_UPDATE =
+    public static final String QUERY_FEES_HISTORY_WITH_NOT_ACTUAL_LAST_UPDATE =
             "SELECT * FROM " + TABLE_FEES_HISTORY + " WHERE " + COLUMN_LAST_UPDATE + " != ?";
 
     private Connection connection;
@@ -53,7 +54,7 @@ public class FeesHistoryDao {
     private PreparedStatement updateVs;
     private PreparedStatement deleteFeesHistory;
     private PreparedStatement queryFeesHistoryByStudentsVs;
-    private PreparedStatement queryFeesHistoryWithWrongLastUpdate;
+    private PreparedStatement queryFeesHistoryWithNotActualLastUpdate;
 
     FeesHistoryDao(Connection connection) throws SQLException {
         try {
@@ -63,7 +64,7 @@ public class FeesHistoryDao {
             updateVs = connection.prepareStatement(UPDATE_VS);
             deleteFeesHistory = connection.prepareStatement(DELETE_FEES_HISTORY);
             queryFeesHistoryByStudentsVs = connection.prepareStatement(QUERY_FEES_HISTORY_BY_STUDENT_VS);
-            queryFeesHistoryWithWrongLastUpdate = connection.prepareStatement(QUERY_FEES_HISTORY_WITH_WRONG_LAST_UPDATE);
+            queryFeesHistoryWithNotActualLastUpdate = connection.prepareStatement(QUERY_FEES_HISTORY_WITH_NOT_ACTUAL_LAST_UPDATE);
         } catch (SQLException e) {
             logger.error("Couldn't create prepared statements for FeesHistoryDao", e);
             throw e;
@@ -87,8 +88,8 @@ public class FeesHistoryDao {
             if (queryFeesHistoryByStudentsVs != null) {
                 queryFeesHistoryByStudentsVs.close();
             }
-            if (queryFeesHistoryWithWrongLastUpdate != null) {
-                queryFeesHistoryWithWrongLastUpdate.close();
+            if (queryFeesHistoryWithNotActualLastUpdate != null) {
+                queryFeesHistoryWithNotActualLastUpdate.close();
             }
         } catch (SQLException e) {
             logger.error("Couldn't close prepared statements for FeesHistoryDao", e);
@@ -96,19 +97,19 @@ public class FeesHistoryDao {
         }
     }
 
-    public void insertFeesHistory(int vs) throws Exception {
+    public void insertFeesHistory(int vs) throws EditRecordException, SQLException {
         insertFeesHistory.setInt(1, vs);
         int affectedRecords = insertFeesHistory.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("inserting fees history failed");
+            throw new EditRecordException("inserting fees history failed");
         }
     }
 
-    public void updateAllMonthsByUser(FeesHistory feesHistory) throws Exception {
+    public void updateAllMonthsByUser(FeesHistory feesHistory) throws EditRecordException, SQLException {
         setAllMonthsToUpdate(feesHistory);
         int affectedRecords = updateAllMonthsByUser.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Updating fees history failed");
+            throw new EditRecordException("Updating fees history failed");
         }
     }
 
@@ -128,11 +129,11 @@ public class FeesHistoryDao {
         updateAllMonthsByUser.setInt(13, feesHistory.getStudentVs());
     }
 
-    public void updateActualMonth(int actualMonth, Student student) throws Exception {
+    public void updateActualMonth(int actualMonth, Student student) throws EditRecordException, SQLException {
         String updateActualMonth = setStringForUpdateActualMonth(actualMonth, student);
         int affectedRecords = connection.createStatement().executeUpdate(updateActualMonth);
         if (affectedRecords != 1) {
-            throw new Exception("Updating fees history failed");
+            throw new EditRecordException("Updating fees history failed");
         }
     }
 
@@ -185,20 +186,20 @@ public class FeesHistoryDao {
         return updateActualMonth.toString();
     }
 
-    public void updateVs(int vs, int editedVs) throws Exception {
+    public void updateVs(int vs, int editedVs) throws EditRecordException, SQLException {
         updateVs.setInt(1, editedVs);
         updateVs.setInt(2, vs);
         int affectedRecords = updateVs.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Updating vs failed");
+            throw new EditRecordException("Updating vs failed");
         }
     }
 
-    public void deleteFeesHistory(int vs) throws Exception {
+    public void deleteFeesHistory(int vs) throws EditRecordException, SQLException {
         deleteFeesHistory.setInt(1, vs);
         int affectedRecords = deleteFeesHistory.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Deleting fees history failed");
+            throw new EditRecordException("Deleting fees history failed");
         }
     }
 
@@ -206,9 +207,11 @@ public class FeesHistoryDao {
         try {
             queryFeesHistoryByStudentsVs.setInt(1, vs);
             ResultSet results = queryFeesHistoryByStudentsVs.executeQuery();
-            return setFeesHistory(results);
+            if (results.next()) {
+                return setFeesHistory(results);
+            } else return null;
         } catch (SQLException e) {
-            logger.warn("Query fees history by vs failed: ", e);
+            logger.error("Query fees history by vs failed: ", e);
             return null;
         }
     }
@@ -228,14 +231,14 @@ public class FeesHistoryDao {
         feesHistory.setOctober(results.getInt(11));
         feesHistory.setNovember(results.getInt(12));
         feesHistory.setDecember(results.getInt(13));
-        feesHistory.setLastUpdate(results.getInt(14));
+        feesHistory.setLastUpdateWasInMonth(results.getInt(14));
         return feesHistory;
     }
 
     public List<FeesHistory> queryFeesHistoriesWithWrongLastUpdate(int lastUpdate) {
         try {
-            queryFeesHistoryWithWrongLastUpdate.setInt(1, lastUpdate);
-            ResultSet results = queryFeesHistoryWithWrongLastUpdate.executeQuery();
+            queryFeesHistoryWithNotActualLastUpdate.setInt(1, lastUpdate);
+            ResultSet results = queryFeesHistoryWithNotActualLastUpdate.executeQuery();
             return setFeesHistories(results);
         } catch (SQLException e) {
             logger.error("Query fees history with wrong last update failed: ", e);
@@ -245,9 +248,11 @@ public class FeesHistoryDao {
 
     private List<FeesHistory> setFeesHistories(ResultSet results) throws SQLException {
         List<FeesHistory> feesHistories = new ArrayList<>();
-        while (results.next()) {
-            FeesHistory feesHistory = setFeesHistory(results);
-            feesHistories.add(feesHistory);
+        if (results.next()) {
+            do {
+                FeesHistory feesHistory = setFeesHistory(results);
+                feesHistories.add(feesHistory);
+            } while (results.next());
         }
         return feesHistories;
     }

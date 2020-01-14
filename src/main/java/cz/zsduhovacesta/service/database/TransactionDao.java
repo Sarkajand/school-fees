@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public class TransactionDao {
             "DELETE FROM " + TABLE_TRANSACTIONS + " WHERE " + COLUMN_TRANSACTIONS_ID + " = ?";
 
     private PreparedStatement queryAllTransactions;
-    private PreparedStatement queryTransactionByVs;
+    private PreparedStatement queryTransactionsByVs;
     private PreparedStatement insertTransaction;
     private PreparedStatement editTransaction;
     private PreparedStatement deleteTransaction;
@@ -63,7 +64,7 @@ public class TransactionDao {
     TransactionDao(Connection connection) throws SQLException {
         try {
             queryAllTransactions = connection.prepareStatement(QUERY_ALL_TRANSACTIONS);
-            queryTransactionByVs = connection.prepareStatement(QUERY_TRANSACTION_BY_VS);
+            queryTransactionsByVs = connection.prepareStatement(QUERY_TRANSACTION_BY_VS);
             insertTransaction = connection.prepareStatement(INSERT_TRANSACTION);
             editTransaction = connection.prepareStatement(EDIT_TRANSACTION);
             deleteTransaction = connection.prepareStatement(DELETE_TRANSACTION);
@@ -78,8 +79,8 @@ public class TransactionDao {
             if (queryAllTransactions != null) {
                 queryAllTransactions.close();
             }
-            if (queryTransactionByVs != null) {
-                queryTransactionByVs.close();
+            if (queryTransactionsByVs != null) {
+                queryTransactionsByVs.close();
             }
             if (insertTransaction != null) {
                 insertTransaction.close();
@@ -99,22 +100,20 @@ public class TransactionDao {
     public List<Transaction> queryAllTransactionsFromExistingStudent() {
         try {
             ResultSet results = queryAllTransactions.executeQuery();
-            if (results == null) {
-                return Collections.emptyList();
-            } else {
-                return setTransactions(results);
-            }
+            return setTransactions(results);
         } catch (SQLException e) {
-            logger.warn("Query all transactions failed: ", e);
+            logger.error("Query all transactions failed: ", e);
             return Collections.emptyList();
         }
     }
 
     private List<Transaction> setTransactions(ResultSet results) throws SQLException {
         List<Transaction> transactions = new ArrayList<>();
-        while (results.next()) {
-            Transaction transaction = setTransaction(results);
-            transactions.add(transaction);
+        if (results.next()) {
+            do {
+                Transaction transaction = setTransaction(results);
+                transactions.add(transaction);
+            } while (results.next());
         }
         return transactions;
     }
@@ -134,10 +133,10 @@ public class TransactionDao {
         return transaction;
     }
 
-    public List<Transaction> queryTransactionByVsFromExistingStudent(int vs) {
+    public List<Transaction> queryTransactionsByVsFromExistingStudent(int vs) {
         try {
-            queryTransactionByVs.setInt(1, vs);
-            ResultSet results = queryTransactionByVs.executeQuery();
+            queryTransactionsByVs.setInt(1, vs);
+            ResultSet results = queryTransactionsByVs.executeQuery();
             return setTransactions(results);
         } catch (SQLException e) {
             logger.error("Query Transactions by vs from existing students failed: ", e);
@@ -145,7 +144,7 @@ public class TransactionDao {
         }
     }
 
-    public void insertTransaction(Transaction transaction) throws Exception {
+    public void insertTransaction(Transaction transaction) throws EditRecordException, SQLException {
         insertTransaction.setString(1, transaction.getStringDate());
         insertTransaction.setInt(2, transaction.getBankStatement());
         insertTransaction.setInt(3, transaction.getVs());
@@ -154,11 +153,11 @@ public class TransactionDao {
         insertTransaction.setString(6, transaction.getTransactionNotes());
         int affectedRecords = insertTransaction.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Inserting transaction failed");
+            throw new EditRecordException("Inserting transaction failed");
         }
     }
 
-    public void editTransaction(Transaction transaction) throws Exception {
+    public void editTransaction(Transaction transaction) throws EditRecordException, SQLException {
         editTransaction.setString(1, transaction.getStringDate());
         editTransaction.setInt(2, transaction.getBankStatement());
         editTransaction.setInt(3, transaction.getVs());
@@ -168,20 +167,20 @@ public class TransactionDao {
         editTransaction.setInt(7, transaction.getId());
         int affectedRecords = editTransaction.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Editing transaction failed");
+            throw new EditRecordException("Editing transaction failed");
         }
     }
 
-    public void deleteTransaction(Transaction transaction) throws Exception {
+    public void deleteTransaction(Transaction transaction) throws EditRecordException, SQLException {
         deleteTransaction.setInt(1, transaction.getId());
         int affectedRecords = deleteTransaction.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Deleting transaction failed");
+            throw new EditRecordException("Deleting transaction failed");
         }
     }
 
     public int countStudentPayed(int studentVs) {
-        List<Transaction> transactions = queryTransactionByVsFromExistingStudent(studentVs);
+        List<Transaction> transactions = queryTransactionsByVsFromExistingStudent(studentVs);
         int sum = 0;
         for (Transaction transaction : transactions) {
             sum += transaction.getAmount();

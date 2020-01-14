@@ -15,7 +15,7 @@ public class FeesHistory {
     private int october;
     private int november;
     private int december;
-    private int lastUpdate;
+    private int lastUpdateWasInMonth;
 
     public FeesHistory() {
         this.studentVs = 0;
@@ -31,7 +31,7 @@ public class FeesHistory {
         this.october = 0;
         this.november = 0;
         this.december = 0;
-        this.lastUpdate = 0;
+        this.lastUpdateWasInMonth = 0;
     }
 
     public int getStudentVs() {
@@ -138,12 +138,12 @@ public class FeesHistory {
         this.december = december;
     }
 
-    public int getLastUpdate() {
-        return lastUpdate;
+    public int getLastUpdateWasInMonth() {
+        return lastUpdateWasInMonth;
     }
 
-    public void setLastUpdate(int lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setLastUpdateWasInMonth(int lastUpdateWasInMonth) {
+        this.lastUpdateWasInMonth = lastUpdateWasInMonth;
     }
 
     public int countShouldPay() {

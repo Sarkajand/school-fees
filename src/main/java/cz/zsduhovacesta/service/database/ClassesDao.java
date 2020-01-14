@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,8 +80,10 @@ public class ClassesDao {
         try {
             ResultSet results = queryClasses.executeQuery();
             List<String> classesNames = new ArrayList<>();
-            while (results.next()) {
-                classesNames.add(results.getString(3));
+            if (results.next()) {
+                do {
+                    classesNames.add(results.getString(3));
+                } while (results.next());
             }
             return classesNames;
         } catch (SQLException e) {
@@ -92,16 +95,22 @@ public class ClassesDao {
     public List<Classes> queryAllClasses() {
         try {
             ResultSet results = queryClasses.executeQuery();
-            List<Classes> classes = new ArrayList<>();
-            while (results.next()) {
-                Classes newClass = setClass(results);
-                classes.add(newClass);
-            }
-            return classes;
+            return setClasses(results);
         } catch (SQLException e) {
             logger.warn("Query classes with stage failed: ", e);
             return Collections.emptyList();
         }
+    }
+
+    private List<Classes> setClasses(ResultSet results) throws SQLException {
+        List<Classes> classes = new ArrayList<>();
+        if (results.next()) {
+            do {
+                Classes newClass = setClass(results);
+                classes.add(newClass);
+            } while (results.next());
+        }
+        return classes;
     }
 
     private Classes setClass(ResultSet results) throws SQLException {
@@ -116,40 +125,44 @@ public class ClassesDao {
         try {
             queryClassIdByClassName.setString(1, className);
             ResultSet results = queryClassIdByClassName.executeQuery();
-            return results.getInt(1);
+            if (!results.next()) {
+                throw new NullPointerException("No results from query class id by name for className " + className);
+            } else {
+                return results.getInt(1);
+            }
         } catch (SQLException e) {
             logger.warn("Query class id failed: ", e);
-            return -1;
+            throw new NullPointerException("Query class id by name failed");
         }
     }
 
-    public void insertClass(Classes classes) throws Exception {
+    public void insertClass(Classes classes) throws EditRecordException, SQLException {
         insertClass.setString(1, classes.getStage());
         insertClass.setString(2, classes.getClassName());
 
         int affectedRecords = insertClass.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Inserting Class failed");
+            throw new EditRecordException("Inserting Class failed");
         }
     }
 
-    public void editClass(Classes classToEdit) throws Exception {
+    public void editClass(Classes classToEdit) throws EditRecordException, SQLException {
         editClass.setString(1, classToEdit.getStage());
         editClass.setString(2, classToEdit.getClassName());
         editClass.setInt(3, classToEdit.getClassId());
 
         int affectedRecords = editClass.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Editing class failed");
+            throw new EditRecordException("Editing class failed");
         }
     }
 
-    public void deleteClass(Classes classToDelete) throws Exception {
+    public void deleteClass(Classes classToDelete) throws EditRecordException, SQLException {
         deleteClass.setInt(1, classToDelete.getClassId());
 
         int affectedRecords = deleteClass.executeUpdate();
         if (affectedRecords != 1) {
-            throw new Exception("Deleting class failed");
+            throw new EditRecordException("Deleting class failed");
         }
     }
 }

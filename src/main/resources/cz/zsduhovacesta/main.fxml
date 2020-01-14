@@ -245,7 +245,7 @@
                             <contextMenu>
                                 <ContextMenu>
                                     <items>
-                                        <MenuItem text="hostorie školného" onAction="#showFeesHistoryDialog"/>
+                                        <MenuItem text="historie školného" onAction="#showFeesHistoryDialog"/>
                                     </items>
                                 </ContextMenu>
                             </contextMenu>

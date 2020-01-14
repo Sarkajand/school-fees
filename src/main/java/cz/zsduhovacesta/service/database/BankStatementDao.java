@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.BankStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,21 +64,24 @@ public class BankStatementDao {
 
     private List<BankStatement> setBankStatements(ResultSet results) throws SQLException {
         List<BankStatement> bankStatements = new ArrayList<>();
-        while (results.next()) {
-            BankStatement bankStatement = new BankStatement();
-            bankStatement.setId(results.getInt(1));
-            bankStatement.setDate(results.getString(2));
-            bankStatements.add(bankStatement);
+        if (results.next()) {
+            do {
+                BankStatement bankStatement = new BankStatement();
+                bankStatement.setId(results.getInt(1));
+                bankStatement.setDate(results.getString(2));
+                bankStatements.add(bankStatement);
+            } while (results.next());
         }
         return bankStatements;
     }
 
-    public void insertBankStatement(BankStatement bankStatement) throws Exception {
+    public void insertBankStatement(BankStatement bankStatement) throws EditRecordException, SQLException {
         insertBankStatement.setInt(1, bankStatement.getId());
         insertBankStatement.setString(2, bankStatement.getStringDate());
-        int affectedRecords = insertBankStatement.executeUpdate();
+        insertBankStatement.executeUpdate();
+        int affectedRecords = insertBankStatement.getUpdateCount();
         if (affectedRecords != 1) {
-            throw new Exception("Inserting bank statement failed");
+            throw new EditRecordException("Inserting bank statement failed");
         }
     }
 }

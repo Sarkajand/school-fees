@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.Student;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -94,7 +95,7 @@ class StudentDaoIT {
     }
 
     @Test
-    void queryStudentsBySchoolStageFromZs() {
+    void queryStudentsBySchoolStageZs() {
         List<Student> students = studentDao.queryStudentsBySchoolStage("ZŠ");
         for (Student student : students) {
             assert student.getSchoolStage().equals("ZŠ");
@@ -102,7 +103,7 @@ class StudentDaoIT {
     }
 
     @Test
-    void queryStudentsBySchoolStageFromMs() {
+    void queryStudentsBySchoolStageMs() {
         List<Student> students = studentDao.queryStudentsBySchoolStage("MŠ");
         for (Student student : students) {
             assert student.getSchoolStage().equals("MŠ");
@@ -136,8 +137,11 @@ class StudentDaoIT {
         try {
             studentDao.insertStudent(existingStudent);
             fail("Should throw exception");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            assertEquals("[SQLITE_CONSTRAINT_PRIMARYKEY]  A PRIMARY KEY constraint failed " +
+                    "(UNIQUE constraint failed: students.VS)", e.getMessage());
+        } catch (EditRecordException ignored) {
+
         }
     }
 
@@ -257,7 +261,7 @@ class StudentDaoIT {
 
     @Test
     void updateShouldPay() {
-        try{
+        try {
             Student student = studentDao.queryStudentByVs(254325);
             assertEquals(0, student.getShouldPay());
             studentDao.updateShouldPay(254325, 150);
@@ -270,7 +274,7 @@ class StudentDaoIT {
 
     @Test
     void testUpdatePayed() {
-        try{
+        try {
             studentDao.updatePayed(254325, 1500);
             Student student = studentDao.queryStudentByVs(254325);
             assertEquals(1500, student.getPayed());
@@ -281,7 +285,7 @@ class StudentDaoIT {
 
     @Test
     void testUpdatePayedZero() {
-        try{
+        try {
             studentDao.updatePayed(254325, 0);
             Student student = studentDao.queryStudentByVs(254325);
             assertEquals(0, student.getPayed());
@@ -292,7 +296,7 @@ class StudentDaoIT {
 
     @Test
     void testUpdateNegativePayed() {
-        try{
+        try {
             studentDao.updatePayed(254325, -1500);
             Student student = studentDao.queryStudentByVs(254325);
             assertEquals(-1500, student.getPayed());
@@ -303,11 +307,13 @@ class StudentDaoIT {
 
     @Test
     void testUpdatePayedNotExistingStudentThrowException() {
-        try{
+        try {
             studentDao.updatePayed(555, 1500);
             fail("should throw exception");
-        } catch (Exception ignored) {
-
+        } catch (EditRecordException e) {
+            assertEquals("Updating payed failed", e.getMessage());
+        } catch (SQLException e) {
+            fail("should throw EditRecordsException");
         }
     }
 }

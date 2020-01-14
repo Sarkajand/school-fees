@@ -1,5 +1,6 @@
 package cz.zsduhovacesta.service.database;
 
+import cz.zsduhovacesta.exceptions.EditRecordException;
 import cz.zsduhovacesta.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -187,7 +188,7 @@ public class DaoManagerTest {
     public void testInsertStudentException() {
         Student student = new Student();
         try {
-            doThrow(Exception.class).when(studentDao).deleteStudent(1);
+            doThrow(EditRecordException.class).when(studentDao).deleteStudent(1);
             daoManager.editStudent(1, student);
             fail("Should throw exception");
         } catch (Exception e) {
@@ -356,7 +357,7 @@ public class DaoManagerTest {
         }
         bankStatement.setTransactions(transactions);
         try {
-            doThrow(Exception.class).when(transactionDao).insertTransaction(any());
+            doThrow(SQLException.class).when(transactionDao).insertTransaction(any());
             daoManager.insertBankStatementWithAllTransactions(bankStatement);
             fail();
         } catch (Exception e) {
@@ -371,7 +372,7 @@ public class DaoManagerTest {
     @Test
     public void testInsertBankStatementExceptionFromBankStatementDao() {
         try {
-            doThrow(Exception.class).when(bankStatementDao).insertBankStatement(any());
+            doThrow(SQLException.class).when(bankStatementDao).insertBankStatement(any());
             daoManager.insertBankStatementWithAllTransactions(new BankStatement());
             fail();
         } catch (Exception e) {
@@ -391,7 +392,7 @@ public class DaoManagerTest {
         try {
             daoManager.insertTransaction(transaction);
             verify(transactionDao, times(1)).insertTransaction(any());
-            verify(studentDao, times(1)).updatePayed(111,500);
+            verify(studentDao, times(1)).updatePayed(111, 500);
         } catch (Exception e) {
             fail();
         }
@@ -405,7 +406,7 @@ public class DaoManagerTest {
         try {
             daoManager.editTransaction(transaction);
             verify(transactionDao, times(1)).editTransaction(any());
-            verify(studentDao, times(1)).updatePayed(456,159);
+            verify(studentDao, times(1)).updatePayed(456, 159);
         } catch (Exception e) {
             fail();
         }
@@ -419,7 +420,7 @@ public class DaoManagerTest {
         try {
             daoManager.deleteTransaction(transaction);
             verify(transactionDao, times(1)).deleteTransaction(any());
-            verify(studentDao, times(1)).updatePayed(753159,-1547);
+            verify(studentDao, times(1)).updatePayed(753159, -1547);
         } catch (Exception e) {
             fail();
         }
@@ -428,7 +429,7 @@ public class DaoManagerTest {
     @Test
     public void testListTransactionByVs() {
         List<Transaction> transactions = new ArrayList<>();
-        when(transactionDao.queryTransactionByVsFromExistingStudent(anyInt())).thenReturn(transactions);
+        when(transactionDao.queryTransactionsByVsFromExistingStudent(anyInt())).thenReturn(transactions);
         assertEquals(transactions, daoManager.listTransactionByVs(1));
     }
 }
