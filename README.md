@@ -4,7 +4,7 @@ School-fees is an app for record payments, it calculates fees and gives data for
 
 
 # Motivation
-I started learning programming and I wanted to work on something usefull, so I took a challenge to write an app to help primary school with keeping the records and with calculating the school fees. The app is localized to Czech language and functions are according to customers requirements. 
+I started learning programming and I wanted to work on something useful, so I took a challenge to write an app to help primary school with keeping the records and with calculating the school fees. The app is localized to Czech language and functions are according to customers requirements. 
 
 #### all data in this git repository are dummy data for testing and presentation
 
